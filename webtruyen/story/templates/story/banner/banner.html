@@ -1,0 +1,31 @@
+{% load static %}
+
+<section class="banner-section">
+    <div class="banner-slider">
+        {% for story in stories %}
+        <div class="slide {% if forloop.first %}active{% endif %}">
+            <div class="slide-image">
+                {% if story.thumbnail %}
+                <img src="{{ story.thumbnail.url }}" alt="{{ story.title }}">
+                {% else %}
+                <img src="{% static 'story/images/default-banner.jpg' %}" alt="No image">
+                {% endif %}
+            </div>
+            <div class="slide-content">
+                {% if story.slug %}
+                <a href="{% url 'story_detail' story.slug %}" class="slide-btn">Đọc ngay</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="slider-dots" style="margin: 120px;">
+        {% for story in stories %}
+        <span class="dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}" style="background: rgb(32, 181, 181); "></span>
+        {% endfor %}
+    </div>
+
+    <button class="slider-arrow prev-arrow">&#10094;</button>
+    <button class="slider-arrow next-arrow">&#10095;</button>
+</section>

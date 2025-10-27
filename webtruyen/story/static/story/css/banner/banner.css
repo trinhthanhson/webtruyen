@@ -1,0 +1,142 @@
+Banner Section
+/* Đã loại bỏ !important và các thuộc tính ghi đè ở đây, chúng nằm trong khối <style> */
+.banner-section {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+/* Banner Slider */
+.banner-slider {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Slide */
+.banner-section .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    z-index: 0;
+}
+
+/* Slide Active */
+.banner-section .slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Hình ảnh */
+.slide-image {
+    /* 2 phần trong tổng số 3 phần */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Đảm bảo hình ảnh con có thể chiếm 100% chiều cao của banner */
+    height: 100%;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.slide-image img {
+    width: 120%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Nội dung */
+.slide-content {
+    flex: 1;
+    padding: 2rem;
+    color: white;
+    z-index: 2;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+}
+
+/* Nội dung Active */
+.banner-section .slide.active .slide-content {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Dots */
+.banner-section .slider-dots {
+    position: absolute;
+    bottom: 15px;
+    left: 45%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+.banner-section .dot  {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.banner-section .dot:hover {
+    transform: scale(1.2);
+    /* Phóng to lên */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Thêm bóng cho đẹp (tùy chọn) */
+}
+.banner-section .dot {
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    
+}
+
+.banner-section .dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+/* Arrow */
+.banner-section .slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.banner-section .prev-arrow {
+    left: 50px;
+}
+
+.banner-section .next-arrow {
+    right: 50px;
+}
+
+/* Hiệu ứng hover */
+.banner-section .slider-arrow {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.banner-section .slider-arrow:hover {
+    transform: scale(1);
+    /* Phóng to lên */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Thêm bóng cho đẹp (tùy chọn) */
+}

@@ -1,0 +1,362 @@
+/* Reset và Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* Đảm bảo thẻ HTML chiếm toàn bộ chiều cao để màu nền body hiển thị */
+    height: 100%;
+    background: rgba(128, 128, 128, 0.5)
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    /* Giữ nguyên min-height để body mở rộng theo viewport */
+    min-height: 100vh;
+    background: #262626;
+
+    /* 🌟 QUAN TRỌNG: Giữ lại display: flex để footer dính dưới cùng 🌟 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.web-story-header {
+    background: #262626;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.9;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    padding: 0.5rem 0;
+}
+
+.nav-menu a:hover {
+    opacity: 0.8;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.btn-outline:hover {
+    background: rgb(161, 139, 99);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* 🌟 KHẮC PHỤC LỖI XUNG ĐỘT BANNER VÀ LAYOUT 🌟 */
+
+/* Loại bỏ thuộc tính flex: 1; min-height: 60vh; trên .main-content */
+/* Thay vì đó, chúng ta chỉ giới hạn chiều rộng và padding */
+.main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    /* ⚠️ LOẠI BỎ: flex: 1; và min-height: 60vh; */
+}
+
+/* Footer Styles */
+.web-story-footer {
+    background: #262626;
+    color: white;
+    padding: 1rem 1.5rem;
+    /* giảm lại cho gọn */
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: #e0f7fa;
+}
+
+.footer-section p {
+    line-height: 1.6;
+    color: #e0f7fa;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: #e0f7fa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: white;
+    transform: translateX(5px);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.social-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    color: #e0f7fa;
+    font-size: 0.9rem;
+}
+
+/* Trong file style.css */
+
+.card-img-top {
+    height: 180px;
+    /* Chiều cao cố định cho ảnh bìa */
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #f0f0f0;
+    /* Màu trắng sáng cho tiêu đề */
+    min-height: 40px;
+    /* Giữ tiêu đề 2 dòng nếu cần */
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.card-title:hover {
+    text-decoration: underline;
+    /* thêm gạch chân */
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    /* Màu xám nhạt cho mô tả/tác giả */
+    margin-bottom: 0.5rem;
+}
+
+/* Sửa style nút Bootstrap mặc định */
+.card-body .btn-primary {
+    background-color: #20B2AA;
+    /* Màu xanh ngọc (từ Header) */
+    border-color: #20B2AA;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.card-body .btn-primary:hover {
+    background-color: #40E0D0;
+    border-color: #40E0D0;
+}
+
+.card-image-wrapper {
+    position: relative;
+    /* Quan trọng để overlay nằm đúng vị trí */
+    overflow: hidden;
+    /* Đảm bảo mọi thứ nằm trong giới hạn */
+    border-radius: 8px 8px 0 0;
+    /* Bo góc trên giống ảnh */
+    height: 180px;
+    /* Chiều cao cố định như ảnh */
+}
+
+.card-image-wrapper img.card-img-top {
+    /* Đảm bảo ảnh lấp đầy wrapper */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    /* Thêm transition cho zoom và filter */
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Nền đen trong suốt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    /* Mặc định ẩn */
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 8px 8px 0 0;
+}
+
+.image-overlay .overlay-text {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0;
+    /* Mặc định ẩn chữ */
+    transform: translateY(10px);
+    /* Chữ hơi đi xuống */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Hiệu ứng khi hover vào card-image-wrapper */
+.card-image-wrapper:hover img.card-img-top {
+    transform: scale(1.1);
+    /* Zoom ảnh 10% */
+    filter: brightness(0.7);
+    /* Làm tối ảnh một chút */
+}
+
+.card-image-wrapper:hover .image-overlay {
+    opacity: 1;
+    /* Hiển thị lớp phủ */
+}
+
+.card-image-wrapper:hover .overlay-text {
+    opacity: 1;
+    /* Hiển thị chữ */
+    transform: translateY(0);
+    /* Chữ trượt lên vị trí ban đầu */
+}
+
+/* Giữ lại style cho card và card-body */
+.card {
+    background-color: #333333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    /* Giữ lại hiệu ứng transform cho cả card nếu muốn */
+}
+
+
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .web-story-header {
+        padding: 1rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .nav-menu {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .header-actions {
+        justify-content: center;
+    }
+
+    .web-story-footer {
+        padding: 2rem 1rem 1rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ story.title }}</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h1>{{ story.title }}</h1>
+    <p><b>Tác giả:</b> {{ story.author }}</p>
+    <p>{{ story.description }}</p>
+
+    <h3>Danh sách chương</h3>
+    <ul>
+        {% for chapter in chapters %}
+            <li><a href="/{{ story.id }}/chapter/{{ chapter.number }}/">
+                Chương {{ chapter.number }}: {{ chapter.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
