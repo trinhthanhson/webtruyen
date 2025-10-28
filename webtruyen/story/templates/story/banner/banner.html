@@ -18,14 +18,13 @@
             </div>
         </div>
         {% endfor %}
-    </div>
-
-    <div class="slider-dots" style="margin: 120px;">
-        {% for story in stories %}
-        <span class="dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}" style="background: rgb(32, 181, 181); "></span>
-        {% endfor %}
-    </div>
-
+        <div class="slider-dots">
+    {% for story in stories %}
+    <span class="dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
+    {% endfor %}
+</div>
     <button class="slider-arrow prev-arrow">&#10094;</button>
     <button class="slider-arrow next-arrow">&#10095;</button>
+    </div>
+
 </section>

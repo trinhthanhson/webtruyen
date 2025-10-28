@@ -71,25 +71,37 @@ Banner Section
     transform: translateX(0);
 }
 
-/* Dots */
+/* Dots container */
 .banner-section .slider-dots {
     position: absolute;
-    bottom: 15px;
-    left: 45%;
+   bottom: 2%;
+    left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 10px;
+    gap: 1vw;
     z-index: 10;
+}
+
+/* Dot */
+.banner-section .slider-dots .dot {
+    width: 1vw;
+    height: 1vw;
+    min-width: 10px;
+    min-height: 10px;
+    max-width: 18px;
+    max-height: 18px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5); /* Màu mặc định */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 .banner-section .dot  {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.banner-section .dot:hover {
+.banner-section .slider-dots .dot:hover {
     transform: scale(1.2);
-    /* Phóng to lên */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    /* Thêm bóng cho đẹp (tùy chọn) */
 }
 .banner-section .dot {
     width: 12px;
@@ -101,11 +113,10 @@ Banner Section
     
 }
 
-.banner-section .dot.active {
+.banner-section .slider-dots .dot.active {
     background: white;
     transform: scale(1.2);
 }
-
 /* Arrow */
 .banner-section .slider-arrow {
     position: absolute;

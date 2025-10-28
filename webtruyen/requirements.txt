@@ -1,0 +1,22 @@
+Django==5.0.4
+djangorestframework==3.15.1
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.3.1
+Pillow==10.3.0
+python-dotenv==1.0.1
+
+# Nếu dùng PostgreSQL:
+# psycopg2-binary==2.9.9
+
+# Nếu dùng MySQL:
+# mysqlclient==2.2.4
+
+# Testing
+# pytest==8.0.2
+# pytest-django==4.8.0
+
+# Production (tuỳ chọn)
+# gunicorn==21.2.0
+
+#run server
+#py manage.py runserver
