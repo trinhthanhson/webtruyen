@@ -214,6 +214,9 @@ body {
     cursor: pointer;
 }
 
+.card-title .a{
+    color: #f0f0f0;
+}
 .card-title:hover {
     text-decoration: underline;
     /* thêm gạch chân */
