@@ -26,8 +26,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary', 
     'story',
 ]
+
+# 1. Cấu hình thông tin Cloudinary (Lấy từ Dashboard của Cloudinary)
+CLOUDINARY_CLOUD_NAME = 'dqb9trxs4'  # Ví dụ: 'webtruyen-project'
+CLOUDINARY_API_KEY = '526277124128331'
+CLOUDINARY_API_SECRET = 'lBNZfs38GP1iGvMKXCRzjDzZcss'
+
+import cloudinary
+
+try:
+    cloudinary.config(cloud_name = CLOUDINARY_CLOUD_NAME,api_key = CLOUDINARY_API_KEY,api_secret = CLOUDINARY_API_SECRET,secure=True)# type: ignore
+except Exception as e:
+    # In ra lỗi nếu cấu hình bị sai key/secret
+    print(f"LỖI CẤU HÌNH CLOUDINARY: {e}") 
+    pass
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

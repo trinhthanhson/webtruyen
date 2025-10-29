@@ -3,12 +3,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField # Có thể dùng JSONField thay thế nếu cần
-
-# Giả định bạn đang sử dụng User Model mặc định của Django.
-# Nếu bạn muốn tùy chỉnh, hãy thay đổi import và ForeignKey.
-# class User (models.Model): # Nếu bạn muốn định nghĩa riêng
-#     ... 
-
 # --- 1. STORIES (Truyện) ---
 class Story(models.Model):
     STATUS_CHOICES = [
@@ -21,7 +15,19 @@ class Story(models.Model):
     title = models.CharField(max_length=255, verbose_name="Tên truyện")
     author = models.CharField(max_length=100, blank=True, null=True, verbose_name="Tác giả")
     description = models.TextField(blank=True, null=True, verbose_name="Tóm tắt")
-    cover_image_url = models.ImageField(max_length=255, blank=True, null=True, verbose_name="Ảnh bìa URL")
+    upload_image_temp = models.ImageField(
+        upload_to='temp_uploads/',
+        blank=True,
+        null=True,
+        verbose_name="Chọn file ảnh để tải lên"
+    ) 
+    cover_image_url = models.URLField( 
+        max_length=500, 
+        blank=True, 
+        null=True, 
+        verbose_name="URL Ảnh bìa Cloudinary"
+    )
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ongoing', verbose_name="Trạng thái")
     views_count = models.BigIntegerField(default=0, verbose_name="Lượt xem")
     

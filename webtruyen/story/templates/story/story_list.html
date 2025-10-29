@@ -1,74 +1,98 @@
+<!-- Load Tailwind CSS CDN -->
 {% load static %}
-<!DOCTYPE html>
-<html lang="vi">
 
-<head>
-    <title>📚 Danh sách truyện</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
     <link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
+<script>
+    // Định nghĩa cấu hình màu Dark Mode
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#60a5fa', // Blue-400
+                    'dark-bg-body': '#262626', // Màu nền #262626
+                    'dark-bg-card': '#333333', // Màu nền container
+                    'dark-border': '#4b5563', // Gray-600
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title|default:"Danh Sách Truyện" }}</title>
 </head>
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen">
 
-<body>
-
+<!-- HEADER (Giả định được include) -->
     {% include 'story/header/header.html' %}
 
-    {% include 'story/banner/banner.html' %}
-
-    <div class="container mt-3">
-        <h1 style="color: white;">📚 Danh sách truyện</h1>
-        <div class="row">
-            {% for story in stories %}
-            <div class="col-md-2">
-                <div class="card mt-1">
-                    <div class="card-image-wrapper">
-                        
-                        {% if story.cover_image_url %}
-                        <img src="{{ story.cover_image_url }}" class="card-img-top" alt="{{ story.title }} - Ảnh bìa">
-                        {% endif %}
-
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{% url 'story_detail' story_id=story.pk %}">
-                                {{ story.title }}
-                            </a>
-                        </h5>
-
-                        <p class="card-text">Tác giả: {{ story.author }}</p>
-
-                        {# Lấy điểm đánh giá trung bình, làm tròn để hiển thị sao #}
-                        {% with rounded_rating=story.avg_rating|default:0|floatformat:0 %}
-                        <div class="story-rating d-flex align-items-center mb-2">
-                            <span class="stars" style="color: gold; font-size: 1.2rem;">
-                                
-                                {# SỬA: Dùng story.avg_rating và làm tròn để hiển thị sao #}
-                                {% if rounded_rating >= 1 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 2 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 3 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 4 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 5 %}&#9733;{% else %}&#9734;{% endif %}
-                            </span>
-                            
-                            {# SỬA: Dùng story.avg_rating thay vì story.rating, hiển thị 2 chữ số thập phân #}
-                            <span class="rating-value ms-2" style="color: white; font-weight: bold;">
-                                {{ story.avg_rating|default:"N/A"|floatformat:2 }}
-                            </span>
-
-                        </div>
-                        {% endwith %}
-
-                    </div>
-                </div>
+<div class="container mx-auto max-w-7xl my-8 px-4">
+    
+    <!-- Tiêu đề trang -->
+    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-8 pb-4 border-b border-dark-border text-center">
+        {{ page_title|default:"Tất Cả Truyện" }}
+    </h1>
+    
+    <!-- Lưới hiển thị danh sách truyện -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+        
+        {% for story in stories %}
+        <div class="bg-dark-bg-card rounded-xl shadow-lg overflow-hidden border border-transparent hover:border-primary transition duration-300 group">
+            
+            <!-- Ảnh bìa -->
+            <a href="{% url 'story_detail' story_id=story.story_id %}" class="block relative aspect-[3/4] overflow-hidden">
+                <img src="{{ story.cover_image_url }}" alt="{{ story.title }}" 
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x533/444444/FFFFFF?text=NO+IMAGE';"
+                >
+                <!-- Badge hoặc trạng thái (Tùy chọn) -->
+                {% if story.status == 'Hoàn thành' %}
+                <span class="absolute top-2 right-2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-full">Hoàn thành</span>
+                {% endif %}
+            </a>
+            
+            <div class="p-3">
+                <!-- Tên truyện -->
+                <h2 class="text-base font-semibold truncate mb-1">
+                    <a href="{% url 'story_detail' story_id=story.story_id %}" class="text-white hover:text-primary transition duration-150" title="{{ story.title }}">
+                        {{ story.title }}
+                    </a>
+                </h2>
+                <!-- Tác giả -->
+                <p class="text-xs text-gray-400 truncate">
+                    Tác giả: {{ story.author|default:"Khuyết danh" }}
+                </p>
+                <!-- Thể loại (Tùy chọn) -->
+                <p class="text-xs text-gray-500 mt-1 truncate">
+                    Thể loại: {{ story.category.name|default:"Chưa rõ" }}
+                </p>
             </div>
-            {% endfor %}
         </div>
+        {% empty %}
+        <p class="col-span-full text-center text-gray-400 py-10">Không tìm thấy truyện nào. Vui lòng thử lại sau.</p>
+        {% endfor %}
     </div>
 
+    <!-- PHÂN TRANG (Tùy chọn, nếu bạn đã thiết lập logic phân trang trong view) -->
+    {% if is_paginated %}
+    <div class="mt-10 flex justify-center">
+        <!-- Pagination logic here if needed -->
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- FOOTER (Giả định được include) -->
     {% include 'story/footer/footer.html' %}
 
-    <script src="{% static 'story/js/banner.js' %}"></script>
-
 </body>
-
 </html>

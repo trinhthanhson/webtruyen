@@ -1,14 +1,93 @@
+<!-- Load Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    // Định nghĩa cấu hình màu Dark Mode giống như story_detail.html
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#60a5fa', // Blue-400
+                    'secondary': '#f97316', // Orange-500
+                    'dark-bg-body': '#262626', // Màu nền #262626
+                    'dark-bg-card': '#333333', // Màu nền container
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
-    <title>{{ chapter.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương {{ story_chapter.chapter_number }} - {{ story_chapter.story.title }}</title>
+    <!-- 💡 CSS custom để xử lý thụt lề đầu dòng trong nội dung truyện -->
+    <style>
+        .chapter-content p {
+            /* Tăng khoảng cách dòng và thụt lề cho đoạn văn */
+            text-indent: 1.5em; 
+            margin-bottom: 1.5em;
+        }
+        .chapter-content {
+            /* Tăng kích thước chữ cho nội dung */
+            font-size: 1.125rem; /* text-lg */
+        }
+    </style>
 </head>
-<body>
-<div class="container mt-4">
-    <h1>{{ chapter.title }}</h1>
-    <div>
-        {{ chapter.content|linebreaks }}
-    </div>
+<!-- Áp dụng màu nền Dark Mode và màu chữ sáng -->
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100">
+
+<div class="container mx-auto max-w-6xl my-8 p-6 md:p-8 bg-dark-bg-card rounded-xl shadow-2xl">
+    
+    <!-- Tiêu đề chương -->
+    <h1 class="text-3xl md:text-4xl font-extrabold text-primary text-center pb-4 mb-6 border-b border-gray-600">
+        Chương {{ story_chapter.chapter_number }}: {{ story_chapter.title }}
+    </h1>
+    
+    <!-- Thông tin truyện cha -->
+    {% if story_chapter.story %}
+    <p class="chapter-info text-center text-gray-400 mb-8">
+        Truyện: <a href="{% url 'story_detail' story_id=story_chapter.story.story_id %}" class="text-primary hover:text-secondary font-bold transition duration-200">
+            {{ story_chapter.story.title }}
+        </a> 
+        <span class="text-sm">| Tác giả: {{ story_chapter.story.author }}</span>
+    </p>
+    {% endif %}
+
+    <!-- KHỐI NỘI DUNG CHÍNH -->
+    <div class="chapter-content text-gray-300 leading-relaxed">
+        {% if story_chapter.content %}
+            {{ story_chapter.content|linebreaksbr }}
+        {% endif %}
+
+        <!-- Hiển thị ảnh -->
+        {% if story_chapter.image_urls %}
+            {% for image_url in story_chapter.image_urls %}
+                <div class="image-container my-8 text-center">
+                    <img src="{{ image_url }}" alt="Hình ảnh minh họa chương" class="max-w-full h-auto mx-auto rounded-lg shadow-lg">
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if not story_chapter.content and not story_chapter.image_urls %}
+            <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Thanh điều hướng chương -->
+    <div class="flex justify-center gap-4 mt-12 pt-6 border-t border-gray-700">
+        <a href="#" class="flex-1 max-w-[200px] bg-gray-600 text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-gray-500 transition duration-200">
+            ← Chương trước
+        </a>
+        <a href="#" class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-blue-500 transition duration-200">
+            Chương sau →
+        </a>
+    </div>
+    
 </div>
 </body>
 </html>

@@ -1,0 +1,90 @@
+<!-- Load Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    // Định nghĩa cấu hình màu Dark Mode
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#60a5fa', // Blue-400
+                    'dark-bg-body': '#262626', // Màu nền #262626
+                    'dark-bg-card': '#333333', // Màu nền container
+                    'dark-border': '#4b5563', // Gray-600
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Tài Khoản</title>
+</head>
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100 flex items-center justify-center min-h-screen">
+
+<div class="w-full max-w-md p-8 m-4 bg-dark-bg-card rounded-xl shadow-2xl border border-gray-700">
+    
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-extrabold text-white mb-2">Đăng Ký Tài Khoản</h1>
+        <p class="text-gray-400">Tạo tài khoản mới để bắt đầu đọc truyện.</p>
+    </div>
+
+    <!-- Giả định form Django được đặt trong đây -->
+    <form method="post" action="{% url 'register' %}" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Trường Tên người dùng -->
+        <div>
+            <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Tên người dùng</label>
+            <input type="text" id="id_username" name="username" required 
+                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                   placeholder="Nhập tên người dùng...">
+        </div>
+
+        <!-- Trường Email -->
+        <div>
+            <label for="id_email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <input type="email" id="id_email" name="email" required 
+                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                   placeholder="Nhập địa chỉ email...">
+        </div>
+
+        <!-- Trường Mật khẩu -->
+        <div>
+            <label for="id_password1" class="block text-sm font-medium text-gray-300 mb-1">Mật khẩu</label>
+            <input type="password" id="id_password1" name="password" required 
+                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                   placeholder="Nhập mật khẩu...">
+        </div>
+
+        <!-- Trường Xác nhận mật khẩu -->
+        <div>
+            <label for="id_password2" class="block text-sm font-medium text-gray-300 mb-1">Xác nhận mật khẩu</label>
+            <input type="password" id="id_password2" name="password_confirm" required 
+                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                   placeholder="Nhập lại mật khẩu...">
+        </div>
+        
+        <!-- Nút Đăng ký -->
+        <button type="submit" 
+                class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
+            Đăng Ký
+        </button>
+    </form>
+    
+    <!-- Link chuyển hướng sang Đăng nhập -->
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-400">Đã có tài khoản? 
+            <a href="{% url 'login' %}" class="font-medium text-primary hover:underline">Đăng nhập ngay</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

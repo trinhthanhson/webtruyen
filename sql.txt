@@ -1,0 +1,122 @@
+-- 1. Bảng USERS (Người dùng)
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    display_name VARCHAR(100),
+    role VARCHAR(20) DEFAULT 'user', -- Ví dụ: 'user', 'admin'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+----------------------------------------------------------------------
+
+-- 2. Bảng STORIES (Truyện)
+CREATE TABLE stories (
+    story_id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(100),
+    description TEXT,
+    cover_image_url VARCHAR(255),
+    status VARCHAR(20) DEFAULT 'ongoing', -- Ví dụ: 'ongoing', 'completed'
+    views_count BIGINT DEFAULT 0,
+    avg_rating NUMERIC(3, 2) DEFAULT 0.00, -- Điểm đánh giá trung bình
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Tạo Index để tối ưu tìm kiếm theo tiêu đề và tác giả
+CREATE INDEX idx_stories_title ON stories (title);
+CREATE INDEX idx_stories_author ON stories (author);
+
+----------------------------------------------------------------------
+
+-- 3. Bảng CATEGORIES (Thể loại)
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL UNIQUE,
+    slug VARCHAR(50) NOT NULL UNIQUE
+);
+
+----------------------------------------------------------------------
+
+-- 4. Bảng STORY_CATEGORIES (Quan hệ Truyện - Thể loại)
+CREATE TABLE story_categories (
+    story_id INTEGER NOT NULL REFERENCES stories(story_id) ON DELETE CASCADE,
+    category_id INTEGER NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (story_id, category_id)
+);
+
+----------------------------------------------------------------------
+
+-- 5. Bảng CHAPTERS (Chương/Tập)
+CREATE TABLE chapters (
+    chapter_id SERIAL PRIMARY KEY,
+    story_id INTEGER NOT NULL REFERENCES stories(story_id) ON DELETE CASCADE,
+    chapter_number NUMERIC(10, 2) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT, -- Nội dung truyện chữ
+    image_urls JSONB, -- Lưu trữ danh sách URL ảnh cho truyện tranh (JSON Binary)
+    published_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Đảm bảo không có 2 chương trùng số trong cùng 1 truyện
+    UNIQUE (story_id, chapter_number) 
+);
+
+----------------------------------------------------------------------
+
+-- 6. Bảng RATINGS (Đánh giá - Sao)
+CREATE TABLE ratings (
+    rating_id SERIAL PRIMARY KEY,
+    story_id INTEGER NOT NULL REFERENCES stories(story_id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    score SMALLINT NOT NULL CHECK (score BETWEEN 1 AND 5), -- Điểm từ 1 đến 5
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Đảm bảo mỗi người dùng chỉ đánh giá 1 lần cho 1 truyện
+    UNIQUE (story_id, user_id)
+);
+
+----------------------------------------------------------------------
+
+-- 7. Bảng COMMENTS (Bình luận - Tích hợp AI)
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    story_id INTEGER NOT NULL REFERENCES stories(story_id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    parent_comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE, -- Bình luận cha
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    is_approved BOOLEAN NOT NULL DEFAULT FALSE, -- FALSE nếu AI phát hiện phản cảm
+    ai_score NUMERIC(5, 2) DEFAULT 0.00 -- Điểm độc hại/phản cảm của AI (0.00 - 100.00)
+);
+
+-- Tạo Index để truy vấn bình luận theo truyện và trạng thái phê duyệt
+CREATE INDEX idx_comments_story_approved ON comments (story_id, is_approved, created_at DESC);
+
+----------------------------------------------------------------------
+
+-- 8. Bảng USER_FAVORITES (Truyện yêu thích của người dùng)
+CREATE TABLE user_favorites (
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    story_id INTEGER NOT NULL REFERENCES stories(story_id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, story_id) -- Đảm bảo mỗi user chỉ thích 1 truyện 1 lần
+);
+
+----------------------------------------------------------------------
+
+-- 9. Bảng READING_HISTORY (Lịch sử đọc truyện)
+CREATE TABLE reading_history (
+    history_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    story_id INTEGER NOT NULL REFERENCES stories(story_id) ON DELETE CASCADE,
+    chapter_id INTEGER REFERENCES chapters(chapter_id) ON DELETE SET NULL, -- Chương cuối cùng đã đọc
+    last_read_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Đảm bảo mỗi người dùng chỉ có 1 dòng lịch sử cho 1 truyện
+    UNIQUE (user_id, story_id)
+);
+
+-- Tạo Index để truy vấn lịch sử đọc nhanh chóng
+CREATE INDEX idx_history_user_read_at ON reading_history (user_id, last_read_at DESC);

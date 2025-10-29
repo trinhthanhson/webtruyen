@@ -1,4 +1,3 @@
-Banner Section
 /* Đã loại bỏ !important và các thuộc tính ghi đè ở đây, chúng nằm trong khối <style> */
 .banner-section {
     position: relative;
@@ -37,7 +36,6 @@ Banner Section
 
 /* Hình ảnh */
 .slide-image {
-    /* 2 phần trong tổng số 3 phần */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,6 +48,7 @@ Banner Section
 .slide-image img {
     width: 120%;
     height: 100%;
+    margin-left: 4.5%;
     object-fit: cover;
 }
 

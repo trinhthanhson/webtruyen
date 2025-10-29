@@ -5,8 +5,8 @@
         {% for story in stories %}
         <div class="slide {% if forloop.first %}active{% endif %}">
             <div class="slide-image">
-                {% if story.thumbnail %}
-                <img src="{{ story.thumbnail.url }}" alt="{{ story.title }}">
+                {% if story.cover_image_url %}
+                <img src="{{ story.cover_image_url }}" alt="{{ story.title }}">
                 {% else %}
                 <img src="{% static 'story/images/default-banner.jpg' %}" alt="No image">
                 {% endif %}
