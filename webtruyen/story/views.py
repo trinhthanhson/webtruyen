@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import F
+from django.db.models import F, Min, Max # ĐÃ THÊM F, Min, Max
 from .models import Story, Chapter,Category # Đảm bảo import đúng Models
 from decimal import Decimal
 from django.shortcuts import render, redirect
@@ -7,6 +7,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.conf import settings # Để sử dụng LOGIN_REDIRECT_URL
+from .form import ProfileEditForm
+from django.contrib.auth.decorators import login_required
 LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 # Trang chủ - hiển thị danh sách truyện
@@ -36,25 +38,41 @@ def story_list(request):
 
 # Trang chi tiết truyện - hiển thị mô tả và chương
 def story_detail(request, story_id):
-    """Hiển thị thông tin chi tiết truyện, tăng lượt xem và danh sách chương."""
+    """
+    Hiển thị thông tin chi tiết truyện, tăng lượt xem và danh sách chương.
+    Đã thêm logic tính toán chương đầu tiên và chương mới nhất (dùng cho nút bấm).
+    """
     
-    # Lấy Story theo Primary Key (pk)
-    story = get_object_or_404(Story, pk=story_id)
-    
-    # 1. TĂNG LƯỢT XEM: Tăng views_count lên 1. Sử dụng F() để tránh race condition.
-    story.views_count = F('views_count') + 1
-    story.save(update_fields=['views_count'])
-    
-    # Lấy lại đối tượng Story sau khi save F() để đảm bảo views_count hiển thị đúng
-    story.refresh_from_db() 
-    
-    # 2. LẤY CHƯƠNG: Lấy tất cả chương, sắp xếp theo chapter_number (DecimalField)
-    # Tên related_name trong Story Model là 'chapters'
-    chapters = story.chapters.all().order_by('chapter_number') 
-    
+    try:
+        # 1. TĂNG LƯỢT XEM: Tăng views_count lên 1. 
+        # Sử dụng QuerySet.update() với F() để đảm bảo tính nguyên vẹn (atomic update)
+        # Giả định Model Story đã được import ở đầu file.
+        Story.objects.filter(pk=story_id).update(views_count=F('views_count') + 1)
+        
+        # 2. Lấy Story VÀ Annotate để tính toán số chương đầu/cuối
+        # Sử dụng get_object_or_404 trên QuerySet đã annotate
+        story = get_object_or_404(
+            Story.objects.annotate(
+                # Giả định related_name từ Chapter tới Story là 'chapters'
+                first_chapter_number=Min('chapters__chapter_number'),
+                latest_chapter_number=Max('chapters__chapter_number')
+            ), 
+            pk=story_id
+        )
+
+        # 3. LẤY CHƯƠNG: Lấy tất cả chương, sắp xếp theo chapter_number (DecimalField)
+        # Tên related_name trong Story Model là 'chapters'
+        chapters = story.chapters.all().order_by('chapter_number')
+        
+    except NameError:
+        # Xử lý nếu Model (Story, Chapter) chưa được định nghĩa
+        story = None
+        chapters = []
+        
     context = {
         'story': story, 
-        'chapters': chapters
+        'chapters': chapters,
+        'page_title': story.title if story else 'Chi tiết truyện'
     }
     return render(request, 'story/story_detail.html', context)
 
@@ -109,6 +127,16 @@ def category_list(request):
     }
     return render(request, 'story/category_list.html', context)
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.urls import reverse # Cần import reverse
+from django.conf import settings # Cần import settings (để lấy LOGIN_REDIRECT_URL)
+
+# Thiết lập đường dẫn chuyển hướng, mặc định là trang chủ
+LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/') 
+
 def register_view(request):
     """
     Xử lý logic cho trang Đăng ký (Register).
@@ -120,17 +148,20 @@ def register_view(request):
         if form.is_valid():
             # Lưu người dùng mới vào database
             user = form.save()
-            
+            print(f"Người dùng mới đã được tạo: {user.username}") # In ra console khi thành công
+
             # Tùy chọn: Đăng nhập người dùng ngay sau khi đăng ký
             login(request, user)
             
             messages.success(request, f'Đăng ký thành công! Chào mừng {user.username}.')
-            # Chuyển hướng người dùng đến trang được định nghĩa trong settings.LOGIN_REDIRECT_URL (hoặc trang chủ)
+            # Chuyển hướng người dùng
             return redirect(LOGIN_REDIRECT_URL)
         else:
-            # Nếu form không hợp lệ, hiển thị lại trang đăng ký cùng với lỗi
-            # messages.error(request, "Đăng ký không thành công. Vui lòng kiểm tra các lỗi dưới đây.")
-            pass # Lỗi sẽ được hiển thị qua form
+            # --- ĐÃ SỬA: CHÈN THÊM LỆNH IN LỖI ---
+            print("LỖI VALIDATION ĐĂNG KÝ:")
+            print(form.errors) # <-- In đối tượng lỗi ra console server
+            messages.error(request, "Đăng ký không thành công. Vui lòng kiểm tra lại thông tin.")
+            pass # Lỗi sẽ được hiển thị qua form trong template
     else:
         # Nếu là request GET, hiển thị form trống
         form = UserCreationForm()
@@ -139,7 +170,7 @@ def register_view(request):
         'form': form,
         'page_title': 'Đăng Ký Tài Khoản'
     }
-    # Sử dụng template 'account/register.html'
+    # Sử dụng template 'story/account/register.html'
     return render(request, 'story/account/register.html', context)
 
 def login_view(request):
@@ -175,8 +206,40 @@ def login_view(request):
     }
     # Sử dụng template 'account/login.html'
     return render(request, 'story/account/login.html', context)
+@login_required
+def profile_view(request):
+    """
+    Hiển thị thông tin hồ sơ người dùng.
+    Dữ liệu người dùng (request.user) đã có sẵn trong template.
+    """
+    return render(request, 'story/account/profile.html')
 
-def logout_view(request):
+
+# --- Hàm View cho Trang CHỈNH SỬA HỒ SƠ ---
+@login_required
+def profile_edit_view(request):
+    """
+    Cho phép người dùng chỉnh sửa thông tin cá nhân (First name, Last name, Email)
+    sử dụng ProfileEditForm an toàn.
+    """
+    if request.method == 'POST':
+        # 1. SỬ DỤNG PROFILEEDITFORM TÙY CHỈNH để tránh hiển thị các trường admin
+        form = ProfileEditForm(request.POST, instance=request.user) 
+        
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Hồ sơ đã được cập nhật thành công! (Chỉnh sửa)')
+            return redirect('profile') # Chuyển hướng về trang profile sau khi lưu
+        else:
+            messages.error(request, 'Đã xảy ra lỗi khi cập nhật hồ sơ. Vui lòng kiểm tra lại thông tin.')
+            
+    else:
+        # Load dữ liệu hiện tại của user vào ProfileEditForm
+        form = ProfileEditForm(instance=request.user) 
+        
+    context = {'form': form}
+    return render(request, 'story/account/profile_edit.html', context)
+def custom_logout_view(request):
     """
     Xử lý logic Đăng xuất.
     """

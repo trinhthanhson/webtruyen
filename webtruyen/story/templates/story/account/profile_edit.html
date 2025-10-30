@@ -1,0 +1,102 @@
+{% load static %}
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    // Định nghĩa cấu hình màu Dark Mode
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#60a5fa', // Blue-400
+                    'dark-bg-body': '#262626', // Màu nền #262626
+                    'dark-bg-card': '#333333', // Màu nền container
+                    'dark-border': '#4b5563', // Gray-600
+                    'secondary': '#f97316', // Orange-500
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh Sửa Hồ Sơ | {{ user.username }}</title>
+</head>
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col items-center">
+
+    {% include 'story/header/header.html' %}
+
+    <main class="container mx-auto px-4 py-8 max-w-xl flex-grow flex items-start justify-center">
+        <div class="w-full bg-dark-bg-card p-8 rounded-xl shadow-2xl border border-gray-700">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-extrabold text-white mb-2">Chỉnh Sửa Hồ Sơ</h1>
+                <p class="text-gray-400">Cập nhật thông tin cá nhân của bạn.</p>
+            </div>
+
+            {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                        <div class="bg-blue-900/50 border border-blue-700 text-gray-300 px-4 py-3 rounded-lg relative" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="mb-4 p-3 bg-red-900/50 border border-red-700 text-red-300 rounded-lg">
+                        {% for error in form.non_field_errors %}
+                            <p class="text-sm">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    {# Vì chúng ta đang dùng ProfileEditForm, các trường này KHÔNG hiển thị. #}
+                    {# Dù sao, tôi vẫn giữ lại check này để an toàn, mặc dù không cần thiết. #}
+                    {% if field.name != 'password' and field.name != 'last_login' and field.name != 'date_joined' and field.name != 'username' %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                            {{ field.label }}
+                        </label>
+                        
+                        {{ field }}
+                        
+                        {% for error in field.errors %}
+                            <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                        {% endfor %}
+
+                        {% if field.help_text %}
+                            <p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                
+                <button type="submit" 
+                         class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
+                    Lưu Thay Đổi
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="{% url 'profile' %}" class="font-medium text-gray-400 hover:text-primary transition duration-200">
+                    &larr; Trở về Hồ sơ
+                </a>
+            </div>
+            
+        </div>
+    </main>
+
+    {% include 'story/footer/footer.html' %}
+
+</body>
+</html>

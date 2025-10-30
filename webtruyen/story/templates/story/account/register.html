@@ -1,3 +1,4 @@
+{% load static %}
 <!-- Load Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -20,7 +21,6 @@
 </script>
 
 <!DOCTYPE html>
-{% load static %}
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,26 @@
         <p class="text-gray-400">Tạo tài khoản mới để bắt đầu đọc truyện.</p>
     </div>
 
-    <!-- Giả định form Django được đặt trong đây -->
+    <!-- Hiển thị lỗi chung (từ messages.error trong views.py) -->
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg relative" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Hiển thị lỗi non-field (ví dụ: mật khẩu không khớp) -->
+    {% if form.non_field_errors %}
+        <div class="mb-4 p-3 bg-red-900/50 border border-red-700 text-red-300 rounded-lg">
+            {% for error in form.non_field_errors %}
+                <p class="text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <form method="post" action="{% url 'register' %}" class="space-y-6">
         {% csrf_token %}
         
@@ -44,36 +63,44 @@
             <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Tên người dùng</label>
             <input type="text" id="id_username" name="username" required 
                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập tên người dùng...">
+                   placeholder="Nhập tên người dùng..."
+                   value="{{ form.username.value|default:'' }}">
+            <!-- Hiển thị lỗi cụ thể cho trường username -->
+            {% for error in form.username.errors %}
+                <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+            {% endfor %}
         </div>
 
-        <!-- Trường Email -->
-        <div>
-            <label for="id_email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-            <input type="email" id="id_email" name="email" required 
-                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập địa chỉ email...">
-        </div>
+        <!-- Đã loại bỏ trường Email vì UserCreationForm mặc định không sử dụng nó -->
 
         <!-- Trường Mật khẩu -->
         <div>
             <label for="id_password1" class="block text-sm font-medium text-gray-300 mb-1">Mật khẩu</label>
-            <input type="password" id="id_password1" name="password" required 
+            <input type="password" id="id_password1" name="password1" required 
                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
                    placeholder="Nhập mật khẩu...">
+            <!-- Hiển thị lỗi cụ thể cho trường password1 -->
+            {% for error in form.password1.errors %}
+                <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+            {% endfor %}
         </div>
 
         <!-- Trường Xác nhận mật khẩu -->
         <div>
             <label for="id_password2" class="block text-sm font-medium text-gray-300 mb-1">Xác nhận mật khẩu</label>
-            <input type="password" id="id_password2" name="password_confirm" required 
+            <input type="password" id="id_password2" name="password2" required 
                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
                    placeholder="Nhập lại mật khẩu...">
+            <!-- Hiển thị lỗi cụ thể cho trường password2 -->
+            {% for error in form.password2.errors %}
+                <!-- Đây là nơi các lỗi như "password is too common" sẽ xuất hiện -->
+                <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+            {% endfor %}
         </div>
         
         <!-- Nút Đăng ký -->
         <button type="submit" 
-                class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
+                 class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
             Đăng Ký
         </button>
     </form>

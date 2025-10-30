@@ -3,15 +3,15 @@
     position: relative;
     width: 100%;
     margin: 0 auto;
-    height: 100%;
-    padding: 2rem;
+    height: 35%;
+    padding: 0.5rem;
     overflow: hidden;
 }
 
 /* Banner Slider */
 .banner-slider {
     position: relative;
-    height: 400px;
+    height: 200px;
     overflow: hidden;
     z-index: 1;
 }
@@ -113,7 +113,7 @@
 }
 
 .banner-section .slider-dots .dot.active {
-    background: white;
+    background: rgb(255, 255, 255);
     transform: scale(1.2);
 }
 /* Arrow */
@@ -121,13 +121,14 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(79, 76, 76, 0.9);
     border: none;
     width: 45px;
     height: 45px;
     border-radius: 50%;
     font-size: 1.5rem;
     cursor: pointer;
+    transform-origin: center;
     z-index: 10;
 }
 
@@ -145,8 +146,6 @@
 }
 
 .banner-section .slider-arrow:hover {
-    transform: scale(1);
-    /* Phóng to lên */
+    transform: translateY(-50%) scale(1.2); /* giữ translate + thêm scale */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    /* Thêm bóng cho đẹp (tùy chọn) */
 }

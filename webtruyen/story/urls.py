@@ -56,5 +56,8 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path("search/", views.search_results, name="search"),  # <--- THÊM DÒNG NÀY
+    path("search/", views.search_results, name="search"), 
+    path('accounts/profile/', views.profile_view, name='profile'),
+    path('accounts/profile/edit/', views.profile_edit_view, name='profile_edit'),
+    path('logout/', views.custom_logout_view, name='logout'),
 ]
