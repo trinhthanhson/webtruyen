@@ -1,4 +1,3 @@
-/* Đã loại bỏ !important và các thuộc tính ghi đè ở đây, chúng nằm trong khối <style> */
 .banner-section {
     position: relative;
     width: 100%;
@@ -8,7 +7,7 @@
     overflow: hidden;
 }
 
-/* Banner Slider */
+/* Slider container */
 .banner-slider {
     position: relative;
     height: 200px;
@@ -34,46 +33,43 @@
     z-index: 1;
 }
 
-/* Hình ảnh */
+/* Vùng chứa ảnh */
 .slide-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Đảm bảo hình ảnh con có thể chiếm 100% chiều cao của banner */
-    height: 100%;
+    position: relative;
     width: 100%;
-    margin-top: 5px;
+    height: 100%;
+    overflow: hidden;
 }
 
-.slide-image img {
+/* Thẻ a bọc ảnh — KHÔNG phá layout */
+.banner-section .banner-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    text-decoration: none;
+}
+
+/* Ảnh banner */
+.banner-section .slide-image img {
     width: 120%;
     height: 100%;
-    margin-left: 4.5%;
     object-fit: cover;
+    display: block;
+    transition: filter 0.3s ease;
 }
 
-/* Nội dung */
-.slide-content {
-    flex: 1;
-    padding: 2rem;
-    color: white;
-    z-index: 2;
-    position: relative;
-    opacity: 0;
-    transform: translateX(-30px);
-    transition: all 0.6s ease;
+/* Hover nhẹ */
+.banner-section .banner-link img:hover {
+    filter: brightness(0.9);
 }
 
-/* Nội dung Active */
-.banner-section .slide.active .slide-content {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-/* Dots container */
+/* Dots */
 .banner-section .slider-dots {
     position: absolute;
-   bottom: 2%;
+    bottom: 2%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -81,7 +77,6 @@
     z-index: 10;
 }
 
-/* Dot */
 .banner-section .slider-dots .dot {
     width: 1vw;
     height: 1vw;
@@ -90,33 +85,22 @@
     max-width: 18px;
     max-height: 18px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5); /* Màu mặc định */
+    background: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-}
-.banner-section .dot  {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .banner-section .slider-dots .dot:hover {
     transform: scale(1.2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
-.banner-section .dot {
-    width: 12px;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s;
-    
-}
 
 .banner-section .slider-dots .dot.active {
     background: rgb(255, 255, 255);
     transform: scale(1.2);
 }
-/* Arrow */
+
+/* Mũi tên */
 .banner-section .slider-arrow {
     position: absolute;
     top: 50%;
@@ -130,6 +114,7 @@
     cursor: pointer;
     transform-origin: center;
     z-index: 10;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .banner-section .prev-arrow {
@@ -140,12 +125,7 @@
     right: 50px;
 }
 
-/* Hiệu ứng hover */
-.banner-section .slider-arrow {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
 .banner-section .slider-arrow:hover {
-    transform: translateY(-50%) scale(1.2); /* giữ translate + thêm scale */
+    transform: translateY(-50%) scale(1.2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }

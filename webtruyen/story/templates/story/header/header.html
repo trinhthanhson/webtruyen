@@ -56,8 +56,6 @@
                 <!-- Người dùng đã đăng nhập: Hiển thị Profile Link và Avatar -->
                 <a href="{% url 'profile' %}" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-gray-700 transition duration-200">
                     
-                    <!-- Avatar (Giả định: user.profile.avatar_url chứa link ảnh) -->
-                    <!-- Nếu không có ảnh, dùng ảnh default (Placeholder SVG) -->
                     <img class="h-8 w-8 rounded-full object-cover" 
                          src="{{ user.profile.avatar_url|default:'https://placehold.co/32x32/60a5fa/ffffff?text=U' }}" 
                          alt="{{ user.username }} Avatar"
@@ -79,7 +77,6 @@
             
                 <!-- Người dùng CHƯA đăng nhập: Hiển thị Sign In và Log in -->
                 
-                <!-- Nút Sign In (Register) -->
                 <a href="{% url 'register' %}" 
                    class="hidden sm:inline-block px-3 py-1.5 text-sm font-semibold border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition duration-200">
                     Sign In

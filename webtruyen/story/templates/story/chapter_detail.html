@@ -1,108 +1,143 @@
-<!-- Load Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-    // Định nghĩa cấu hình màu Dark Mode giống như story_detail.html
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'secondary': '#f97316', // Orange-500
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền container
-                    'dark-border': '#4b5563', // Gray-600
-                },
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                },
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#60a5fa',
+                        'secondary': '#f97316',
+                        'dark-bg-body': '#262626',
+                        'dark-bg-card': '#333333',
+                        'dark-border': '#4b5563',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
             }
         }
-    }
-</script>
+    </script>
 
-<!DOCTYPE html>
-{% load static %}
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chương {{ story_chapter.chapter_number }} - {{ story_chapter.story.title }}</title>
-    <!-- 💡 CSS custom để xử lý thụt lề đầu dòng trong nội dung truyện -->
-    
+    <style>
+        /* ✅ Format nội dung truyện: xuống dòng, dễ đọc, thụt đầu dòng */
+        .chapter-content {
+            white-space: pre-line; /* Giữ nguyên xuống dòng trong nội dung */
+        }
+
+        .chapter-content p {
+            margin-bottom: 1.25rem;
+            text-indent: 1.75rem;
+            font-size: 1.1rem;
+            line-height: 1.85;
+        }
+
+        .chapter-content img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 1.5rem auto;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        }
+    </style>
 </head>
-<!-- Áp dụng màu nền Dark Mode và màu chữ sáng -->
-<body class="bg-dark-bg-body font-sans antialiased text-gray-100">
 
-<!-- BẮT ĐẦU HEADER -->
-<header class="bg-dark-bg-card shadow-lg sticky top-0 z-50 border-b border-gray-700">
-    <div class="container mx-auto px-4 max-w-7xl">
-        <div class="flex items-center justify-between py-3">
-            
-            <!-- Logo/Tên Web -->
-            <!-- Giả định 'home' là tên URL pattern cho trang chủ -->
-            <a href="{% url 'home' %}" class="text-2xl font-extrabold text-primary hover:text-secondary transition duration-300">
-                WebStory
-            </a>
-            
-            <!-- Header Actions (Buttons) -->
-            <div class="header-actions space-x-2">
-                <button class="px-4 py-2 text-sm font-semibold border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition duration-200">Sign In</button>
-                <button class="px-4 py-2 text-sm font-semibold border border-gray-500 text-gray-300 rounded-lg hover:bg-gray-700 transition duration-200">Log in</button>
+<body class="bg-dark-bg-body font-sans text-gray-100 antialiased">
+
+    <!-- Header -->
+    <header class="bg-dark-bg-card shadow-lg sticky top-0 z-50 border-b border-gray-700">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <div class="flex items-center justify-between py-3">
+                <a href="{% url 'home' %}"
+                    class="text-2xl font-extrabold text-primary hover:text-secondary transition duration-300">
+                    WebStory
+                </a>
+                <div class="space-x-2">
+                    <button
+                        class="px-4 py-2 text-sm font-semibold border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition duration-200">
+                        Sign In
+                    </button>
+                    <button
+                        class="px-4 py-2 text-sm font-semibold border border-gray-500 text-gray-300 rounded-lg hover:bg-gray-700 transition duration-200">
+                        Log in
+                    </button>
+                </div>
             </div>
         </div>
+    </header>
+
+    <!-- Nội dung -->
+    <div class="container mx-auto max-w-5xl my-10 p-6 md:p-10 bg-dark-bg-card rounded-2xl shadow-2xl">
+
+        <!-- Tiêu đề chương -->
+        <h1 class="text-3xl md:text-4xl font-extrabold text-primary text-center pb-4 mb-6 border-b border-gray-600">
+            {{ page_title }}
+        </h1>
+
+        <!-- Thông tin truyện -->
+        {% if story %}
+        <p class="text-center text-gray-400 mb-8">
+            Truyện:
+            <a href="{% url 'story_detail' story_slug=story.slug %}"
+                class="text-primary hover:text-secondary font-semibold transition duration-300">
+                {{ story.title }}
+            </a>
+            <span class="text-sm ml-1">| Tác giả: {{ story.author }}</span>
+        </p>
+        {% endif %}
+
+        <!-- Nội dung chương -->
+        <div class="chapter-content text-gray-300 leading-relaxed">
+            {% if chapter.content %}
+                {{ chapter.content|linebreaksbr }}
+            {% elif chapter.image_urls %}
+                {% for image_url in chapter.image_urls %}
+                    <img src="{{ image_url }}" alt="Hình ảnh minh họa chương">
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
+            {% endif %}
+        </div>
+
+        <!-- Thanh điều hướng chương -->
+        <div class="flex justify-center gap-4 mt-12 pt-6 border-t border-gray-700">
+
+            {% if previous_chapter %}
+            <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=previous_chapter.chapter_number %}"
+                class="flex-1 max-w-[200px] bg-gray-600 text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-gray-500 transition duration-200">
+                ← Chương trước
+            </a>
+            {% else %}
+            <button disabled
+                class="flex-1 max-w-[200px] bg-gray-700 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
+                ← Chương trước
+            </button>
+            {% endif %}
+
+            {% if next_chapter %}
+            <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=next_chapter.chapter_number %}"
+                class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-blue-500 transition duration-200">
+                Chương sau →
+            </a>
+            {% else %}
+            <button disabled
+                class="flex-1 max-w-[200px] bg-gray-700 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
+                Chương sau →
+            </button>
+            {% endif %}
+        </div>
+
     </div>
-</header>
-<!-- KẾT THÚC HEADER -->
-
-<div class="container mx-auto max-w-6xl my-8 p-6 md:p-8 bg-dark-bg-card rounded-xl shadow-2xl">
-    
-    <!-- Tiêu đề chương -->
-    <h1 class="text-3xl md:text-4xl font-extrabold text-primary text-center pb-4 mb-6 border-b border-gray-600">
-        Chương {{ story_chapter.chapter_number }}: {{ story_chapter.title }}
-    </h1>
-    
-    <!-- Thông tin truyện cha -->
-    {% if story_chapter.story %}
-    <p class="chapter-info text-center text-gray-400 mb-8">
-        Truyện: 
-        <!-- ĐÃ SỬA LỖI: Dùng story_slug thay vì story_id -->
-        <a href="{% url 'story_detail' story_slug=story_chapter.story.slug %}" class="text-primary hover:text-secondary font-bold transition duration-200">
-            {{ story_chapter.story.title }}
-        </a> 
-        <span class="text-sm">| Tác giả: {{ story_chapter.story.author }}</span>
-    </p>
-    {% endif %}
-
-    <!-- KHỐI NỘI DUNG CHÍNH -->
-    <div class="chapter-content text-gray-300 leading-relaxed">
-        {% if story_chapter.content %}
-            {{ story_chapter.content|linebreaksbr }}
-        {% endif %}
-
-        <!-- Hiển thị ảnh -->
-        {% if story_chapter.image_urls %}
-            {% for image_url in story_chapter.image_urls %}
-                <div class="image-container my-8 text-center">
-                    <img src="{{ image_url }}" alt="Hình ảnh minh họa chương" class="max-w-full h-auto mx-auto rounded-lg shadow-lg">
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        {% if not story_chapter.content and not story_chapter.image_urls %}
-            <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
-        {% endif %}
-    </div>
-    
-    <!-- Thanh điều hướng chương -->
-    <div class="flex justify-center gap-4 mt-12 pt-6 border-t border-gray-700">
-        <!-- Các nút này cần logic lấy chương trước/sau từ view -->
-        <a href="#" class="flex-1 max-w-[200px] bg-gray-600 text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-gray-500 transition duration-200">
-            ← Chương trước
-        </a>
-        <a href="#" class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-blue-500 transition duration-200">
-            Chương sau →
-        </a>
-    </div>
-    
-</div>
 </body>
+
 </html>

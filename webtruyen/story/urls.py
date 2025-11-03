@@ -8,15 +8,12 @@ urlpatterns = [
     # URL gốc của app 'story' (thường là trang chủ)
     path("", views.home, name="home"),
     # Trang chi tiết truyện
-    path("truyen/<int:story_id>/", views.story_detail, name="story_detail"),
+    path('doc/<slug:story_slug>/', views.story_detail, name='story_detail'),
     path("categories/<slug:category_slug>/", views.category_detail, name="category_detail"),
     # trang chi tiết chương truyện
-    path(
-        "doc/<slug:story_slug>/<str:chapter_number>/",  # <-- Sửa từ <int:story_id> sang <slug:story_slug>
-        views.chapter_detail,
-        name="chapter_detail",
-    ),  # Nếu bạn vẫn muốn hàm banner riêng
-    # view banner
+    path('doc/<slug:story_slug>/<int:chapter_number>/', views.chapter_detail, name='chapter_detail'),
+ # Nếu bạn vẫn muốn hàm banner riêng
+   # view banner
     path("banner-data/", views.home_banner, name="banner_data"),
     # view list stories
     path("stories/", views.story_list, name="stories"),  # <--- Dùng tên 'stories',

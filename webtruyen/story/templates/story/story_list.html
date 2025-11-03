@@ -32,7 +32,6 @@
 </head>
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen">
 
-<!-- HEADER (Giả định được include) -->
     {% include 'story/header/header.html' %}
 
 <div class="container mx-auto max-w-7xl my-8 px-4">
@@ -49,12 +48,11 @@
         <div class="bg-dark-bg-card rounded-xl shadow-lg overflow-hidden border border-transparent hover:border-primary transition duration-300 group">
             
             <!-- Ảnh bìa -->
-            <a href="{% url 'story_detail' story_id=story.story_id %}" class="block relative aspect-[3/4] overflow-hidden">
+            <a href="{% url 'story_detail' story_slug=story.slug %}" class="block relative aspect-[3/4] overflow-hidden">
                 <img src="{{ story.cover_image_url }}" alt="{{ story.title }}" 
                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                      onerror="this.onerror=null; this.src='https://placehold.co/400x533/444444/FFFFFF?text=NO+IMAGE';"
                 >
-                <!-- Badge hoặc trạng thái (Tùy chọn) -->
                 {% if story.status == 'Hoàn thành' %}
                 <span class="absolute top-2 right-2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-full">Hoàn thành</span>
                 {% endif %}
@@ -63,7 +61,7 @@
             <div class="p-3">
                 <!-- Tên truyện -->
                 <h2 class="text-base font-semibold truncate mb-1">
-                    <a href="{% url 'story_detail' story_id=story.story_id %}" class="text-white hover:text-primary transition duration-150" title="{{ story.title }}">
+                    <a href="{% url 'story_detail' story_slug=story.slug %}" class="text-white hover:text-primary transition duration-150" title="{{ story.title }}">
                         {{ story.title }}
                     </a>
                 </h2>
@@ -71,7 +69,6 @@
                 <p class="text-xs text-gray-400 truncate">
                     Tác giả: {{ story.author|default:"Khuyết danh" }}
                 </p>
-                <!-- Thể loại (Tùy chọn) -->
                 <p class="text-xs text-gray-500 mt-1 truncate">
                     Thể loại: {{ story.category.name|default:"Chưa rõ" }}
                 </p>
@@ -82,7 +79,6 @@
         {% endfor %}
     </div>
 
-    <!-- PHÂN TRANG (Tùy chọn, nếu bạn đã thiết lập logic phân trang trong view) -->
     {% if is_paginated %}
     <div class="mt-10 flex justify-center">
         <!-- Pagination logic here if needed -->
@@ -91,7 +87,6 @@
 
 </div>
 
-<!-- FOOTER (Giả định được include) -->
     {% include 'story/footer/footer.html' %}
 
 </body>

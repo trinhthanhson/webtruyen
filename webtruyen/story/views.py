@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.conf import settings # Để sử dụng LOGIN_REDIRECT_URL
 from .form import ProfileEditForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+
 LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 # Trang chủ - hiển thị danh sách truyện
@@ -69,31 +71,54 @@ def story_detail(request, story_slug):
     return render(request, 'story/story_detail.html', context)
 
 # Trang đọc chương
-def chapter_detail(request, story_id, chapter_number):
-    # 1. Chuyển đổi số chương từ string (URL) sang Decimal để query database
+def chapter_detail(request, story_slug, chapter_number):
+    """
+    Hiển thị nội dung chương chi tiết của truyện, dựa theo slug truyện và số chương.
+    """
+    # 1. Chuyển chapter_number thành Decimal để match với DecimalField trong model
     try:
-        chapter_number_decimal = Decimal(chapter_number)
+        # Chuyển số chương thành string trước khi tạo Decimal để tránh lỗi precision
+        chapter_number_decimal = Decimal(str(chapter_number))
     except Exception:
-        # Xử lý lỗi nếu chapter_number không phải là số hợp lệ
-        # Hoặc trả về 404
-        return render(request, 'error_page.html', {'message': 'Số chương không hợp lệ.'}) 
+        # Trả về lỗi 404 Not Found nếu số chương không hợp lệ (Không phải là số)
+        return get_object_or_404(Story, pk=None) 
 
-    # 2. Truy vấn đối tượng Chapter
-    # Chúng ta sử dụng get_object_or_404 để tự động trả về lỗi 404 nếu không tìm thấy
+    # 2. Lấy truyện theo slug. Dùng select_related để lấy thông tin tác giả nếu cần
+    story = get_object_or_404(Story, slug=story_slug)
+
+    # 3. Lấy chương hiện tại
     current_chapter = get_object_or_404(
-        Chapter.objects.select_related('story'), # Dùng select_related để tối ưu truy vấn Story
-        story_id=story_id,
+        Chapter.objects.select_related('story'), # Select related story object
+        story=story,
         chapter_number=chapter_number_decimal
     )
 
-    # 3. Tạo context để truyền dữ liệu sang template
+    # 4. Lấy chương trước và sau để điều hướng
+    # Chương trước (chapter_number < hiện tại, sắp xếp giảm dần, lấy cái đầu tiên)
+    previous_chapter = (
+        Chapter.objects.filter(story=story, chapter_number__lt=chapter_number_decimal)
+        .order_by('-chapter_number')
+        .only('chapter_number') # Tối ưu hóa: chỉ cần lấy chapter_number
+        .first()
+    )
+
+    # Chương sau (chapter_number > hiện tại, sắp xếp tăng dần, lấy cái đầu tiên)
+    next_chapter = (
+        Chapter.objects.filter(story=story, chapter_number__gt=chapter_number_decimal)
+        .order_by('chapter_number')
+        .only('chapter_number') # Tối ưu hóa: chỉ cần lấy chapter_number
+        .first()
+    )
+
+    # 5. Truyền context sang template
     context = {
-        'story_chapter': current_chapter, # Tên biến này sẽ được sử dụng trong template
-        # Bạn có thể thêm các logic cho nút chương trước/sau ở đây
-        # 'previous_chapter': ...,
-        # 'next_chapter': ...,
+        'story': story,
+        'chapter': current_chapter,
+        'previous_chapter': previous_chapter,
+        'next_chapter': next_chapter,
+        'page_title': f"{story.title} - Chương {current_chapter.chapter_number}",
     }
-    
+
     return render(request, 'story/chapter_detail.html', context)
 
 # Hàm home() bị trùng lặp, logic của nó có thể gộp vào story_list hoặc banner
@@ -111,8 +136,7 @@ def category_list(request):
     """Lấy và hiển thị danh sách loại truyện."""
     
     # Lấy tất cả loại truyện
-    categories = Category.objects.all()
-    
+    categories = Category.objects.annotate(story_count=Count('stories'))    
     context = {
         'categories': categories,
     }

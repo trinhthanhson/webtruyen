@@ -35,7 +35,6 @@
         <p class="text-gray-400">Tạo tài khoản mới để bắt đầu đọc truyện.</p>
     </div>
 
-    <!-- Hiển thị lỗi chung (từ messages.error trong views.py) -->
     {% if messages %}
         <div class="mb-4">
             {% for message in messages %}
@@ -46,7 +45,6 @@
         </div>
     {% endif %}
 
-    <!-- Hiển thị lỗi non-field (ví dụ: mật khẩu không khớp) -->
     {% if form.non_field_errors %}
         <div class="mb-4 p-3 bg-red-900/50 border border-red-700 text-red-300 rounded-lg">
             {% for error in form.non_field_errors %}

@@ -6,25 +6,23 @@
         <div class="slide {% if forloop.first %}active{% endif %}">
             <div class="slide-image">
                 {% if story.cover_image_url %}
-                <img src="{{ story.cover_image_url }}" alt="{{ story.title }}">
+                <a href="{% url 'story_detail' story_slug=story.slug %}" class="banner-link">
+                    <img src="{{ story.cover_image_url }}" alt="{{ story.title }}">
+                </a>
                 {% else %}
                 <img src="{% static 'story/images/default-banner.jpg' %}" alt="No image">
                 {% endif %}
             </div>
-            <div class="slide-content">
-                {% if story.slug %}
-                <a href="{% url 'story_detail' story.slug %}" class="slide-btn">Đọc ngay</a>
-                {% endif %}
-            </div>
         </div>
         {% endfor %}
-        <div class="slider-dots">
-    {% for story in stories %}
-    <span class="dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
-    {% endfor %}
-</div>
-    <button class="slider-arrow prev-arrow">&#10094;</button>
-    <button class="slider-arrow next-arrow">&#10095;</button>
-    </div>
 
+        <div class="slider-dots">
+            {% for story in stories %}
+            <span class="dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
+            {% endfor %}
+        </div>
+
+        <button class="slider-arrow prev-arrow">&#10094;</button>
+        <button class="slider-arrow next-arrow">&#10095;</button>
+    </div>
 </section>
