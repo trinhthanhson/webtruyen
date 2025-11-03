@@ -51,13 +51,26 @@ class CategoryAdminForm(forms.ModelForm):
 class StoryAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('title', 'author', 'description','upload_image_temp', 'cover_image_url', 'status', 'views_count')
+            'fields': (
+                'title', 
+                'slug',
+                'author', 
+                'description',
+                'upload_image_temp', 
+                'cover_image_url', 
+                'categories',   
+                'status', 
+                'views_count',
+                'avg_rating'
+            )
         }),
     )
-    list_display = ('title', 'author', 'status', 'views_count', 'avg_rating')
-    list_filter = ('status',)
+    readonly_fields = ('views_count', 'avg_rating') 
+    list_display = ('title', 'author', 'status','slug')
+    list_filter = ('status', 'categories')  
     search_fields = ('title', 'author')
-    
+    filter_horizontal = ('categories',)  
+
     def save_model(self, request, obj, form, change):
         # 1. Logic Tải ảnh lên Cloudinary
         if 'upload_image_temp' in form.files:
@@ -67,15 +80,15 @@ class StoryAdmin(admin.ModelAdmin):
             file_data.seek(0)
             
             # --- ÁP DỤNG SLUGIFY TIẾNG VIỆT CHO TÊN FILE ---
-            title_slug = vietnamese_slugify(obj.title) 
+            title_slug = vietnamese_slugify(obj.title)
             public_id_name = f"{title_slug}-{public_id_hash}"
             print(f"Bắt đầu tải file: {file_data.name} lên Cloudinary...")
 
             upload_result = cloudinary.uploader.upload(
                 file_data,
-                folder="webtruyen/story_covers", 
+                folder="webtruyen/story_covers",
                 public_id=public_id_name,
-                overwrite=True, 
+                overwrite=True,
                 resource_type="image"
             )
             
@@ -84,7 +97,6 @@ class StoryAdmin(admin.ModelAdmin):
             form.files.pop('upload_image_temp')
             
         super().save_model(request, obj, form, change)
-
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

@@ -37,45 +37,36 @@ def story_list(request):
     return render(request, 'story/story_list.html', context)
 
 # Trang chi tiết truyện - hiển thị mô tả và chương
-def story_detail(request, story_id):
+def story_detail(request, story_slug): 
     """
     Hiển thị thông tin chi tiết truyện, tăng lượt xem và danh sách chương.
     Đã thêm logic tính toán chương đầu tiên và chương mới nhất (dùng cho nút bấm).
     """
     
-    try:
-        # 1. TĂNG LƯỢT XEM: Tăng views_count lên 1. 
-        # Sử dụng QuerySet.update() với F() để đảm bảo tính nguyên vẹn (atomic update)
-        # Giả định Model Story đã được import ở đầu file.
-        Story.objects.filter(pk=story_id).update(views_count=F('views_count') + 1)
-        
-        # 2. Lấy Story VÀ Annotate để tính toán số chương đầu/cuối
-        # Sử dụng get_object_or_404 trên QuerySet đã annotate
-        story = get_object_or_404(
-            Story.objects.annotate(
-                # Giả định related_name từ Chapter tới Story là 'chapters'
-                first_chapter_number=Min('chapters__chapter_number'),
-                latest_chapter_number=Max('chapters__chapter_number')
-            ), 
-            pk=story_id
-        )
+    # 1. TĂNG LƯỢT XEM: Tăng views_count lên 1. 
+    # Sử dụng F() và update() để đảm bảo tính nguyên vẹn (atomic update).
+    Story.objects.filter(slug=story_slug).update(views_count=F('views_count') + 1)
 
-        # 3. LẤY CHƯƠNG: Lấy tất cả chương, sắp xếp theo chapter_number (DecimalField)
-        # Tên related_name trong Story Model là 'chapters'
-        chapters = story.chapters.all().order_by('chapter_number')
-        
-    except NameError:
-        # Xử lý nếu Model (Story, Chapter) chưa được định nghĩa
-        story = None
-        chapters = []
+    # 2. Lấy Story VÀ Annotate để tính toán số chương đầu/cuối
+    # SỬA LỖI: Đã thay pk=story_id thành slug=story_slug.
+    story = get_object_or_404(
+        Story.objects.annotate(
+            # Giả định related_name từ Chapter tới Story là 'chapters'
+            first_chapter_number=Min('chapters__chapter_number'),
+            latest_chapter_number=Max('chapters__chapter_number')
+        ), 
+        slug=story_slug
+    )
+
+    # 3. LẤY CHƯƠNG: Lấy tất cả chương, sắp xếp theo chapter_number (DecimalField/Int)
+    chapters = story.chapters.all().order_by('chapter_number')
         
     context = {
         'story': story, 
         'chapters': chapters,
-        'page_title': story.title if story else 'Chi tiết truyện'
+        'page_title': story.title # Lấy title từ đối tượng story đã fetch
     }
     return render(request, 'story/story_detail.html', context)
-
 
 # Trang đọc chương
 def chapter_detail(request, story_id, chapter_number):
@@ -277,3 +268,21 @@ def search_results(request):
     
     # Sử dụng lại template hiển thị danh sách truyện
     return render(request, 'story/story_list.html', context)
+def category_detail(request, category_slug):
+    """
+    Hiển thị chi tiết một danh mục và tất cả các truyện thuộc danh mục đó.
+    """
+    # 1. Tìm Category dựa trên slug, nếu không tìm thấy thì trả về 404
+    category = get_object_or_404(Category, slug=category_slug)
+
+    # 2. Lấy tất cả các câu chuyện liên quan đến danh mục này.
+    # Ta dùng related_name='stories' đã được định nghĩa trong ManyToManyField của Story.
+    # Ví dụ: stories = Story.objects.filter(categories=category)
+    stories = category.stories.all().order_by('-views_count') # Sắp xếp theo lượt xem
+
+    context = {
+        'category': category,
+        'stories': stories,
+    }
+    
+    return render(request, 'story/category_detail.html', context)   

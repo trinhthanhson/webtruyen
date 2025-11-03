@@ -1,20 +1,16 @@
-{% load static %}
 <!-- Load Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
- <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
+{% load static %}
 
-    <link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
-    // Định nghĩa cấu hình màu Dark Mode và font Inter
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    'primary': '#60a5fa', // Blue-400
+                    'primary': '#60a5fa', // Blue-400, sáng hơn cho Dark Mode
                     'secondary': '#f97316', // Orange-500
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền card
-                    'dark-border': '#4b5563', // Gray-600
+                    'dark-bg-body': '#262626', // Màu nền theo yêu cầu
+                    'dark-bg-card': '#333333', // Màu nền container (hơi sáng hơn body)
                 },
                 fontFamily: {
                     sans: ['Inter', 'sans-serif'],
@@ -23,101 +19,159 @@
         }
     }
 </script>
+<!-- Lưu ý: Đã xóa link tới static CSS vì đây là file template, không phải file CSS gốc -->
 
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 
 <head>
+       
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 Danh sách truyện</title>
+        <title>{{ story.title }}</title>
 </head>
+<!-- Đã thay đổi bg-gray-100 thành bg-dark-bg-body và text-gray-800 thành text-gray-100 -->
 
-<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen">
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100">
 
-    <!-- Giả định include header.html đã được chuyển đổi sang Tailwind -->
-    {% include 'story/header/header.html' %}
+        <!-- Header Section (Minimal) -->
+        {% include 'story/header/header.html' %}
 
-    <!-- Giả định banner.html là nội dung được chèn vào ngay dưới header -->
-    {% include 'story/banner/banner.html' %}
 
-    <div class="container mx-auto px-4 py-6 md:py-8 max-w-7xl">
-        <h1 class="text-3xl font-extrabold text-white mb-6">
-            📚 {{ page_title|default:"Danh sách truyện" }}
-        </h1>
-        
-        <!-- Bố cục Grid Responsive (2 cột trên mobile, 6 cột trên desktop lớn) -->
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-6">
-            {% for story in stories %}
-            
-                <div class="bg-dark-bg-card rounded-lg shadow-xl overflow-hidden 
-                            hover:shadow-primary/50 hover:scale-[1.02] transition duration-300">
-                    
-                    <a href="{% url 'story_detail' story_id=story.pk %}" class="block">
-                        <div class="card-image-wrapper aspect-w-3 aspect-h-4">
-                            
-                            <!-- Ảnh bìa truyện -->
-                            {% if story.cover_image_url %}
-                            <img src="{{ story.cover_image_url }}" 
-                                 class="w-full h-full object-cover" 
-                                 alt="{{ story.title }} - Ảnh bìa"
-                                 onerror="this.onerror=null; this.src='https://placehold.co/400x600/374151/FFFFFF?text=WEBSTORY';"
-                            >
-                            {% else %}
-                            <div class="w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
-                                Không có ảnh
-                            </div>
-                            {% endif %}
-                        </div>
-                    </a>
+        <!-- Main Content: Story Detail -->
+        <main class="container mx-auto px-4 py-8 max-w-7xl">
 
-                    <div class="p-3">
-                        
-                        <!-- Tiêu đề truyện -->
-                        <h5 class="text-base font-semibold truncate mb-1">
-                            <a href="{% url 'story_detail' story_id=story.pk %}" class="hover:text-primary text-white">
-                                {{ story.title }}
-                            </a>
-                        </h5>
+                <!-- 1. THÔNG TIN TRUYỆN VÀ TÓM TẮT -->
+                <!-- Đã thay đổi bg-white thành bg-dark-bg-card -->
+                <div class="bg-dark-bg-card rounded-xl shadow-2xl p-6 md:p-8 mb-8">
+                        <div class="flex flex-col md:flex-row gap-6">
 
-                        <!-- Tác giả -->
-                        <p class="text-xs text-gray-400 truncate mb-2">Tác giả: {{ story.author }}</p>
+                                <!-- Hình ảnh bìa truyện -->
+                                <div class="w-full md:w-1/4 flex-shrink-0">
+                                        <!-- Giả sử story.cover_image_url chứa URL ảnh bìa -->
+                                        <img src="{{ story.cover_image_url }}" alt="Bìa truyện {{ story.title }}"      
+                                         
+                        onerror="this.onerror=null; this.src='https://placehold.co/300x400/cccccc/333333?text=Kh%C3%B4ng+%E1%BA%A2nh'"
+                                                class="w-full h-auto object-cover rounded-lg shadow-md aspect-[3/4]">
+                                    </div>
 
-                        <!-- Đánh giá (Rating) -->
-                        {% with rounded_rating=story.avg_rating|default:0|floatformat:0 %}
-                        <div class="story-rating flex items-center text-sm">
-                            <span class="text-yellow-400 mr-1">
-                                
-                                {# Hiển thị sao dựa trên rating #}
-                                {% if rounded_rating >= 1 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 2 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 3 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 4 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 5 %}&#9733;{% else %}&#9734;{% endif %}
-                            </span>
-                            
-                            <!-- Giá trị rating -->
-                            <span class="rating-value text-gray-300 font-bold ml-1">
-                                {{ story.avg_rating|default:"N/A"|floatformat:2 }}
-                            </span>
-                        </div>
-                        {% endwith %}
+                                <!-- Tóm tắt và Metadata -->
+                                <div class="w-full md:w-3/4">
+                                        <!-- Thay đổi text-gray-900 thành text-white -->
+                                        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2 leading-tight">
+                                                {{ story.title }}
+                                            </h1>
 
+                                        <p class="text-gray-400 mb-4">
+                                                <!-- Thay đổi text-gray-700 thành text-gray-300 -->
+                                                <span class="font-semibold text-gray-300">Tác giả:</span>
+                                                <span class="text-primary hover:underline cursor-pointer">{{
+                            story.author }}</span>
+                                            </p>
+
+                                        <!-- Metadata (Ví dụ: Thể loại, Trạng thái - nếu bạn có các trường này) -->
+                                        <div class="flex flex-wrap gap-2 mb-6 text-sm">
+                                                <!-- Giữ màu nền sáng để nổi bật -->
+                                                <span
+                            class="bg-green-700 text-green-100 px-3 py-1 rounded-full font-medium">Hoàn thành</span>
+                                                <span
+                            class="bg-indigo-700 text-indigo-100 px-3 py-1 rounded-full font-medium">Ngôn tình</span>
+                                                <span
+                            class="bg-red-700 text-red-100 px-3 py-1 rounded-full font-medium">Huyền ảo</span>
+                                            </div>
+
+                                        <!-- Tóm tắt truyện -->
+                                        <!-- Thay đổi text-gray-800 thành text-gray-200 -->
+                                        <h3 class="text-xl font-bold text-gray-200 mb-2 border-b border-gray-600 pb-1">
+                        Tóm tắt</h3>
+                                        <p class="text-gray-400 text-base leading-relaxed overflow-hidden"
+                        style="max-height: 10em;">
+                                                {{ story.description|linebreaksbr }}
+                                            </p>
+
+                                        <!-- Nút Đọc Chương Mới Nhất / Chương Đầu Tiên -->
+                                        <div class="mt-6 flex gap-4">
+
+                                                <!-- 1. Nút ĐỌC TỪ ĐẦU (Chương đầu tiên) -->
+                        <!-- SỬA LỖI: Dùng story_slug=story.slug -->
+                                                <a
+                            href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.first_chapter_number %}"
+                                                       
+                            class="flex-1 text-center bg-primary text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300">
+                                                        ĐỌC TỪ ĐẦU
+                                                    </a>
+
+                                                <!-- 2. Nút CHƯƠNG MỚI NHẤT -->
+                        <!-- SỬA LỖI: Dùng story_slug=story.slug -->
+                                                <a
+                            href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.latest_chapter_number %}"
+                                                       
+                            class="flex-1 text-center bg-secondary text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-orange-600 transition duration-300">
+                                                        CHƯƠNG MỚI NHẤT
+                                                    </a>
+                                           
                     </div>
-                </div>
-            {% empty %}
-                <p class="col-span-full text-center text-gray-400 py-10 text-lg">Không tìm thấy truyện nào.</p>
-            {% endfor %}
-        </div>
-        
-        <!-- Logic phân trang (pagination) nếu có sẽ được thêm vào đây -->
-        
-    </div>
 
-    <!-- Giả định include footer.html đã được chuyển đổi sang Tailwind -->
-    {% include 'story/footer/footer.html' %}
+                                    </div>
+                            </div>
+                    </div>
 
-    <!-- Loại bỏ script tĩnh của banner nếu đã chuyển sang JS hoặc Tailwind -->
-    <script src="{% static 'story/js/banner.js' %}"></script>
+                <!-- 2. DANH SÁCH CHƯƠNG -->
+                <!-- Đã thay đổi bg-white thành bg-dark-bg-card -->
+                <div class="bg-dark-bg-card rounded-xl shadow-2xl p-6 md:p-8">
+                        <!-- Thay đổi text-gray-800 thành text-gray-200 -->
+                        <h3 class="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-600 pb-2">Danh sách chương
+            </h3>
+
+                        <ul class="divide-y divide-gray-700">
+                                {% for chapter in chapters %}
+                                <!-- 💡 Sửa lỗi cú pháp và sử dụng chapter.chapter_number -->
+                                {% if chapter.chapter_number %}
+                                <!-- Thay đổi hover:bg-gray-50 thành hover:bg-neutral-700 -->
+                                <li class="py-3 hover:bg-neutral-700 transition duration-150 px-2 -mx-2 rounded-lg">
+                                        <!-- SỬA LỖI: Dùng story_slug=story.slug -->
+                                        <a
+                        href="{% url 'chapter_detail' story_slug=story.slug chapter_number=chapter.chapter_number %}"  
+                                             
+                        class="flex justify-between items-center text-gray-300 hover:text-primary">
+
+                                                <!-- Số chương và Tên chương -->
+                                                <span class="truncate pr-4 font-medium">
+                                                        <span
+                                class="text-primary font-bold mr-2 w-12 inline-block text-left">
+                                                                C{{ chapter.chapter_number|floatformat:0 }}
+                                                            </span>
+                                                        {{ chapter.title }}
+                                                    </span>
+
+                                                <!-- Thời gian đăng (nếu có) -->
+                                                {% if chapter.published_at %}
+                                                <!-- Thay đổi text-gray-500 thành text-gray-400 -->
+                                                <span class="text-sm text-gray-400 whitespace-nowrap hidden sm:block">
+                                                        {{ chapter.published_at|date:"d-m-Y" }}
+                                                    </span>
+                                                {% endif %}
+                                            </a>
+                                    </li>
+                                {% else %}
+                                <!-- Xử lý chương bị lỗi/thiếu số -->
+                                <li class="py-3 px-2 text-red-400 italic">
+                                        Chương bị lỗi: {{ chapter.title }} (Chưa có số chương)
+                                    </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+
+                        {% if not chapters %}
+                        <p class="text-center text-gray-500 py-8">Truyện này hiện chưa có chương nào.</p>
+                        {% endif %}
+                    </div>
+
+            </main>
+
+        <!-- Footer (Minimal) -->
+        <footer class="bg-gray-900 text-white text-center py-6 mt-12">
+                <p class="text-sm">&copy; 2025 WebTruyen. All rights reserved.</p>
+            </footer>
 
 </body>
 

@@ -1,0 +1,123 @@
+{% load static %}
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    // Định nghĩa cấu hình màu Dark Mode
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#60a5fa', // Blue-400
+                    'dark-bg-body': '#262626', // Màu nền #262626
+                    'dark-bg-card': '#333333', // Màu nền container
+                    'dark-border': '#4b5563', // Gray-600
+                    'secondary': '#f97316', // Orange-500
+                    'completed': '#10b981', // Emerald-500 (Hoàn thành)
+                    'ongoing': '#f59e0b', // Amber-500 (Đang ra)
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Mục: {{ category.category_name }}</title>
+    <!-- Thêm Font Awesome để dùng icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
+
+    {% include 'story/header/header.html' %}
+
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        
+        <!-- TIÊU ĐỀ DANH MỤC -->
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2 border-b-2 border-primary pb-3 inline-block">
+                Truyện Thể Loại: <span class="text-primary">{{ category.category_name }}</span>
+            </h1>
+            <p class="text-gray-400 text-lg">Khám phá các câu chuyện thuộc danh mục này.</p>
+        </div>
+
+        {% if stories %}
+            <!-- GRID HIỂN THỊ TRUYỆN -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                {% for story in stories %}
+                    <!-- SỬA LỖI: Thay 'slug' bằng 'story_slug' để khớp với URL pattern mới (Phương án A) -->
+                    <a href="{% url 'story_detail' story_slug=story.slug %}" 
+                        class="block transform transition duration-300 hover:scale-[1.02] rounded-xl shadow-lg hover:shadow-2xl">
+                        
+                        <div class="bg-dark-bg-card border border-gray-700 rounded-xl overflow-hidden h-full flex flex-col">
+                            <div class="relative h-48 sm:h-60 overflow-hidden">
+                                <!-- COVER IMAGE -->
+                                <img src="{{ story.cover_image_url|default:'https://placehold.co/800x600/333333/AAAAAA?text=No+Cover' }}" 
+                                            alt="{{ story.title }}" 
+                                            class="w-full h-full object-cover transition duration-500 hover:opacity-75"
+                                            onerror="this.onerror=null;this.src='https://placehold.co/800x600/333333/AAAAAA?text=No+Cover';">
+                                
+                                <!-- STATUS TAG -->
+                                <span class="absolute top-2 right-2 px-3 py-1 text-xs font-semibold rounded-full 
+                                    {% if story.status == 'Hoàn thành' %}bg-completed text-gray-900{% else %}bg-ongoing text-gray-900{% endif %}">
+                                    {{ story.status }}
+                                </span>
+                            </div>
+
+                            <div class="p-4 flex flex-col flex-grow">
+                                <!-- TITLE -->
+                                <h2 class="text-xl font-bold text-white mb-2 line-clamp-2 hover:text-primary transition duration-200">
+                                    {{ story.title }}
+                                </h2>
+
+                                <!-- AUTHOR -->
+                                <p class="text-sm text-gray-400 mb-3 flex items-center">
+                                    <i class="fas fa-user mr-2 text-primary"></i>
+                                    Tác giả: <span class="ml-1 text-gray-300 font-medium">{{ story.author }}</span>
+                                </p>
+                                
+                                <!-- DESCRIPTION SNIPPET -->
+                                <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                                    {{ story.description|truncatechars:100 }}
+                                </p>
+
+                                <div class="mt-auto pt-3 border-t border-gray-700 flex justify-between items-center">
+                                    <!-- VIEWS COUNT -->
+                                    <div class="text-sm text-gray-400 flex items-center">
+                                        <i class="fas fa-eye mr-2 text-secondary"></i>
+                                        <span class="font-semibold text-gray-300">{{ story.views_count|default:0 }}</span>
+                                        <span class="ml-1 text-xs">lượt xem</span>
+                                    </div>
+
+                                    <!-- READ BUTTON -->
+                                    <span class="px-4 py-2 bg-primary text-white font-semibold text-sm rounded-full 
+                                            hover:bg-blue-500 transition duration-300 shadow-md">
+                                        Đọc Ngay
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+            <!-- KẾT THÚC GRID -->
+        
+        {% else %}
+            <!-- THÔNG BÁO KHÔNG CÓ TRUYỆN -->
+            <div class="text-center py-16 bg-dark-bg-card rounded-xl border border-gray-700">
+                <i class="fas fa-book-open fa-3x text-gray-500 mb-4"></i>
+                <p class="text-xl text-gray-400 font-semibold mb-2">Chưa có truyện nào trong danh mục "{{ category.category_name }}"</p>
+                <p class="text-gray-500">Hãy quay lại sau hoặc khám phá các danh mục khác.</p>
+            </div>
+        {% endif %}
+
+    </main>
+
+    {% include 'story/footer/footer.html' %}
+
+</body>
+</html>

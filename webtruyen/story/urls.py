@@ -9,9 +9,10 @@ urlpatterns = [
     path("", views.home, name="home"),
     # Trang chi tiết truyện
     path("truyen/<int:story_id>/", views.story_detail, name="story_detail"),
+    path("categories/<slug:category_slug>/", views.category_detail, name="category_detail"),
     # trang chi tiết chương truyện
     path(
-        "doc/<int:story_id>/<str:chapter_number>/",
+        "doc/<slug:story_slug>/<str:chapter_number>/",  # <-- Sửa từ <int:story_id> sang <slug:story_slug>
         views.chapter_detail,
         name="chapter_detail",
     ),  # Nếu bạn vẫn muốn hàm banner riêng
@@ -56,8 +57,8 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path("search/", views.search_results, name="search"), 
-    path('accounts/profile/', views.profile_view, name='profile'),
-    path('accounts/profile/edit/', views.profile_edit_view, name='profile_edit'),
-    path('logout/', views.custom_logout_view, name='logout'),
+    path("search/", views.search_results, name="search"),
+    path("accounts/profile/", views.profile_view, name="profile"),
+    path("accounts/profile/edit/", views.profile_edit_view, name="profile_edit"),
+    path("logout/", views.custom_logout_view, name="logout"),
 ]

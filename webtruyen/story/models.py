@@ -27,7 +27,7 @@ class Story(models.Model):
         null=True, 
         verbose_name="URL Ảnh bìa Cloudinary"
     )
-    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
+    slug = models.SlugField(max_length=50, unique=True, verbose_name="Slug") # Dùng SlugField cho URL thân thiện
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ongoing', verbose_name="Trạng thái")
     views_count = models.BigIntegerField(default=0, verbose_name="Lượt xem")
     
