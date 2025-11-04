@@ -53,12 +53,14 @@
 }
 
 /* Ảnh banner */
+/* Ảnh banner */
 .banner-section .slide-image img {
-    width: 120%;
+    width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* Tự động cắt để vừa khít vùng banner mà vẫn giữ tỷ lệ */
+    object-position: center; /* Căn giữa hình ảnh */
     display: block;
-    transition: filter 0.3s ease;
+    transition: transform 0.4s ease, filter 0.3s ease;
 }
 
 /* Hover nhẹ */

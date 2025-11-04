@@ -4,6 +4,8 @@
 {% load static %}
 
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
+<link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
 <script>
     // Custom Tailwind Configuration (Configuring dark mode colors)
     tailwind.config = {
@@ -34,18 +36,11 @@
 </head>
 
 <!-- Body sử dụng màu nền tối sâu và màu chữ sáng -->
+
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
 
-    <header class="bg-dark-bg-card shadow-lg border-b border-gray-700">
-        <nav class="container mx-auto px-4 py-4 flex justify-between items-center max-w-7xl">
-            <a href="/" class="text-2xl font-black text-primary hover:text-blue-400 transition">WebTruyen</a>
-            <div class="flex items-center space-x-4">
-                <a href="#" class="text-gray-300 hover:text-primary transition hidden sm:block">Trang chủ</a>
-                <a href="#" class="text-gray-300 hover:text-primary transition hidden sm:block">Thể loại</a>
-                <button class="bg-primary hover:bg-blue-600 text-white font-semibold py-1.5 px-4 rounded-full transition shadow-md">Đăng nhập</button>
-            </div>
-        </nav>
-    </header>
+    {% include 'story/header/header.html' %}
+
 
     <!-- Main Content: Story Detail -->
     <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
@@ -70,63 +65,98 @@
                         {{ story.title|default:"Tiêu Đề Truyện Chưa Tải" }}
                     </h1>
 
-                    <!-- Tác giả -->
                     <p class="text-gray-400 mb-4 text-lg">
                         <span class="font-semibold text-gray-300">Tác giả:</span>
-                        <a href="#" class="text-primary hover:text-blue-400 font-medium transition cursor-pointer">{{ story.author|default:"Ẩn Danh" }}</a>
+                        <a href="{% url 'search' %}?q={{ story.author }}"
+                            class="text-primary hover:text-blue-400 font-medium transition cursor-pointer">
+                            {{ story.author|default:"Ẩn Danh" }}
+                        </a>
                     </p>
 
                     <div class="flex flex-wrap gap-2 mb-6 text-sm">
-                        <!-- Sử dụng màu sắc tương phản cao hơn cho Dark Mode -->
-                        <!-- Placeholder tags -->
-                        <span class="bg-green-600 text-white px-3 py-1 rounded-full font-medium shadow-md">Hoàn thành</span>
-                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full font-medium shadow-md">Ngôn tình</span>
-                        <span class="bg-red-600 text-white px-3 py-1 rounded-full font-medium shadow-md">Huyền ảo</span>
-                        <!-- End Placeholder tags -->
+                        {% for category in story.categories.all %}
+                        {% if forloop.counter|divisibleby:6 %}
+                        <a href="{% url 'category_detail' category.slug %}"
+                            class="bg-indigo-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            {{ category.category_name }}
+                        </a>
+                        {% elif forloop.counter|divisibleby:5 %}
+                        <a href="{% url 'category_detail' category.slug %}"
+                            class="bg-green-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            {{ category.category_name }}
+                        </a>
+                        {% elif forloop.counter|divisibleby:4 %}
+                        <a href="{% url 'category_detail' category.slug %}"
+                            class="bg-yellow-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            {{ category.category_name }}
+                        </a>
+                        {% elif forloop.counter|divisibleby:3 %}
+                        <a href="{% url 'category_detail' category.slug %}"
+                            class="bg-red-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            {{ category.category_name }}
+                        </a>
+                        {% elif forloop.counter|divisibleby:2 %}
+                        <a href="{% url 'category_detail' category.slug %}"
+                            class="bg-pink-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            {{ category.category_name }}
+                        </a>
+                        {% else %}
+                        <a href="{% url 'category_detail' category.slug %}"
+                            class="bg-purple-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            {{ category.category_name }}
+                        </a>
+                        {% endif %}
+                        {% empty %}
+                        <span class="bg-gray-500 text-white px-3 py-1 rounded-full font-medium shadow-md">
+                            Chưa có thể loại
+                        </span>
+                        {% endfor %}
                     </div>
+
+
+
 
                     <!-- Tóm tắt truyện -->
                     <h3 class="text-xl font-bold text-gray-200 mb-2 border-b border-gray-700 pb-1">Tóm tắt</h3>
                     <p class="text-gray-400 text-base leading-relaxed mb-6 max-h-36 overflow-hidden relative">
-                        {{ story.description|linebreaksbr|default:"Đây là một phần tóm tắt giả định. Vui lòng đảm bảo rằng trường 'description' của đối tượng 'story' đã được tải đầy đủ. Tóm tắt sẽ giúp người đọc hiểu rõ hơn về nội dung chính, bối cảnh, và các nhân vật chủ chốt của truyện." }}
+                        {{story.description}}
                         <!-- Thêm hiệu ứng fade-out cho tóm tắt dài -->
-                        <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-dark-bg-card to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-dark-bg-card to-transparent">
+                    </div>
                     </p>
 
                     <!-- Nút Đọc Chương Mới Nhất / Chương Đầu Tiên -->
-            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    <div class="mt-6 flex flex-col sm:flex-row gap-4">
 
-                <!-- 1️⃣ Nút ĐỌC TỪ ĐẦU -->
-                {% if story.first_chapter_number %}
-                    <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.first_chapter_number|floatformat:0 %}"
-                    class="flex-1 text-center bg-primary text-white font-extrabold py-3 px-6 rounded-xl shadow-xl shadow-primary/30 
+                        <!-- 1️⃣ Nút ĐỌC TỪ ĐẦU -->
+                        {% if story.first_chapter_number %}
+                        <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.first_chapter_number|floatformat:0 %}"
+                            class="flex-1 text-center bg-primary text-white font-extrabold py-3 px-6 rounded-xl shadow-xl shadow-primary/30 
                             hover:bg-blue-600 hover:shadow-primary/50 transition duration-300 transform hover:scale-[1.02]">
-                        <i class="fas fa-book-open mr-2"></i> ĐỌC TỪ ĐẦU
-                    </a>
-                {% else %}
-                    <button disabled
-                            class="flex-1 text-center bg-gray-400 text-gray-200 font-extrabold py-3 px-6 rounded-xl shadow-inner 
+                            <i class="fas fa-book-open mr-2"></i> ĐỌC TỪ ĐẦU
+                        </a>
+                        {% else %}
+                        <button disabled class="flex-1 text-center bg-gray-400 text-gray-200 font-extrabold py-3 px-6 rounded-xl shadow-inner 
                                 cursor-not-allowed">
-                        <i class="fas fa-book-open mr-2"></i> ĐỌC TỪ ĐẦU
-                    </button>
-                {% endif %}
+                            <i class="fas fa-book-open mr-2"></i> ĐỌC TỪ ĐẦU
+                        </button>
+                        {% endif %}
 
-                <!-- 2️⃣ Nút CHƯƠNG MỚI NHẤT -->
-                {% if story.latest_chapter_number %}
-                    <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.latest_chapter_number|floatformat:0 %}"
-                    class="flex-1 text-center bg-secondary text-white font-extrabold py-3 px-6 rounded-xl shadow-xl shadow-secondary/30 
+                        <!-- 2️⃣ Nút CHƯƠNG MỚI NHẤT -->
+                        {% if story.latest_chapter_number %}
+                        <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.latest_chapter_number|floatformat:0 %}"
+                            class="flex-1 text-center bg-secondary text-white font-extrabold py-3 px-6 rounded-xl shadow-xl shadow-secondary/30 
                             hover:bg-orange-600 hover:shadow-secondary/50 transition duration-300 transform hover:scale-[1.02]">
-                        <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
-                    </a>
-                {% else %}
-                    <button disabled
-                            class="flex-1 text-center bg-gray-400 text-gray-200 font-extrabold py-3 px-6 rounded-xl shadow-inner 
+                            <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
+                        </a>
+                        {% else %}
+                        <button disabled class="flex-1 text-center bg-gray-400 text-gray-200 font-extrabold py-3 px-6 rounded-xl shadow-inner 
                                 cursor-not-allowed">
-                        <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
-                    </button>
-                {% endif %}
+                            <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
+                        </button>
+                        {% endif %}
 
-            </div>
+                    </div>
 
 
                 </div>
@@ -140,43 +170,43 @@
 
             <!-- Grid cho bố cục 2 cột trên desktop -->
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 divide-y sm:divide-y-0 divide-gray-700">
-    {% if chapters %}
-        {% for chapter in chapters %}
-            <li class="py-3 hover:bg-neutral-700 transition duration-150 px-2 rounded-lg">
-                <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=chapter.chapter_number|floatformat:0 %}"
-                   class="flex justify-between items-center text-gray-300 hover:text-primary">
-                    <span class="truncate pr-4 font-medium">
-                        <span class="text-primary font-bold mr-2 w-10 inline-block text-left">
-                            C{{ chapter.chapter_number|floatformat:0 }}
+                {% if chapters %}
+                {% for chapter in chapters %}
+                <li class="py-3 hover:bg-neutral-700 transition duration-150 px-2 rounded-lg">
+                    <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=chapter.chapter_number|floatformat:0 %}"
+                        class="flex justify-between items-center text-gray-300 hover:text-primary">
+                        <span class="truncate pr-4 font-medium">
+                            <span class="text-primary font-bold mr-2 w-10 inline-block text-left">
+                                C{{ chapter.chapter_number|floatformat:0 }}
+                            </span>
+                            {{ chapter.title }}
                         </span>
-                        {{ chapter.title }}
-                    </span>
-                    {% if chapter.published_at %}
+                        {% if chapter.published_at %}
                         <span class="text-sm text-gray-500 whitespace-nowrap hidden sm:block">
                             {{ chapter.published_at|date:"d-m-Y" }}
                         </span>
-                    {% endif %}
-                </a>
-            </li>
-        {% endfor %}
-    {% else %}
-        {% for chapter in fake_chapters %}
-            <li class="py-3 hover:bg-neutral-700 transition duration-150 px-2 rounded-lg">
-                <div class="flex justify-between items-center text-gray-400">
-                    <span class="truncate pr-4 font-medium">
-                        <span class="text-primary font-bold mr-2 w-10 inline-block text-left">
-                            C{{ chapter.chapter_number }}
+                        {% endif %}
+                    </a>
+                </li>
+                {% endfor %}
+                {% else %}
+                {% for chapter in fake_chapters %}
+                <li class="py-3 hover:bg-neutral-700 transition duration-150 px-2 rounded-lg">
+                    <div class="flex justify-between items-center text-gray-400">
+                        <span class="truncate pr-4 font-medium">
+                            <span class="text-primary font-bold mr-2 w-10 inline-block text-left">
+                                C{{ chapter.chapter_number }}
+                            </span>
+                            {{ chapter.title }}
                         </span>
-                        {{ chapter.title }}
-                    </span>
-                    <span class="text-sm text-gray-500 whitespace-nowrap hidden sm:block">
-                        25-10-2025
-                    </span>
-                </div>
-            </li>
-        {% endfor %}
-    {% endif %}
-</ul>
+                        <span class="text-sm text-gray-500 whitespace-nowrap hidden sm:block">
+                            25-10-2025
+                        </span>
+                    </div>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
 
             {% if not chapters %}
             <p class="text-center text-gray-500 py-8">Truyện này hiện chưa có chương nào.</p>
@@ -185,10 +215,8 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white text-center py-6 mt-12 border-t border-gray-700">
-        <p class="text-sm text-gray-400">&copy; 2025 WebTruyen. All rights reserved.</p>
-    </footer>
+    {% include 'story/footer/footer.html' %}
+
 
 </body>
 

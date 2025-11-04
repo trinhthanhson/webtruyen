@@ -1,4 +1,7 @@
+{% load static %}
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
+<link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
 <script>
     // Định nghĩa cấu hình màu Dark Mode
     tailwind.config = {
@@ -27,6 +30,7 @@
     <title>Danh sách Thể loại Truyện</title>
 </head>
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100">
+    {% include 'story/header/header.html' %}
 
 <div class="container mx-auto max-w-5xl my-8 px-4">
     
@@ -61,6 +65,7 @@
         </div>
     </div>
 </div>
+    {% include 'story/footer/footer.html' %}
 
 </body>
 </html>

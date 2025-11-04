@@ -11,7 +11,7 @@ urlpatterns = [
     path('doc/<slug:story_slug>/', views.story_detail, name='story_detail'),
     path("categories/<slug:category_slug>/", views.category_detail, name="category_detail"),
     # trang chi tiết chương truyện
-    path('doc/<slug:story_slug>/<int:chapter_number>/', views.chapter_detail, name='chapter_detail'),
+    path('doc/<slug:story_slug>/<chapter_number>/', views.chapter_detail, name='chapter_detail'),
  # Nếu bạn vẫn muốn hàm banner riêng
    # view banner
     path("banner-data/", views.home_banner, name="banner_data"),

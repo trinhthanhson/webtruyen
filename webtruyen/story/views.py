@@ -10,6 +10,8 @@ from django.conf import settings # Để sử dụng LOGIN_REDIRECT_URL
 from .form import ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.forms.models import model_to_dict
+from django.db.models import Q
 
 LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
@@ -27,15 +29,23 @@ def home(request):
     return render(request, 'story/home.html', context)
 
 def story_list(request):
-    """Lấy và hiển thị danh sách truyện, sắp xếp theo thời gian cập nhật."""
+    """
+    Lấy và hiển thị danh sách truyện, sắp xếp theo thời gian cập nhật.
+    Sử dụng select_related để tải trước Category, tránh lỗi N+1 query.
+    """
     
     # Lấy tất cả truyện, sắp xếp theo thời gian cập nhật giảm dần
-    stories = Story.objects.all().order_by('-updated_at', '-created_at')
+    # SỬA: Thêm .select_related('category')
+    stories = Story.objects.prefetch_related('categories').order_by('-updated_at', '-created_at')
     
     context = {
         'stories': stories,
-        # Bạn có thể thêm các biến khác nếu cần, ví dụ: 'top_stories': ...
     }
+
+
+    # Sau khi sửa, code của bạn sẽ chạy mượt mà khi sử dụng:
+    # Thể loại: {{ story.category.category_name |default:"Chưa rõ" }}
+    
     return render(request, 'story/story_list.html', context)
 
 # Trang chi tiết truyện - hiển thị mô tả và chương
@@ -277,13 +287,11 @@ def search_results(request):
                 Q(title__icontains=query) | 
                 Q(author__icontains=query) | 
                 Q(description__icontains=query)
-            ).distinct().order_by('-published_at')
+            ).distinct().order_by('-created_at')
             
             page_title = f"Kết Quả Tìm Kiếm cho: \"{query}\""
         except NameError:
-             # Xử lý nếu Model Story chưa được định nghĩa
-            pass 
-        
+             print("loi")
     context = {
         'query': query,
         'stories': results,

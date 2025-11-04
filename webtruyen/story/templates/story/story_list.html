@@ -2,8 +2,8 @@
 {% load static %}
 
 <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
-    <link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
+<link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
 <script>
     // Định nghĩa cấu hình màu Dark Mode
     tailwind.config = {
@@ -26,68 +26,78 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title|default:"Danh Sách Truyện" }}</title>
 </head>
+
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen">
 
     {% include 'story/header/header.html' %}
 
-<div class="container mx-auto max-w-7xl my-8 px-4">
-    
-    <!-- Tiêu đề trang -->
-    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-8 pb-4 border-b border-dark-border text-center">
-        {{ page_title|default:"Tất Cả Truyện" }}
-    </h1>
-    
-    <!-- Lưới hiển thị danh sách truyện -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-        
-        {% for story in stories %}
-        <div class="bg-dark-bg-card rounded-xl shadow-lg overflow-hidden border border-transparent hover:border-primary transition duration-300 group">
-            
-            <!-- Ảnh bìa -->
-            <a href="{% url 'story_detail' story_slug=story.slug %}" class="block relative aspect-[3/4] overflow-hidden">
-                <img src="{{ story.cover_image_url }}" alt="{{ story.title }}" 
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                     onerror="this.onerror=null; this.src='https://placehold.co/400x533/444444/FFFFFF?text=NO+IMAGE';"
-                >
-                {% if story.status == 'Hoàn thành' %}
-                <span class="absolute top-2 right-2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-full">Hoàn thành</span>
-                {% endif %}
-            </a>
-            
-            <div class="p-3">
-                <!-- Tên truyện -->
-                <h2 class="text-base font-semibold truncate mb-1">
-                    <a href="{% url 'story_detail' story_slug=story.slug %}" class="text-white hover:text-primary transition duration-150" title="{{ story.title }}">
-                        {{ story.title }}
-                    </a>
-                </h2>
-                <!-- Tác giả -->
-                <p class="text-xs text-gray-400 truncate">
-                    Tác giả: {{ story.author|default:"Khuyết danh" }}
-                </p>
-                <p class="text-xs text-gray-500 mt-1 truncate">
-                    Thể loại: {{ story.category.name|default:"Chưa rõ" }}
-                </p>
+    <div class="container mx-auto max-w-7xl my-8 px-4">
+
+        <!-- Tiêu đề trang -->
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-8 pb-4 border-b border-dark-border text-center">
+            {{ page_title|default:"Tất Cả Truyện" }}
+        </h1>
+
+        <!-- Lưới hiển thị danh sách truyện -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+
+            {% for story in stories %}
+            <div
+                class="bg-dark-bg-card rounded-xl shadow-lg overflow-hidden border border-transparent hover:border-primary transition duration-300 group">
+
+                <!-- Ảnh bìa -->
+                <a href="{% url 'story_detail' story_slug=story.slug %}"
+                    class="block relative aspect-[3/4] overflow-hidden">
+                    <img src="{{ story.cover_image_url }}" alt="{{ story.title }}"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x533/444444/FFFFFF?text=NO+IMAGE';">
+                    {% if story.status == 'Hoàn thành' %}
+                    <span
+                        class="absolute top-2 right-2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-full">Hoàn
+                        thành</span>
+                    {% endif %}
+                </a>
+
+                <div class="p-3">
+                    <!-- Tên truyện -->
+                    <h2 class="text-base font-semibold truncate mb-1">
+                        <a href="{% url 'story_detail' story_slug=story.slug %}"
+                            class="text-white hover:text-primary transition duration-150" title="{{ story.title }}">
+                            {{ story.title }}
+                        </a>
+                    </h2>
+                    <!-- Tác giả -->
+                    <p class="text-xs text-gray-400 truncate">
+                        Tác giả: {{ story.author|default:"Khuyết danh" }}
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1 truncate">
+                       Thể loại: {% for category in story.categories.all %}
+                        {{ category.category_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
             </div>
+            {% empty %}
+            <p class="col-span-full text-center text-gray-400 py-10">Không tìm thấy truyện nào. Vui lòng thử lại sau.
+            </p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p class="col-span-full text-center text-gray-400 py-10">Không tìm thấy truyện nào. Vui lòng thử lại sau.</p>
-        {% endfor %}
-    </div>
 
-    {% if is_paginated %}
-    <div class="mt-10 flex justify-center">
-        <!-- Pagination logic here if needed -->
-    </div>
-    {% endif %}
+        {% if is_paginated %}
+        <div class="mt-10 flex justify-center">
+            <!-- Pagination logic here if needed -->
+        </div>
+        {% endif %}
 
-</div>
+    </div>
 
     {% include 'story/footer/footer.html' %}
 
 </body>
+
 </html>

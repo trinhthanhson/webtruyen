@@ -53,12 +53,12 @@ class StoryAdmin(admin.ModelAdmin):
         (None, {
             'fields': (
                 'title', 
-                'slug',
+                'slug', # Giữ slug trong fields để người dùng có thể tùy chỉnh
                 'author', 
                 'description',
                 'upload_image_temp', 
                 'cover_image_url', 
-                'categories',   
+                'categories',  
                 'status', 
                 'views_count',
                 'avg_rating'
@@ -72,6 +72,16 @@ class StoryAdmin(admin.ModelAdmin):
     filter_horizontal = ('categories',)  
 
     def save_model(self, request, obj, form, change):
+        # 0. Logic Tự động tạo Slug dựa trên Title (trước khi lưu)
+        # Chỉ tạo slug nếu đây là đối tượng mới (chưa có ID) HOẶC 
+        # trường slug KHÔNG được điền (là chuỗi rỗng)
+        # HOẶC bạn muốn tự động cập nhật slug MỖI KHI title thay đổi.
+        
+        # Nếu muốn người dùng CÓ THỂ chỉnh sửa slug, chỉ tạo khi nó rỗng (None hoặc rỗng)
+        if not obj.slug:
+            # SỬ DỤNG HÀM SLUGIFY CỦA BẠN CHO TIẾNG VIỆT
+            obj.slug = vietnamese_slugify(obj.title) 
+        
         # 1. Logic Tải ảnh lên Cloudinary
         if 'upload_image_temp' in form.files:
             file_data = form.files['upload_image_temp']
