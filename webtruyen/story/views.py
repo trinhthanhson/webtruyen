@@ -12,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.db.models import Q
-
+from django.http import JsonResponse
+from .models import Story, UserFavorite # Giả sử các model nằm trong cùng app
 LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 # Trang chủ - hiển thị danh sách truyện
@@ -69,14 +70,19 @@ def story_detail(request, story_slug):
         ), 
         slug=story_slug
     )
-
+    if request.user.is_authenticated:
+        # Kiểm tra xem user đã lưu truyện này chưa
+        is_favorited = UserFavorite.objects.filter(
+            user=request.user, story=story, status=True
+        ).exists()
     # 3. LẤY CHƯƠNG: Lấy tất cả chương, sắp xếp theo chapter_number (DecimalField/Int)
     chapters = story.chapters.all().order_by('chapter_number')
         
     context = {
         'story': story, 
         'chapters': chapters,
-        'page_title': story.title # Lấy title từ đối tượng story đã fetch
+        'page_title': story.title,
+        'is_favorited': is_favorited, # Lấy title từ đối tượng story đã fetch
     }
     return render(request, 'story/story_detail.html', context)
 
@@ -318,3 +324,57 @@ def category_detail(request, category_slug):
     }
     
     return render(request, 'story/category_detail.html', context)   
+@login_required
+def toggle_favorite(request, story_slug):
+    if request.method == 'POST':
+        story = get_object_or_404(Story, slug=story_slug)
+        user = request.user
+
+        try:
+            # Nếu đã tồn tại, đảo trạng thái True <-> False
+            favorite_entry = UserFavorite.objects.get(user=user, story=story)
+            favorite_entry.status = not favorite_entry.status
+            favorite_entry.save()
+            is_favorited = favorite_entry.status
+            print(is_favorited)
+            message = "Đã thêm vào mục yêu thích." if is_favorited else "Đã xoá khỏi mục yêu thích."
+        except UserFavorite.DoesNotExist:
+            # Nếu chưa có thì tạo mới (mặc định là True)
+            UserFavorite.objects.create(user=user, story=story, status=True)
+            favorite_entry.status = True
+            message = "Đã thêm vào mục yêu thích."
+
+        # Nếu là AJAX request thì trả về JSON
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'is_favorited': favorite_entry.status,
+                'message': message,
+            })
+
+        # Nếu không phải AJAX (ví dụ form POST), chuyển hướng về lại trang chi tiết
+        return redirect('story_detail', story_slug=story_slug)
+    # Nếu là GET hoặc method khác → redirect về chi tiết truyện
+    return redirect('story_detail', story_slug=story_slug)
+
+@login_required
+def favorite_list(request):
+    """Hiển thị danh sách truyện đã được người dùng lưu (status=True)."""
+    
+    # Lấy tất cả đối tượng UserFavorite của người dùng hiện tại
+    # Lọc theo status=True (đã lưu) và sắp xếp theo thời gian mới nhất
+    user_favorites = UserFavorite.objects.filter(
+        user=request.user, 
+        status=True
+    ).select_related('story').order_by('-created_at')
+    
+    # Lấy danh sách các đối tượng Story từ user_favorites
+    favorite_stories = [fav.story for fav in user_favorites]
+
+    context = {
+        'page_title': 'Truyện Đã Lưu',
+        'favorite_stories': favorite_stories,
+        'user_favorites': user_favorites, # Tùy chọn, nếu cần thông tin created_at
+    }
+    
+    return render(request, 'story/favorite.html', context)

@@ -58,4 +58,6 @@ urlpatterns = [
     path("accounts/profile/", views.profile_view, name="profile"),
     path("accounts/profile/edit/", views.profile_edit_view, name="profile_edit"),
     path("logout/", views.custom_logout_view, name="logout"),
+path('toggle-favorite/<slug:story_slug>/', views.toggle_favorite, name='toggle_favorite'),
+path('truyen/yeu-thich/', views.favorite_list, name='favorite_list'),
 ]

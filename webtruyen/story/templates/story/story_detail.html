@@ -155,6 +155,41 @@
                             <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
                         </button>
                         {% endif %}
+                        <script>
+    console.log("isAuthenticated = '{{ user.is_authenticated }}'");
+</script>
+{% if user.is_authenticated %}
+<button type="button"
+        id="favorite-btn"
+        data-story-slug="{{ story.slug }}"
+        data-is-favorited="{{ is_favorited|yesno:'true,false' }}"
+        class="flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition duration-300 transform hover:scale-[1.03]
+        {% if is_favorited %}
+            bg-red-600 text-white hover:bg-red-700 shadow-red-600/40
+        {% else %}
+            bg-gray-700 text-gray-200 hover:bg-gray-600 shadow-gray-700/40
+        {% endif %}"
+        aria-label="{% if is_favorited %}Xóa khỏi Yêu thích{% else %}Thêm vào Yêu thích{% endif %}">
+
+    <!-- Icon trái -->
+    <i id="favorite-icon"
+       class="text-lg {% if is_favorited %}fas fa-heart{% else %}far fa-heart{% endif %}"></i>
+
+    <!-- Chữ -->
+    <span id="favorite-text" class="font-medium tracking-wide">
+        {% if is_favorited %}Đã Lưu{% else %}Lưu Truyện{% endif %}
+    </span>
+</button>
+
+{% else %}
+<!-- Nếu chưa đăng nhập -->
+<button disabled
+        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-700 text-gray-500 shadow-inner cursor-not-allowed"
+        title="Đăng nhập để lưu truyện">
+    <i class="far fa-heart text-lg"></i>
+    <span class="font-medium">Lưu Truyện</span>
+</button>
+{% endif %}
 
                     </div>
 
@@ -219,5 +254,71 @@
 
 
 </body>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const favoriteBtn = document.getElementById("favorite-btn");
+
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener("click", function() {
+            const storySlug = favoriteBtn.getAttribute("data-story-slug");
+            const isFavorited = favoriteBtn.getAttribute("data-is-favorited") === "true";
+
+            fetch(`/toggle-favorite/${storySlug}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật icon + màu nút + text
+                    const icon = document.getElementById("favorite-icon");
+                    const label = favoriteBtn.querySelector("span");
+
+                    if (data.is_favorited) {
+                        favoriteBtn.classList.remove("bg-gray-700", "text-gray-200", "hover:bg-gray-600");
+                        favoriteBtn.classList.add("bg-red-600", "text-white", "hover:bg-red-700");
+                        icon.classList.remove("far");
+                        icon.classList.add("fas");
+                        label.textContent = "Đã Lưu";
+                    } else {
+                        favoriteBtn.classList.remove("bg-red-600", "text-white", "hover:bg-red-700");
+                        favoriteBtn.classList.add("bg-gray-700", "text-gray-200", "hover:bg-gray-600");
+                        icon.classList.remove("fas");
+                        icon.classList.add("far");
+                        label.textContent = "Lưu Truyện";
+                    }
+
+                    // Cập nhật lại data attribute
+                    favoriteBtn.setAttribute("data-is-favorited", data.is_favorited ? "true" : "false");
+
+                    console.log(data.message);
+                } else {
+                    console.error("Lỗi xử lý yêu thích:", data.message);
+                }
+            })
+            .catch(err => console.error("Lỗi fetch:", err));
+        });
+    }
+
+    // Hàm lấy CSRF token (Django yêu cầu)
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
 
 </html>

@@ -11,6 +11,7 @@ class Story(models.Model):
         ('paused', 'Tạm ngưng'),
     ]
 
+
     story_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, verbose_name="Tên truyện")
     author = models.CharField(max_length=100, blank=True, null=True, verbose_name="Tác giả")
@@ -154,7 +155,7 @@ class UserFavorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='favorited_by', verbose_name="Truyện")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Thời gian thêm")
-
+    status = models.BooleanField(default=False, verbose_name="Đã lưu")  # ⚡ Dòng này phải có
     class Meta:
         verbose_name = "Truyện yêu thích"
         verbose_name_plural = "Truyện yêu thích"
