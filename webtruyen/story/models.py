@@ -149,7 +149,7 @@ class Comment(models.Model):
             models.Index(fields=['story', 'is_approved', '-created_at']), 
         ]
 
-
+ 
 # --- 6. USER_FAVORITES (Truyện yêu thích) ---
 class UserFavorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', verbose_name="Người dùng")

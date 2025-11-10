@@ -1,29 +1,4 @@
-<!-- Story Detail Page - Dark Mode Theme -->
-
-<!-- Load Tailwind CSS CDN -->
 {% load static %}
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
-<link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
-<script>
-    // Custom Tailwind Configuration (Configuring dark mode colors)
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    'primary': '#3b82f6', // Blue-500: Nổi bật, dùng cho CTA chính
-                    'secondary': '#f97316', // Orange-500: Dùng cho CTA phụ/cần chú ý
-                    'dark-bg-body': '#171717', // Màu nền sâu hơn (Neutral-900)
-                    'dark-bg-card': '#262626', // Màu nền container (Neutral-800)
-                },
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                },
-            }
-        }
-    }
-</script>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -31,81 +6,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Sử dụng một tiêu đề giả định cho mục đích xem trước -->
     <title>{{ story.title|default:"Tên Truyện Đang Tải..." }}</title>
+
+    {# Tải Tailwind CSS CDN (với JIT engine) #}
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {# Liên kết Font Awesome #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    {# Liên kết Google Fonts (Quicksand) #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    {# Liên kết CSS tĩnh (Đã loại bỏ các liên kết lặp lại) #}
+    <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
+    <link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
+
+    <script>
+        // Custom Tailwind Configuration (Configuring dark mode colors)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3b82f6', 
+                        'secondary': '#f97316', 
+                        'dark-bg-body': '#171717', 
+                        'dark-bg-card': '#262626',
+                    },
+                    fontFamily: {
+                        // ĐỊNH NGHĨA FONT MỚI
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
 </head>
 
-<!-- Body sử dụng màu nền tối sâu và màu chữ sáng -->
-
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
-
     {% include 'story/header/header.html' %}
 
 
-    <!-- Main Content: Story Detail -->
     <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
 
-        <!-- 1. THÔNG TIN TRUYỆN VÀ TÓM TẮT -->
-        <!-- Thẻ cha dùng màu nền card tối, bo tròn và bóng nổi bật -->
+        {# Chi tiết truyện và Bìa #}
         <div class="bg-dark-bg-card rounded-2xl shadow-2xl p-6 md:p-8 mb-10 border border-gray-700/50">
             <div class="flex flex-col md:flex-row gap-8">
 
-                <!-- Hình ảnh bìa truyện -->
                 <div class="w-full md:w-1/3 lg:w-1/4 flex-shrink-0">
-                    <!-- aspect-[3/4] đảm bảo tỉ lệ ảnh đứng -->
                     <img src="{{ story.cover_image_url }}" alt="Bìa truyện {{ story.title|default:'Truyện' }}"
-                        onerror="this.onerror=null; this.src='https://placehold.co/300x400/374151/D1D5DB?text=Kh%C3%B4ng+%E1%BA%A2nh'"
+                        noscript="this.noscript=null; this.src='https://placehold.co/300x400/374151/D1D5DB?text=Kh%C3%B4ng+%E1%BA%A2nh'"
                         class="w-full h-auto object-cover rounded-xl shadow-xl transition-all duration-300 hover:shadow-primary/50 aspect-[3/4]">
                 </div>
 
-                <!-- Tóm tắt và Metadata -->
                 <div class="w-full md:w-2/3 lg:w-3/4">
-                    <!-- Tiêu đề truyện -->
-                    <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-3 leading-tight">
+                    <h1 class="text-3xl md:text-5xl font-bold text-white mb-3 leading-tight">
                         {{ story.title|default:"Tiêu Đề Truyện Chưa Tải" }}
                     </h1>
 
                     <p class="text-gray-400 mb-4 text-lg">
                         <span class="font-semibold text-gray-300">Tác giả:</span>
                         <a href="{% url 'search' %}?q={{ story.author }}"
-                            class="text-primary hover:text-blue-400 font-medium transition cursor-pointer">
+                            class="text-white hover:text-white hover:underline decoration-primary font-medium transition cursor-pointer">
                             {{ story.author|default:"Ẩn Danh" }}
                         </a>
                     </p>
+<div class="flex items-center gap-6 mb-6">
+                        <div class="flex items-center gap-2">
+                            <span class="text-3xl font-extrabold text-yellow-400" id="average-score">
+                                {% if story.average_rating|default:0 > 0 %}
+                                    {{ story.average_rating|floatformat:1 }}
+                                {% else %}
+                                    0.0
+                                {% endif %}
+                            </span>
+                            <span class="text-xl text-gray-400">/ 5</span>
+                        </div>
 
+                        <div class="flex flex-col">
+                            {% if user.is_authenticated %}
+                                <div id="rating-widget"
+                                    data-story-slug="{{ story.slug }}"
+                                    data-user-score="{{ user_rating.score|default:0 }}"
+                                    class="flex text-2xl cursor-pointer">
+                                    {% for i in "12345"|make_list %}
+                                        <i class="far fa-star rating-star transition duration-150 hover:text-yellow-300" 
+                                        data-score="{{ forloop.counter }}"></i>
+                                    {% endfor %}
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1" id="rating-message">
+                                    {% if user_rating %}
+                                        Bạn đã đánh giá: {{ user_rating.score }} sao
+                                    {% else %}
+                                        Nhấp để đánh giá truyện này
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                <p class="text-sm text-gray-500">Đăng nhập để đánh giá</p>
+                            {% endif %}
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                (<span id="total-ratings">{{ story.total_ratings|default:0 }}</span> lượt đánh giá)
+                            </p>
+                        </div>
+                    </div>
                     <div class="flex flex-wrap gap-2 mb-6 text-sm">
                         {% for category in story.categories.all %}
-                        {% if forloop.counter|divisibleby:6 %}
                         <a href="{% url 'category_detail' category.slug %}"
-                            class="bg-indigo-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
+                            class="bg-gray-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:bg-gray-500 transition">
                             {{ category.category_name }}
                         </a>
-                        {% elif forloop.counter|divisibleby:5 %}
-                        <a href="{% url 'category_detail' category.slug %}"
-                            class="bg-green-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
-                            {{ category.category_name }}
-                        </a>
-                        {% elif forloop.counter|divisibleby:4 %}
-                        <a href="{% url 'category_detail' category.slug %}"
-                            class="bg-yellow-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
-                            {{ category.category_name }}
-                        </a>
-                        {% elif forloop.counter|divisibleby:3 %}
-                        <a href="{% url 'category_detail' category.slug %}"
-                            class="bg-red-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
-                            {{ category.category_name }}
-                        </a>
-                        {% elif forloop.counter|divisibleby:2 %}
-                        <a href="{% url 'category_detail' category.slug %}"
-                            class="bg-pink-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
-                            {{ category.category_name }}
-                        </a>
-                        {% else %}
-                        <a href="{% url 'category_detail' category.slug %}"
-                            class="bg-purple-600 text-white px-3 py-1 rounded-full font-medium shadow-md hover:opacity-90 transition">
-                            {{ category.category_name }}
-                        </a>
-                        {% endif %}
                         {% empty %}
                         <span class="bg-gray-500 text-white px-3 py-1 rounded-full font-medium shadow-md">
                             Chưa có thể loại
@@ -114,96 +125,89 @@
                     </div>
 
 
-
-
-                    <!-- Tóm tắt truyện -->
                     <h3 class="text-xl font-bold text-gray-200 mb-2 border-b border-gray-700 pb-1">Tóm tắt</h3>
-                    <p class="text-gray-400 text-base leading-relaxed mb-6 max-h-36 overflow-hidden relative">
-                        {{story.description}}
-                        <!-- Thêm hiệu ứng fade-out cho tóm tắt dài -->
-                    <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-dark-bg-card to-transparent">
-                    </div>
-                    </p>
+                    <div class="relative mb-6">
+                        <p id="story-description"
+                            class="text-gray-400 text-base leading-relaxed max-h-36 overflow-hidden transition-all duration-300">
+                            {{ story.description }}
+                        </p>
 
-                    <!-- Nút Đọc Chương Mới Nhất / Chương Đầu Tiên -->
+                        <div id="fade-overlay"
+                            class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-dark-bg-card to-transparent pointer-events-none">
+                        </div>
+
+                        <button id="toggle-description"
+                            class="absolute bottom-1 right-2 text-primary hover:underline font-semibold text-sm bg-dark-bg-card px-2 py-1 rounded-lg">
+                            Xem thêm ↓
+                        </button>
+                    </div>
+
                     <div class="mt-6 flex flex-col sm:flex-row gap-4">
 
-                        <!-- 1️⃣ Nút ĐỌC TỪ ĐẦU -->
                         {% if story.first_chapter_number %}
                         <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.first_chapter_number|floatformat:0 %}"
-                            class="flex-1 text-center bg-primary text-white font-extrabold py-3 px-6 rounded-xl shadow-xl shadow-primary/30 
-                            hover:bg-blue-600 hover:shadow-primary/50 transition duration-300 transform hover:scale-[1.02]">
+                            class="flex-1 text-center bg-primary/50 text-white font-bold py-3 px-6 rounded-xl shadow-xl shadow-primary/30 
+                            hover:bg-blue-400 hover:shadow-primary/50 transition duration-300 transform hover:scale-[1.02]">
                             <i class="fas fa-book-open mr-2"></i> ĐỌC TỪ ĐẦU
                         </a>
                         {% else %}
-                        <button disabled class="flex-1 text-center bg-gray-400 text-gray-200 font-extrabold py-3 px-6 rounded-xl shadow-inner 
+                        <button disabled class="flex-1 text-center bg-gray-400 text-gray-200 font-bold py-3 px-6 rounded-xl shadow-inner 
                                 cursor-not-allowed">
                             <i class="fas fa-book-open mr-2"></i> ĐỌC TỪ ĐẦU
                         </button>
                         {% endif %}
 
-                        <!-- 2️⃣ Nút CHƯƠNG MỚI NHẤT -->
                         {% if story.latest_chapter_number %}
                         <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=story.latest_chapter_number|floatformat:0 %}"
-                            class="flex-1 text-center bg-secondary text-white font-extrabold py-3 px-6 rounded-xl shadow-xl shadow-secondary/30 
-                            hover:bg-orange-600 hover:shadow-secondary/50 transition duration-300 transform hover:scale-[1.02]">
+                            class="flex-1 text-center bg-primary/50 text-white font-bold py-3 px-6 rounded-xl shadow-xl shadow-primary/30 
+                            hover:bg-blue-400 hover:shadow-primary/50 transition duration-300 transform hover:scale-[1.02]">
                             <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
                         </a>
                         {% else %}
-                        <button disabled class="flex-1 text-center bg-gray-400 text-gray-200 font-extrabold py-3 px-6 rounded-xl shadow-inner 
+                        <button disabled class="flex-1 text-center bg-gray-400 text-gray-200 font-bold py-3 px-6 rounded-xl shadow-inner 
                                 cursor-not-allowed">
                             <i class="fas fa-arrow-right mr-2"></i> CHƯƠNG MỚI NHẤT
                         </button>
                         {% endif %}
-                        <script>
-    console.log("isAuthenticated = '{{ user.is_authenticated }}'");
-</script>
-{% if user.is_authenticated %}
-<button type="button"
-        id="favorite-btn"
-        data-story-slug="{{ story.slug }}"
-        data-is-favorited="{{ is_favorited|yesno:'true,false' }}"
-        class="flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition duration-300 transform hover:scale-[1.03]
-        {% if is_favorited %}
-            bg-red-600 text-white hover:bg-red-700 shadow-red-600/40
-        {% else %}
-            bg-gray-700 text-gray-200 hover:bg-gray-600 shadow-gray-700/40
-        {% endif %}"
-        aria-label="{% if is_favorited %}Xóa khỏi Yêu thích{% else %}Thêm vào Yêu thích{% endif %}">
 
-    <!-- Icon trái -->
-    <i id="favorite-icon"
-       class="text-lg {% if is_favorited %}fas fa-heart{% else %}far fa-heart{% endif %}"></i>
+                        {% if user.is_authenticated %}
+                        <button type="button" id="favorite-btn" data-story-slug="{{ story.slug }}"
+                            data-is-favorited="{{ is_favorited|yesno:'true,false' }}"
+                            class="flex items-center justify-center gap-2 px-4 py-2 rounded-xl shadow-lg transition duration-300 transform hover:scale-[1.03]
+                                {% if is_favorited %}
+                                    bg-red-600 text-white hover:bg-red-700 shadow-red-600/40
+                                {% else %}
+                                    bg-gray-700 text-gray-200 hover:bg-gray-600 shadow-gray-700/40
+                                {% endif %}"
+                            aria-label="{% if is_favorited %}Xóa khỏi Yêu thích{% else %}Thêm vào Yêu thích{% endif %}">
 
-    <!-- Chữ -->
-    <span id="favorite-text" class="font-medium tracking-wide">
-        {% if is_favorited %}Đã Lưu{% else %}Lưu Truyện{% endif %}
-    </span>
-</button>
+                            <i id="favorite-icon"
+                                class="text-lg {% if is_favorited %}fas fa-heart{% else %}far fa-heart{% endif %}"></i>
 
-{% else %}
-<!-- Nếu chưa đăng nhập -->
-<button disabled
-        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-700 text-gray-500 shadow-inner cursor-not-allowed"
-        title="Đăng nhập để lưu truyện">
-    <i class="far fa-heart text-lg"></i>
-    <span class="font-medium">Lưu Truyện</span>
-</button>
-{% endif %}
+                            <span id="favorite-text" class="font-medium tracking-wide hidden sm:inline">
+                                {% if is_favorited %}Đã Lưu{% else %}Lưu Truyện{% endif %}
+                            </span>
+                        </button>
+
+                        {% else %}
+                        <button disabled
+                            class="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gray-700 text-gray-500 shadow-inner cursor-not-allowed"
+                            title="Đăng nhập để lưu truyện">
+                            <i class="far fa-heart text-lg"></i>
+                            <span class="font-medium hidden sm:inline">Lưu Truyện</span>
+                        </button>
+                        {% endif %}
 
                     </div>
-
-
                 </div>
             </div>
         </div>
 
-        <!-- 2. DANH SÁCH CHƯƠNG -->
-        <div class="bg-dark-bg-card rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-700/50">
+        {# Danh sách chương #}
+        <div class="bg-dark-bg-card rounded-2xl shadow-2xl p-6 md:p-8 mb-10 border border-gray-700/50">
             <h3 class="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Danh sách chương
             </h3>
 
-            <!-- Grid cho bố cục 2 cột trên desktop -->
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 divide-y sm:divide-y-0 divide-gray-700">
                 {% if chapters %}
                 {% for chapter in chapters %}
@@ -218,7 +222,7 @@
                         </span>
                         {% if chapter.published_at %}
                         <span class="text-sm text-gray-500 whitespace-nowrap hidden sm:block">
-                            {{ chapter.published_at|date:"d-m-Y" }}
+                            {{ chapter.published_at | date:"H:i d/m/Y" }}
                         </span>
                         {% endif %}
                     </a>
@@ -248,22 +252,289 @@
             {% endif %}
         </div>
 
+        {# Phần Bình luận #}
+        <div class="bg-dark-bg-card rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-700/50">
+            <h3 class="text-2xl font-bold text-gray-200 mb-6 border-b border-gray-700 pb-2">
+                Bình luận
+                <span class="text-primary ml-2" id="comment-count">({{ total_comments|default:0 }})</span>
+            </h3>
+
+            <div id="comment-form-section">
+                <h4 class="text-xl font-semibold text-white mb-4">Để lại một bình luận</h4>
+                <p class="text-gray-400 text-sm mb-4">Email của bạn sẽ không được hiển thị công khai. <span
+                        class="text-red-500">Các trường bắt buộc</span> được đánh dấu <span class="text-red-500">*</span>
+                </p>
+
+                {% if user.is_authenticated %}
+                <form id="comment-form" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div>
+                        <label for="comment-content" class="block text-gray-300 font-medium mb-1">Bình luận <span
+                                class="text-red-500">*</span></label>
+                        <textarea id="comment-content" name="content" rows="6" required
+                            class="w-full p-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                            placeholder="Viết bình luận của bạn về truyện..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <p class="text-gray-500 italic p-3 bg-gray-700 rounded-lg">
+                            <i class="fas fa-user-circle mr-2"></i> Đang bình luận với tên:
+                            <span class="font-semibold text-gray-300">{{ user.username }}</span>
+                        </p>
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                            class="bg-primary text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-blue-600 transition duration-300">
+                            Gửi Bình Luận
+                        </button>
+                    </div>
+                </form>
+
+                {% else %}
+                <form class="space-y-4" onsubmit="return false;">
+
+                    <div>
+                        <label for="comment-content-disabled" class="block text-gray-300 font-medium mb-1">Bình luận
+                            <span class="text-red-500">*</span></label>
+                        <textarea id="comment-content-disabled" rows="6" disabled
+                            class="w-full p-3 bg-gray-800 text-gray-500 border border-gray-700 rounded-lg cursor-not-allowed"
+                            placeholder="Vui lòng đăng nhập để bình luận..."></textarea>
+                    </div>
+
+                    <div>
+                        <button type="button" disabled
+                            class="bg-gray-700 text-gray-500 font-bold py-3 px-6 rounded-xl shadow-inner cursor-not-allowed">
+                            Gửi Bình Luận
+                        </button>
+                    </div>
+
+                    <p class="text-yellow-500 mt-4 font-medium">Vui lòng <a href="{% url 'login' %}"
+                            class="text-primary hover:text-blue-400 underline">Đăng nhập</a> hoặc <a
+                            href="{% url 'register' %}" class="text-primary hover:text-blue-400 underline">Đăng ký</a> để
+                        có thể để lại bình luận cho truyện.</p>
+                </form>
+                {% endif %}
+            </div>
+
+            <div id="comments" class="mt-10 pt-6 border-t border-gray-700">
+                <h4 class="text-xl font-semibold text-gray-300 mb-6">Danh sách bình luận</h4>
+
+                <div id="comments-container">
+                    {% if comments %}
+                    {% for comment in comments %}
+                    <div class="comment-item flex gap-4 p-4 mb-6 border border-gray-700 rounded-xl bg-gray-800/50">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-circle text-3xl text-primary"></i>
+                        </div>
+
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="font-bold text-white text-lg">{{ comment.user.username }}</span>
+                                <span class="text-sm text-gray-500">{{ comment.created_at|date:"H:i d/m/Y" }}</span>
+                            </div>
+                            <p class="text-gray-300 mb-3 leading-relaxed">{{ comment.content }}</p>
+
+                            <div class="flex items-center gap-4 text-sm font-medium">
+                                {% if user.is_authenticated %}
+                                <button class="text-gray-400 hover:text-primary transition duration-150 reply-btn"
+                                    data-comment-id="{{ comment.pk }}">
+                                    <i class="fas fa-reply mr-1"></i> Trả lời
+                                </button>
+                                {% else %}
+                                <span class="text-gray-600 cursor-not-allowed" title="Đăng nhập để trả lời">
+                                    <i class="fas fa-reply mr-1"></i> Trả lời
+                                </span>
+                                {% endif %}
+
+                                {% if comment.replies.all|length > 0 %}
+                                <span class="text-gray-500">
+                                    ({{ comment.replies.all|length }} trả lời)
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            {% if user.is_authenticated %}
+                            <div class="reply-form-container mt-4 hidden">
+                                <form class="reply-form space-y-3 p-4 bg-gray-700/50 rounded-lg"
+                                    data-parent-id="{{ comment.pk }}">
+                                    {% csrf_token %}
+                                    <textarea name="content" rows="3" required
+                                        class="w-full p-2 bg-gray-800 text-gray-100 border border-gray-600 rounded-lg focus:ring-secondary focus:border-secondary transition placeholder-gray-500"
+                                        placeholder="Trả lời {{ comment.user.username }}..."></textarea>
+                                    <button type="submit"
+                                        class="bg-secondary text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-orange-600 transition duration-300">
+                                        Gửi Trả Lời
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+
+                            <div class="replies mt-4 pl-8 border-l-2 border-gray-700 space-y-4">
+                                {% for reply in comment.replies.all %}
+                                {% if reply.is_approved %}
+                                <div class="comment-reply flex gap-3 p-3 bg-gray-700/50 rounded-lg">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-user-tag text-lg text-secondary"></i>
+                                    </div>
+                                    <div class="flex-grow">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="font-semibold text-white text-base">{{ reply.user.username }}</span>
+                                            <span class="text-xs text-gray-500">{{ reply.created_at|date:"H:i d/m/Y" }}</span>
+                                        </div>
+                                        <p class="text-gray-400">{{ reply.content }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p id="no-comments-message"
+                        class="text-gray-500 italic py-4 text-center border-t border-gray-800">Hiện chưa có bình luận nào
+                        cho truyện này. Hãy là người đầu tiên!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </main>
 
     {% include 'story/footer/footer.html' %}
 
 
 </body>
+
+{# Đưa script vào cuối <body> để tăng tốc độ tải trang #}
 <script>
+// =================================================================
+// AJAX LOGIC (YÊU THÍCH, BÌNH LUẬN, TRẢ LỜI, ĐÁNH GIÁ)
+// =================================================================
+
 document.addEventListener("DOMContentLoaded", function() {
+
+    // Hàm lấy cookie (cần cho CSRF token)
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // ---------------------------------------------
+    // 1. Xử lý Đánh giá 5 sao (Rating AJAX)
+    // ---------------------------------------------
+    const ratingWidget = document.getElementById('rating-widget');
+    const ratingMessage = document.getElementById('rating-message');
+    const averageScoreElement = document.getElementById('average-score');
+    const totalRatingsElement = document.getElementById('total-ratings');
+    const stars = ratingWidget ? ratingWidget.querySelectorAll('.rating-star') : [];
+    let initialScore = ratingWidget ? parseInt(ratingWidget.getAttribute('data-user-score')) : 0;
+    
+    // Hàm tô màu sao
+    function colorStars(score, baseClass = 'far', activeClass = 'fas', color = 'text-yellow-400') {
+        stars.forEach(star => {
+            const starScore = parseInt(star.getAttribute('data-score'));
+            star.classList.remove(activeClass, baseClass, color, 'text-gray-600', 'text-yellow-300');
+            
+            if (starScore <= score) {
+                star.classList.add(activeClass, color);
+            } else {
+                star.classList.add(baseClass, 'text-gray-600');
+            }
+        });
+    }
+
+    if (ratingWidget) {
+        // Khởi tạo màu sao dựa trên điểm đã đánh giá
+        colorStars(initialScore, 'far', 'fas', 'text-yellow-400');
+    
+        // Xử lý Hover: Highlight các sao
+        ratingWidget.addEventListener('mouseover', (e) => {
+            if (e.target.classList.contains('rating-star')) {
+                const hoverScore = parseInt(e.target.getAttribute('data-score'));
+                colorStars(hoverScore, 'far', 'fas', 'text-yellow-300'); 
+            }
+        });
+
+        // Xử lý Mouseout: Trở về điểm đã lưu
+        ratingWidget.addEventListener('mouseout', () => {
+            colorStars(initialScore, 'far', 'fas', 'text-yellow-400'); 
+        });
+
+        // Xử lý Click: Gửi điểm đánh giá
+        ratingWidget.addEventListener('click', (e) => {
+            if (e.target.classList.contains('rating-star')) {
+                const newScore = parseInt(e.target.getAttribute('data-score'));
+                const storySlug = ratingWidget.getAttribute('data-story-slug');
+                
+                const oldScore = initialScore;
+                initialScore = newScore;
+                
+                // Cập nhật giao diện ngay lập tức
+                colorStars(initialScore, 'far', 'fas', 'text-yellow-400');
+                ratingMessage.textContent = `Đang gửi ${newScore} sao...`;
+
+                fetch(`{% url 'submit_rating' story_slug=story.slug %}`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({
+                        'score': newScore
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        ratingMessage.textContent = `Bạn đã đánh giá: ${data.score} sao`;
+                        if(averageScoreElement) averageScoreElement.textContent = data.average_rating;
+                        if(totalRatingsElement) totalRatingsElement.textContent = data.total_ratings;
+
+                        ratingWidget.setAttribute('data-user-score', data.score);
+                        initialScore = data.score;
+                        
+                    } else {
+                        // Nếu thất bại, quay lại điểm cũ và hiển thị lỗi
+                        initialScore = oldScore; 
+                        colorStars(initialScore, 'far', 'fas', 'text-yellow-400');
+                        ratingMessage.textContent = `Lỗi: ${data.message}`;
+                    }
+                })
+                .catch(err => {
+                    // Nếu lỗi kết nối, quay lại điểm cũ
+                    initialScore = oldScore;
+                    colorStars(initialScore, 'far', 'fas', 'text-yellow-400');
+                    ratingMessage.textContent = `Lỗi kết nối. Thử lại.`;
+                    console.error("Lỗi fetch khi gửi đánh giá:", err);
+                });
+            }
+        });
+    }
+
+    // ---------------------------------------------
+    // 2. Xử lý nút Yêu thích (Toggle Favorite)
+    // ---------------------------------------------
     const favoriteBtn = document.getElementById("favorite-btn");
 
     if (favoriteBtn) {
         favoriteBtn.addEventListener("click", function() {
             const storySlug = favoriteBtn.getAttribute("data-story-slug");
-            const isFavorited = favoriteBtn.getAttribute("data-is-favorited") === "true";
-
-            fetch(`/toggle-favorite/${storySlug}/`, {
+            
+            fetch(`/toggle-favorite/${storySlug}/`, { // Giả định URL: /toggle-favorite/<slug>/
                 method: "POST",
                 headers: {
                     "X-CSRFToken": getCookie("csrftoken"),
@@ -273,28 +544,24 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Cập nhật icon + màu nút + text
                     const icon = document.getElementById("favorite-icon");
-                    const label = favoriteBtn.querySelector("span");
-
+                    const label = document.getElementById("favorite-text");
+                    
+                    // Cập nhật giao diện
                     if (data.is_favorited) {
-                        favoriteBtn.classList.remove("bg-gray-700", "text-gray-200", "hover:bg-gray-600");
-                        favoriteBtn.classList.add("bg-red-600", "text-white", "hover:bg-red-700");
+                        favoriteBtn.classList.remove("bg-gray-700", "text-gray-200", "hover:bg-gray-600", "shadow-gray-700/40");
+                        favoriteBtn.classList.add("bg-red-600", "text-white", "hover:bg-red-700", "shadow-red-600/40");
                         icon.classList.remove("far");
                         icon.classList.add("fas");
-                        label.textContent = "Đã Lưu";
+                        if (label) label.textContent = "Đã Lưu";
                     } else {
-                        favoriteBtn.classList.remove("bg-red-600", "text-white", "hover:bg-red-700");
-                        favoriteBtn.classList.add("bg-gray-700", "text-gray-200", "hover:bg-gray-600");
+                        favoriteBtn.classList.remove("bg-red-600", "text-white", "hover:bg-red-700", "shadow-red-600/40");
+                        favoriteBtn.classList.add("bg-gray-700", "text-gray-200", "hover:bg-gray-600", "shadow-gray-700/40");
                         icon.classList.remove("fas");
                         icon.classList.add("far");
-                        label.textContent = "Lưu Truyện";
+                        if (label) label.textContent = "Lưu Truyện";
                     }
-
-                    // Cập nhật lại data attribute
                     favoriteBtn.setAttribute("data-is-favorited", data.is_favorited ? "true" : "false");
-
-                    console.log(data.message);
                 } else {
                     console.error("Lỗi xử lý yêu thích:", data.message);
                 }
@@ -303,22 +570,234 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Hàm lấy CSRF token (Django yêu cầu)
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+    // ---------------------------------------------
+    // 3. Xử lý Form Bình luận GỐC (Comment Form)
+    // ---------------------------------------------
+    const commentForm = document.getElementById("comment-form");
+    const commentCountSpan = document.getElementById("comment-count");
+
+    if (commentForm && commentCountSpan) { 
+        commentForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const commentContent = document.getElementById("comment-content").value;
+            
+            if (!commentContent.trim()) {
+                alert("Vui lòng nhập nội dung bình luận!");
+                return;
+            }
+            
+            fetch(`{% url 'submit_comment' story_slug=story.slug %}`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    'content': commentContent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("comment-content").value = "";
+                    
+                    const commentsContainer = document.getElementById("comments-container");
+                    const noCommentsMessage = document.getElementById("no-comments-message");
+                    
+                    if (noCommentsMessage) {
+                        noCommentsMessage.remove();
+                    }
+                    
+                    // Tạo HTML cho bình luận mới (sử dụng template literal)
+                    const newCommentHTML = `
+                        <div class="comment-item flex gap-4 p-4 mb-6 border border-gray-700 rounded-xl bg-gray-800/50 animate-fadeIn new-comment-highlight">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-user-circle text-3xl text-primary"></i>
+                            </div>
+
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="font-bold text-white text-lg">${data.comment.username}</span>
+                                    <span class="text-sm text-gray-500">
+                                        ${new Date(data.comment.created_at).toLocaleString('vi-VN', {
+                                            hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
+                                        })}
+                                    </span> 
+                                </div>
+
+                                <p class="text-gray-300 mb-3 leading-relaxed">${data.comment.content}</p>
+
+                                <div class="flex items-center gap-4 text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-primary transition duration-150 reply-btn" data-comment-id="${data.comment.id}">
+                                        <i class="fas fa-reply mr-1"></i> Trả lời
+                                    </button>
+                                </div>
+                                
+                                {% if user.is_authenticated %}
+                                <div class="reply-form-container mt-4 hidden">
+                                    <form class="reply-form space-y-3 p-4 bg-gray-700/50 rounded-lg" data-parent-id="${data.comment.id}">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie("csrftoken")}">
+                                        <textarea name="content" rows="3" required
+                                            class="w-full p-2 bg-gray-800 text-gray-100 border border-gray-600 rounded-lg focus:ring-secondary focus:border-secondary transition placeholder-gray-500"
+                                            placeholder="Trả lời ${data.comment.username}..."></textarea>
+                                        <button type="submit"
+                                            class="bg-secondary text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-orange-600 transition duration-300">
+                                            Gửi Trả Lời
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                                <div class="replies mt-4 pl-8 border-l-2 border-gray-700 space-y-4"></div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Thêm bình luận vào đầu danh sách
+                    commentsContainer.insertAdjacentHTML('afterbegin', newCommentHTML);
+                    
+                    // Cập nhật số lượng bình luận
+                    const currentCountMatch = commentCountSpan.textContent.match(/\d+/);
+                    const currentCount = currentCountMatch ? parseInt(currentCountMatch[0]) : 0;
+                    commentCountSpan.textContent = `(${currentCount + 1})`;
+                    
+                    // Thêm hiệu ứng highlight (tùy chọn)
+                    const newComment = commentsContainer.querySelector('.new-comment-highlight');
+                    if(newComment) {
+                        newComment.classList.remove('new-comment-highlight');
+                        newComment.classList.add('border-primary', 'bg-primary/20');
+                        setTimeout(() => {
+                            newComment.classList.remove('border-primary', 'bg-primary/20');
+                        }, 3000);
+                    }
+                    
+                } else {
+                    alert(`Gửi bình luận thất bại: ${data.message || 'Lỗi không xác định.'}`);
                 }
+            })
+            .catch(err => {
+                console.error("Lỗi fetch khi gửi bình luận:", err);
+                alert("Đã xảy ra lỗi khi gửi bình luận. Vui lòng thử lại.");
+            });
+        });
+    }
+
+    // ---------------------------------------------
+    // 4. Xử lý Nút và Form Trả lời (Reply Logic)
+    // ---------------------------------------------
+    const commentsContainer = document.getElementById("comments-container");
+
+    // Xử lý hiển thị/ẩn form trả lời
+    commentsContainer.addEventListener("click", function(e) {
+        if (e.target.classList.contains('reply-btn') || e.target.closest('.reply-btn')) {
+            e.preventDefault();
+            const btn = e.target.classList.contains('reply-btn') ? e.target : e.target.closest('.reply-btn');
+            
+            const commentItem = btn.closest('.comment-item');
+            const replyFormContainer = commentItem.querySelector('.reply-form-container');
+
+            if (replyFormContainer) {
+                // Đóng tất cả các form reply đang mở (trừ form hiện tại nếu nó đang mở)
+                document.querySelectorAll('.reply-form-container').forEach(container => {
+                    if (container !== replyFormContainer && !container.classList.contains('hidden')) {
+                         container.classList.add('hidden');
+                    }
+                });
+
+                replyFormContainer.classList.toggle('hidden');
             }
         }
-        return cookieValue;
-    }
+    });
+
+    // Xử lý submit form trả lời (sử dụng event delegation)
+    commentsContainer.addEventListener("submit", function(e) {
+        if (e.target.classList.contains('reply-form')) {
+            e.preventDefault();
+            const form = e.target;
+            const parentId = form.getAttribute('data-parent-id');
+            const content = form.querySelector('textarea[name="content"]').value;
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            if (!content.trim()) {
+                alert("Vui lòng nhập nội dung trả lời!");
+                return;
+            }
+
+            // Vô hiệu hóa nút
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang gửi...';
+
+            fetch(`{% url 'submit_comment' story_slug=story.slug %}`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    'content': content,
+                    'parent_id': parentId // THÊM parent_id
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gửi Trả Lời';
+                form.querySelector('textarea[name="content"]').value = ""; // Xóa nội dung
+
+                if (data.success) {
+                    const repliesContainer = form.closest('.flex-grow').querySelector('.replies');
+                    const replyButtonContainer = form.closest('.flex-grow').querySelector('.flex.items-center.gap-4');
+                    let replyCountSpan = replyButtonContainer.querySelector('.text-gray-500');
+
+                    // Tạo HTML cho trả lời mới
+                    const newReplyHTML = `
+                        <div class="comment-reply flex gap-3 p-3 bg-gray-700/50 rounded-lg animate-fadeIn">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-user-tag text-lg text-secondary"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="font-semibold text-white text-base">${data.comment.username}</span>
+                                    <span class="text-xs text-gray-500">
+                                        ${new Date(data.comment.created_at).toLocaleString('vi-VN', {
+                                            hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
+                                        })}
+                                    </span>
+                                </div>
+                                <p class="text-gray-400">${data.comment.content}</p>
+                            </div>
+                        </div>
+                    `;
+
+                    // Thêm trả lời vào cuối danh sách replies
+                    repliesContainer.insertAdjacentHTML('beforeend', newReplyHTML);
+
+                    // Ẩn form reply
+                    form.closest('.reply-form-container').classList.add('hidden');
+
+                    // Cập nhật số lượng trả lời
+                    if (replyCountSpan) {
+                        const currentCountMatch = replyCountSpan.textContent.match(/\d+/);
+                        const currentCount = currentCountMatch ? parseInt(currentCountMatch[0]) : 0;
+                        replyCountSpan.textContent = `(${currentCount + 1} trả lời)`;
+                    } else {
+                        // Nếu chưa có replies nào, tạo span đếm mới
+                        replyButtonContainer.insertAdjacentHTML('beforeend', '<span class="text-gray-500">(1 trả lời)</span>');
+                    }
+
+                } else {
+                    alert(`Gửi trả lời thất bại: ${data.message || 'Lỗi không xác định.'}`);
+                }
+            })
+            .catch(err => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gửi Trả Lời';
+                console.error("Lỗi fetch khi gửi trả lời:", err);
+                alert("Đã xảy ra lỗi khi gửi trả lời. Vui lòng thử lại.");
+            });
+        }
+    });
 });
 </script>
-
-</html>

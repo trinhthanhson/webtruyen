@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📖 Lịch sử đọc gần đây</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CSS tĩnh -->
+  <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
+  <link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
+
+  <!-- Cấu hình Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#60a5fa',     // xanh dương
+            'secondary': '#f97316',   // cam
+            'dark-bg-body': '#262626', // nền body
+            'dark-bg-card': '#333333', // nền thẻ
+            'dark-border': '#4b5563',  // viền
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-dark-bg-body text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- 🧩 Header -->
+  {% include 'story/header/header.html' %}
+
+  <!-- 🧠 Nội dung chính -->
+  <main class="flex-grow container mx-auto px-4 py-8 md:py-10 max-w-5xl">
+
+    <!-- Tiêu đề -->
+    <h1 class="text-3xl font-bold text-primary mb-8 text-center">
+      📚 Lịch Sử Đọc Gần Đây Của Bạn
+    </h1>
+
+    <!-- Danh sách lịch sử -->
+    {% if recent_history %}
+    <ul class="space-y-4">
+      {% for item in recent_history %}
+      <li
+        class="p-5 bg-dark-bg-card border border-dark-border rounded-2xl shadow-md 
+               hover:shadow-primary/30 hover:border-primary/50 hover:scale-[1.01] transition-all duration-300">
+        
+        <!-- Tên truyện -->
+        <a href="{% url 'story_detail' item.story.slug %}" 
+           class="text-white text-lg font-semibold hover:text-primary transition block truncate">
+          {{ item.story.title }}
+        </a>
+
+        <!-- Chương đang đọc -->
+        <p class="text-gray-400 mt-1 text-sm">
+          📘 Đã đọc đến: 
+          {% if item.chapter %}
+          <a href="{% url 'chapter_detail' story_slug=item.story.slug chapter_number=item.chapter.chapter_number|floatformat:0 %}" 
+             class="text-secondary hover:text-orange-400 transition font-medium">
+            Chương {{ item.chapter.chapter_number|floatformat:0 }}: {{ item.chapter.title }}
+          </a>
+          {% else %}
+          <span class="italic text-gray-500">Chương đã bị xóa hoặc chưa rõ.</span>
+          {% endif %}
+        </p>
+
+        <!-- Thời gian đọc gần nhất -->
+        <p class="text-xs text-gray-500 mt-2">
+          🕒 Lần cuối: <span class="text-gray-300">{{ item.last_read_at|date:"H:i d/m/Y" }}</span>
+        </p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-gray-500 italic text-center mt-10 text-sm">Bạn chưa đọc truyện nào gần đây.</p>
+    {% endif %}
+  </main>
+
+  <!-- 🧩 Footer -->
+  {% include 'story/footer/footer.html' %}
+
+  <!-- Script banner -->
+  <script src="{% static 'story/js/banner.js' %}"></script>
+</body>
+
+</html>

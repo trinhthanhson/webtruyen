@@ -60,4 +60,10 @@ urlpatterns = [
     path("logout/", views.custom_logout_view, name="logout"),
 path('toggle-favorite/<slug:story_slug>/', views.toggle_favorite, name='toggle_favorite'),
 path('truyen/yeu-thich/', views.favorite_list, name='favorite_list'),
-]
+path('story/<slug:story_slug>/submit-comment/', 
+         views.submit_comment, 
+         name='submit_comment'),
+         path('history-chapter/', 
+         views.history_view, 
+         name='history'),
+path('story/<slug:story_slug>/submit-rating/', views.submit_rating, name='submit_rating'),]
