@@ -1,103 +1,120 @@
-<!-- Load Tailwind CSS CDN -->
 {% load static %}
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
-<link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
-<script>
-    // Định nghĩa cấu hình màu Dark Mode
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền container
-                    'dark-border': '#4b5563', // Gray-600
-                },
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                },
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title|default:"Nguyệt Mộng Thư - Danh Sách Truyện" }}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        'primary': '#EAB308', // Màu vàng đặc trưng của logo
+                        'dark-body': '#121212', // Nền đen sâu
+                        'dark-card': '#1a1a1a', // Nền thẻ truyện
+                    },
+                    fontFamily: { 
+                        'logo': ['"Dancing Script"', 'cursive'], 
+                        'sans': ['Inter', 'sans-serif'] 
+                    },
+                }
             }
         }
-    }
-</script>
+    </script>
 
-<!DOCTYPE html>
-{% load static %}
-<html>
+    <style>
+        body { background-color: #121212; color: #e5e7eb; }
+        
+        /* Hiệu ứng Glassmorphism cho Card truyện */
+        .story-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page_title|default:"Danh Sách Truyện" }}</title>
+        .story-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #EAB308;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Badge Full đỏ đặc trưng trong ảnh */
+        .badge-full {
+            background-color: #ff0000;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Tên truyện và thông tin đè lên ảnh giống mẫu */
+        .story-info-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
+
+        .font-logo { font-family: 'Dancing Script', cursive; }
+    </style>
 </head>
 
-<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen">
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
 
     {% include 'story/header/header.html' %}
 
-    <div class="container mx-auto max-w-7xl my-8 px-4">
+    <main class="flex-grow container mx-auto px-4 pt-24 pb-12 mt-6 max-w-7xl">
 
-        <!-- Tiêu đề trang -->
-        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-8 pb-4 border-b border-dark-border text-center">
-            {{ page_title|default:"Tất Cả Truyện" }}
-        </h1>
+        <div class="flex items-center gap-3 mb-10">
+            <span class="w-1.5 h-8 bg-primary rounded-full shadow-[0_0_10px_#EAB308]"></span>
+            <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                {{ page_title|default:"Nguyệt Mộng Thư Truyện" }}
+            </h1>
+        </div>
 
-        <!-- Lưới hiển thị danh sách truyện -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {% for story in stories %}
-            <div
-                class="bg-dark-bg-card rounded-xl shadow-lg overflow-hidden border border-transparent hover:border-primary transition duration-300 group">
-
-                <!-- Ảnh bìa -->
-                <a href="{% url 'story_detail' story_slug=story.slug %}"
-                    class="block relative aspect-[3/4] overflow-hidden">
+            <div class="story-card group relative flex flex-col h-full overflow-hidden rounded-xl bg-dark-bg-card border border-transparent hover:border-primary/50 transition-all duration-300">
+                
+                <a href="{% url 'story_detail' story.slug %}" class="relative aspect-[3/4] block overflow-hidden">
                     <img src="{{ story.cover_image_url }}" alt="{{ story.title }}"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        onerror="this.onerror=null; this.src='https://placehold.co/400x533/444444/FFFFFF?text=NO+IMAGE';">
-                    {% if story.status == 'Hoàn thành' %}
-                    <span
-                        class="absolute top-2 right-2 bg-green-600 text-xs font-semibold px-2 py-0.5 rounded-full">Hoàn
-                        thành</span>
-                    {% endif %}
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-3">
+                        <h3 class="text-white font-logo text-sm text-center italic mb-1 line-clamp-2">
+                            {{ story.title }}
+                        </h3>
+                        <div class="flex justify-center">
+                            <span class="text-[9px] bg-white/10 backdrop-blur-sm text-gray-300 px-2 py-0.5 rounded-full border border-white/10">
+                                Edit: Trúc Mộng Yên
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="absolute top-2 left-2">
+                        <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg">FULL</span>
+                    </div>
                 </a>
 
-                <div class="p-3">
-                    <!-- Tên truyện -->
-                    <h2 class="text-base font-semibold truncate mb-1">
-                        <a href="{% url 'story_detail' story_slug=story.slug %}"
-                            class="text-white hover:text-primary transition duration-150" title="{{ story.title }}">
-                            {{ story.title }}
-                        </a>
-                    </h2>
-                    <!-- Tác giả -->
-                    <p class="text-xs text-gray-400 truncate">
-                        Tác giả: {{ story.author|default:"Khuyết danh" }}
-                    </p>
-                    <p class="text-xs text-gray-500 mt-1 truncate">
-                       Thể loại: {% for category in story.categories.all %}
-                        {{ category.category_name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    </p>
+                <div class="p-3 text-center">
+                    <a href="{% url 'story_detail' story.slug %}" class="text-sm font-semibold hover:text-primary transition line-clamp-1">
+                        {{ story.title }}
+                    </a>
                 </div>
             </div>
-            {% empty %}
-            <p class="col-span-full text-center text-gray-400 py-10">Không tìm thấy truyện nào. Vui lòng thử lại sau.
-            </p>
             {% endfor %}
         </div>
 
-        {% if is_paginated %}
-        <div class="mt-10 flex justify-center">
-            <!-- Pagination logic here if needed -->
-        </div>
-        {% endif %}
-
-    </div>
+    </main>
 
     {% include 'story/footer/footer.html' %}
 
 </body>
-
 </html>

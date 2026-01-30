@@ -1,120 +1,208 @@
 {% load static %}
-<!-- Load Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
- <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
-
-    <link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
-<script>
-    // Định nghĩa cấu hình màu Dark Mode và font Inter
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'secondary': '#f97316', // Orange-500
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền card
-                    'dark-border': '#4b5563', // Gray-600
-                },
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                },
-            }
-        }
-    }
-</script>
-
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 Danh sách truyện</title>
+    <title>📚 Nguyệt Mộng Thư - Trang chủ</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'primary': '#EAB308' },
+                    fontFamily: { 'logo': ['"Dancing Script"', 'cursive'], 'sans': ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        #global-bg-blur {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-size: cover;
+            background-position: center;
+            filter: blur(30px) brightness(0.5) saturate(1.3);
+            z-index: -2;
+            transition: background-image 1s ease-in-out;
+            transform: scale(1.1);
+        }
+
+        .global-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            z-index: -1;
+        }
+
+        html, body, main, section, div { background-color: transparent !important; }
+
+        #main-header {
+            transition: all 0.3s ease;
+        }
+
+        .banner-container {
+            padding-top: 140px;
+            padding-bottom: 60px;
+            min-height: 60vh;
+        }
+
+        /* Tối ưu Card truyện để có thể click toàn bộ diện tích */
+        .story-card-link {
+            display: block;
+            background: rgba(255, 255, 255, 0.07) !important;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 10px;
+            transition: all 0.4s ease;
+        }
+        
+        .story-card-link:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #EAB308;
+            transform: translateY(-8px);
+        }
+
+        .swiper { width: 260px; height: 380px; }
+        .swiper-slide { border-radius: 12px; overflow: hidden; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        #active-title {
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            color: rgb(245, 199, 74);
+        }
+    </style>
 </head>
 
-<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen">
+<body class="text-white antialiased">
 
-    <!-- Giả định include header.html đã được chuyển đổi sang Tailwind -->
-    {% include 'story/header/header.html' %}
+    <div id="global-bg-blur"></div>
+    <div class="global-overlay"></div>
 
-    <!-- Giả định banner.html là nội dung được chèn vào ngay dưới header -->
-    {% include 'story/banner/banner.html' %}
+    <header id="main-header" class="fixed top-0 left-0 w-full z-[100] transition-all duration-300">
+        <div class="container mx-auto px-6 h-[64px] flex justify-between items-center">
+            <div class="flex-shrink-0">
+                <a href="/" class="text-2xl font-logo text-primary tracking-wide">Nguyệt Mộng Thư</a>
+            </div>
 
-    <div class="container mx-auto px-4 py-6 md:py-8 max-w-7xl">
-        <h1 class="text-3xl font-extrabold text-white mb-6">
-            📚 {{ page_title|default:"Danh sách truyện" }}
-        </h1>
-        
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-6">
-            {% for story in stories %}
-            
-                <div class="bg-dark-bg-card rounded-lg shadow-xl overflow-hidden 
-                            hover:shadow-primary/50 hover:scale-[1.02] transition duration-300">
-                    
-                    <a href="{% url 'story_detail' story_slug=story.slug %}" class="block">
-                        <div class="card-image-wrapper aspect-w-3 aspect-h-4">
-                            
-                            <!-- Ảnh bìa truyện -->
-                            {% if story.cover_image_url %}
-                            <img src="{{ story.cover_image_url }}" 
-                                 class="w-full h-full object-cover" 
-                                 alt="{{ story.title }} - Ảnh bìa"
-                                 onerror="this.onerror=null; this.src='https://placehold.co/400x600/374151/FFFFFF?text=WEBSTORY';"
-                            >
-                            {% else %}
-                            <div class="w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
-                                Không có ảnh
-                            </div>
-                            {% endif %}
-                        </div>
-                    </a>
-
-                    <div class="p-3">
-                        
-                        <h5 class="text-base font-semibold truncate mb-1">
-                            <a href="{% url 'story_detail' story_slug=story.slug %}" class="hover:text-primary text-white">
-                                {{ story.title }}
-                            </a>
-                        </h5>
-
-                        <p class="text-xs text-gray-400 truncate mb-2">Tác giả: {{ story.author }}</p>
-
-                        {% with rounded_rating=story.avg_rating|default:0|floatformat:0 %}
-                        <div class="story-rating flex items-center text-sm">
-                            <span class="text-yellow-400 mr-1">
-                                
-                                {# Hiển thị sao dựa trên rating #}
-                                {% if rounded_rating >= 1 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 2 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 3 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 4 %}&#9733;{% else %}&#9734;{% endif %}
-                                {% if rounded_rating >= 5 %}&#9733;{% else %}&#9734;{% endif %}
-                            </span>
-                            
-                            <!-- Giá trị rating -->
-                            <span class="rating-value text-gray-300 font-bold ml-1">
-                                {{ story.avg_rating|default:"N/A"|floatformat:2 }}
-                            </span>
-                        </div>
-                        {% endwith %}
-
-                    </div>
+            <nav class="hidden md:flex items-center space-x-8 text-[15px] font-medium">
+                <a href="/" class="text-primary border-b-2 border-primary pb-1">Trang chủ</a>
+                <a href="/stories/" class="text-gray-200 hover:text-primary transition">Truyện</a>
+                <div class="relative group cursor-pointer flex items-center text-gray-200 hover:text-primary transition">
+                    <span>Thể loại</span>
+                    <svg class="w-4 h-4 ml-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
                 </div>
-            {% empty %}
-                <p class="col-span-full text-center text-gray-400 py-10 text-lg">Không tìm thấy truyện nào.</p>
+                <a href="#" class="text-gray-200 hover:text-primary transition">Liên hệ</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Tìm kiếm..." class="bg-[#1a1a1a]/60 border border-gray-700/50 text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] focus:outline-none focus:border-primary transition">
+                </div>
+                <div class="text-gray-400 hover:text-primary cursor-pointer flex items-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="banner-container">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+            <div class="flex-1 text-center md:text-left">
+                <a href="#" id="active-title-link" class="inline-block group">
+                    <h2 id="active-title" class="text-5xl font-bold mb-6 leading-tight group-hover:text-primary transition duration-300"></h2>
+                </a>
+                <p id="active-description" class="text-gray-100 text-lg mb-10 line-clamp-3"></p>
+                <a href="#" id="active-readmore-link" class="inline-block bg-white text-black px-10 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition shadow-lg">Đọc Ngay</a>
+            </div>
+
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    {% for story in stories %}
+                    <a href="{% url 'story_detail' story.slug %}" class="swiper-slide block" data-title="{{ story.title }}" data-desc="{{ story.description }}" data-url="{% url 'story_detail' story.slug %}">
+                        <img src="{{ story.cover_image_url }}" alt="{{ story.title }}">
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 py-20">
+        <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
+            <span class="w-1.5 h-8 bg-primary rounded-full"></span>
+            Truyện Mới Cập Nhật
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+            {% for story in stories %}
+            <a href="{% url 'story_detail' story.slug %}" class="story-card-link group">
+                <div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 shadow-md">
+                    <img src="{{ story.cover_image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h3 class="font-bold text-sm line-clamp-1 group-hover:text-primary transition">{{ story.title }}</h3>
+                <p class="text-[11px] text-gray-300 mt-1 opacity-80">{{ story.author }}</p>
+            </a>
             {% endfor %}
         </div>
-        
-        <!-- Logic phân trang (pagination) nếu có sẽ được thêm vào đây -->
-        
-    </div>
+    </main>
 
-    <!-- Giả định include footer.html đã được chuyển đổi sang Tailwind -->
-    {% include 'story/footer/footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            effect: "cards",
+            grabCursor: true,
+            loop: true,
+            autoplay: { delay: 3500, disableOnInteraction: false },
+            on: {
+                init: function () { updateUI(this); },
+                slideChange: function () { updateUI(this); }
+            }
+        });
 
-    <!-- Loại bỏ script tĩnh của banner nếu đã chuyển sang JS hoặc Tailwind -->
-    <script src="{% static 'story/js/banner.js' %}"></script>
+        function updateUI(s) {
+            const activeSlide = s.slides[s.activeIndex];
+            if (!activeSlide) return;
 
+            const imgUrl = activeSlide.querySelector('img').src;
+            const title = activeSlide.dataset.title;
+            const desc = activeSlide.dataset.desc;
+            const url = activeSlide.dataset.url;
+
+            // Cập nhật nền blur
+            document.getElementById('global-bg-blur').style.backgroundImage = `url('${imgUrl}')`;
+
+            // Cập nhật nội dung Banner
+            document.getElementById('active-title').innerText = title;
+            document.getElementById('active-description').innerText = desc;
+            
+            // Cập nhật các liên kết (Link)
+            document.getElementById('active-title-link').href = url;
+            document.getElementById('active-readmore-link').href = url;
+        }
+
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.style.backgroundColor = 'rgba(18, 18, 18, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+                header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+            } else {
+                header.style.backgroundColor = 'transparent';
+                header.style.backdropFilter = 'blur(0px)';
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
 </body>
-
 </html>
