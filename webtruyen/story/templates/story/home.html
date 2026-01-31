@@ -1,13 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📚 Nguyệt Mộng Thư - Trang chủ</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <script>
@@ -24,7 +27,10 @@
     <style>
         #global-bg-blur {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background-size: cover;
             background-position: center;
             filter: blur(30px) brightness(0.5) saturate(1.3);
@@ -35,12 +41,21 @@
 
         .global-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.15);
             z-index: -1;
         }
 
-        html, body, main, section, div { background-color: transparent !important; }
+        html,
+        body,
+        main,
+        section,
+        div {
+            background-color: transparent !important;
+        }
 
         #main-header {
             transition: all 0.3s ease;
@@ -62,19 +77,31 @@
             padding: 10px;
             transition: all 0.4s ease;
         }
-        
+
         .story-card-link:hover {
             background: rgba(255, 255, 255, 0.15) !important;
             border-color: #EAB308;
             transform: translateY(-8px);
         }
 
-        .swiper { width: 260px; height: 380px; }
-        .swiper-slide { border-radius: 12px; overflow: hidden; }
-        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .swiper {
+            width: 260px;
+            height: 380px;
+        }
+
+        .swiper-slide {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         #active-title {
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             color: rgb(245, 199, 74);
         }
     </style>
@@ -94,7 +121,8 @@
             <nav class="hidden md:flex items-center space-x-8 text-[15px] font-medium">
                 <a href="/" class="text-primary border-b-2 border-primary pb-1">Trang chủ</a>
                 <a href="/stories/" class="text-gray-200 hover:text-primary transition">Truyện</a>
-                <div class="relative group cursor-pointer flex items-center text-gray-200 hover:text-primary transition">
+                <div
+                    class="relative group cursor-pointer flex items-center text-gray-200 hover:text-primary transition">
                     <span>Thể loại</span>
                     <svg class="w-4 h-4 ml-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -105,11 +133,14 @@
 
             <div class="flex items-center space-x-4">
                 <div class="relative">
-                    <input type="text" placeholder="Tìm kiếm..." class="bg-[#1a1a1a]/60 border border-gray-700/50 text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] focus:outline-none focus:border-primary transition">
+                    <input type="text" placeholder="Tìm kiếm..."
+                        class="bg-[#1a1a1a]/60 border border-gray-700/50 text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] focus:outline-none focus:border-primary transition">
                 </div>
                 <div class="text-gray-400 hover:text-primary cursor-pointer flex items-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                        </path>
                     </svg>
                 </div>
             </div>
@@ -120,16 +151,22 @@
         <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
             <div class="flex-1 text-center md:text-left">
                 <a href="#" id="active-title-link" class="inline-block group">
-                    <h2 id="active-title" class="text-5xl font-bold mb-6 leading-tight group-hover:text-primary transition duration-300"></h2>
+                    <h2 id="active-title"
+                        class="text-5xl font-bold mb-6 leading-tight group-hover:text-primary transition duration-300">
+                    </h2>
                 </a>
                 <p id="active-description" class="text-gray-100 text-lg mb-10 line-clamp-3"></p>
-                <a href="#" id="active-readmore-link" class="inline-block bg-white text-black px-10 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition shadow-lg">Đọc Ngay</a>
+                <a href="#" id="active-readmore-link"
+                    class="inline-block bg-white text-black px-10 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition shadow-lg">Đọc
+                    Ngay</a>
             </div>
 
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     {% for story in stories %}
-                    <a href="{% url 'story_detail' story.slug %}" class="swiper-slide block" data-title="{{ story.title }}" data-desc="{{ story.description }}" data-url="{% url 'story_detail' story.slug %}">
+                    <a href="{% url 'story_detail' story.slug %}" class="swiper-slide block"
+                        data-title="{{ story.title }}" data-desc="{{ story.description }}"
+                        data-url="{% url 'story_detail' story.slug %}">
                         <img src="{{ story.cover_image_url }}" alt="{{ story.title }}">
                     </a>
                     {% endfor %}
@@ -148,7 +185,8 @@
             {% for story in stories %}
             <a href="{% url 'story_detail' story.slug %}" class="story-card-link group">
                 <div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 shadow-md">
-                    <img src="{{ story.cover_image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <img src="{{ story.cover_image_url }}"
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                 </div>
                 <h3 class="font-bold text-sm line-clamp-1 group-hover:text-primary transition">{{ story.title }}</h3>
                 <p class="text-[11px] text-gray-300 mt-1 opacity-80">{{ story.author }}</p>
@@ -185,13 +223,13 @@
             // Cập nhật nội dung Banner
             document.getElementById('active-title').innerText = title;
             document.getElementById('active-description').innerText = desc;
-            
+
             // Cập nhật các liên kết (Link)
             document.getElementById('active-title-link').href = url;
             document.getElementById('active-readmore-link').href = url;
         }
 
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const header = document.getElementById('main-header');
             if (window.scrollY > 50) {
                 header.style.backgroundColor = 'rgba(18, 18, 18, 0.95)';
@@ -205,4 +243,5 @@
         });
     </script>
 </body>
+
 </html>

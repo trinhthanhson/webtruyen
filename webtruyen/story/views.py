@@ -37,9 +37,10 @@ def story_list(request):
     # Lấy tất cả truyện, sắp xếp theo thời gian cập nhật giảm dần
     # SỬA: Thêm .select_related('category')
     stories = Story.objects.prefetch_related('categories').order_by('-updated_at', '-created_at')
-    
+    categories = Category.objects.annotate(story_count=Count('stories')) # Phải gọi lại hàm này
     context = {
         'stories': stories,
+        'categories':categories
     }
 
 
@@ -65,7 +66,7 @@ def story_detail(request, story_slug):
         Story.objects.annotate(
             # Giả định related_name từ Chapter tới Story là 'chapters'
             first_chapter_number=Min('chapters__chapter_number'),
-            latest_chapter_number=Max('chapters__chapter_number')
+            latest_chapter_number=Max('chapters__chapter_number'),
         ), 
         slug=story_slug
     )
@@ -121,12 +122,13 @@ def chapter_detail(request, story_slug, chapter_number):
     )
 
     # 5. Truyền context sang template
+    chapter_display = int(current_chapter.chapter_number) if current_chapter.chapter_number else 0
     context = {
         'story': story,
         'chapter': current_chapter,
         'previous_chapter': previous_chapter,
         'next_chapter': next_chapter,
-        'page_title': f"{story.title} - Chương {current_chapter.chapter_number}",
+        'page_title': f"{story.title} - Chương {chapter_display}",
     }
 
     return render(request, 'story/chapter_detail.html', context)

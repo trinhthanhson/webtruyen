@@ -9,8 +9,6 @@
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.0">
-<link rel="stylesheet" href="{% static 'story/css/banner/banner.css' %}?v=1.0">
     <script>
         tailwind.config = {
             theme: {
@@ -33,7 +31,8 @@
     <style>
         /* ✅ Format nội dung truyện: xuống dòng, dễ đọc, thụt đầu dòng */
         .chapter-content {
-            white-space: pre-line; /* Giữ nguyên xuống dòng trong nội dung */
+            white-space: pre-line;
+            /* Giữ nguyên xuống dòng trong nội dung */
         }
 
         .chapter-content p {
@@ -57,7 +56,7 @@
 <body class="bg-dark-bg-body font-sans text-gray-100 antialiased">
 
     <!-- Header -->
-        {% include 'story/header/header.html' %}
+    {% include 'story/header/header.html' %}
 
 
     <!-- Nội dung -->
@@ -83,13 +82,13 @@
         <!-- Nội dung chương -->
         <div class="chapter-content text-gray-300 leading-relaxed">
             {% if chapter.content %}
-                {{ chapter.content|linebreaksbr }}
+            {{ chapter.content|linebreaksbr }}
             {% elif chapter.image_urls %}
-                {% for image_url in chapter.image_urls %}
-                    <img src="{{ image_url }}" alt="Hình ảnh minh họa chương">
-                {% endfor %}
+            {% for image_url in chapter.image_urls %}
+            <img src="{{ image_url }}" alt="Hình ảnh minh họa chương">
+            {% endfor %}
             {% else %}
-                <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
+            <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
             {% endif %}
         </div>
 
