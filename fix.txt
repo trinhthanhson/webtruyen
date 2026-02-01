@@ -1,0 +1,8 @@
+Để a note lại 1 vài thứ e xem qua nha.
+
+1. Xem lại Hero Banner cho mượt.
+2. Fill thêm demo Truyện theo danh mục ở Homepage.
+3. Darkmode điều chỉnh (check lại màu sắc chữ khi ở 2 mode)
+4. Response mobile (Quan trọng vì user dùng mobile nhiều)
+5. Điều chỉnh footer theo 1 layout mới khác hiện tại.
+6. Gom assets (css, js) lại.

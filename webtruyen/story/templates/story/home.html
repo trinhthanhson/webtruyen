@@ -44,6 +44,20 @@
             z-index: -2;
             transition: background-image 1s ease-in-out;
             transform: scale(1.1);
+            transition: background-image 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Chuyển nền mượt hơn */
+            will-change: background-image;
+            /* Báo trước cho trình duyệt tối ưu phần cứng */
+        }
+
+        #active-title,
+        #active-description {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-out;
+        }
+
+        .content-fade-out {
+            opacity: 0;
+            transform: translateY(10px);
         }
 
         .global-overlay {
@@ -102,6 +116,7 @@
         }
 
         .swiper-slide {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 12px;
             overflow: hidden;
         }
@@ -324,6 +339,7 @@
             {% endfor %}
         </div>
     </main>
+    {% include 'story/footer/footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
@@ -331,13 +347,20 @@
             effect: "cards",
             grabCursor: true,
             loop: true,
-            autoplay: { delay: 3500, disableOnInteraction: false },
+            speed: 800, // Tăng tốc độ trượt lên 800ms để cảm giác mượt và sâu hơn
+            rotate: true, // Cho phép xoay nhẹ các card phía sau
+            perSlideRotate: 2,
+            perSlideOffset: 8,
+            autoplay: {
+                delay: 4500, // Tăng thời gian chờ để người dùng kịp đọc tiêu đề
+                disableOnInteraction: false
+            },
+            watchSlidesProgress: true, // Tối ưu hóa việc theo dõi tiến trình để animation mượt hơn
             on: {
                 init: function () { updateUI(this); },
                 slideChange: function () { updateUI(this); }
             }
         });
-
         function updateUI(s) {
             const activeSlide = s.slides[s.activeIndex];
             if (!activeSlide) return;
@@ -347,16 +370,29 @@
             const desc = activeSlide.dataset.desc;
             const url = activeSlide.dataset.url;
 
-            // Cập nhật nền blur
-            document.getElementById('global-bg-blur').style.backgroundImage = `url('${imgUrl}')`;
+            // Hiệu ứng Fade Out nội dung cũ
+            const titleEl = document.getElementById('active-title');
+            const descEl = document.getElementById('active-description');
 
-            // Cập nhật nội dung Banner
-            document.getElementById('active-title').innerText = title;
-            document.getElementById('active-description').innerText = desc;
+            titleEl.style.opacity = '0';
+            descEl.style.opacity = '0';
 
-            // Cập nhật các liên kết (Link)
-            document.getElementById('active-title-link').href = url;
-            document.getElementById('active-readmore-link').href = url;
+            setTimeout(() => {
+                // Cập nhật nền blur
+                document.getElementById('global-bg-blur').style.backgroundImage = `url('${imgUrl}')`;
+
+                // Cập nhật nội dung
+                titleEl.innerText = title;
+                descEl.innerText = desc;
+
+                // Cập nhật links
+                document.getElementById('active-title-link').href = url;
+                document.getElementById('active-readmore-link').href = url;
+
+                // Fade In nội dung mới
+                titleEl.style.opacity = '1';
+                descEl.style.opacity = '1';
+            }, 300); // Đợi 300ms cho slide bắt đầu trượt rồi mới đổi chữ
         }
 
         window.addEventListener('scroll', function () {
