@@ -21,7 +21,38 @@
         }
     }
 </script>
+<style>
+    body.light-mode {
+        background-color: #f8f9fa !important;
+        color: #000000 !important;
+    }
 
+    body.light-mode .bg-dark-bg-card {
+        background-color: #ffffff !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Ép tất cả chữ trong nội dung chương sang ĐEN */
+    body.light-mode .chapter-content,
+    body.light-mode .chapter-content p,
+    body.light-mode .text-gray-300,
+    body.light-mode .text-gray-400 {
+        color: #000000 !important;
+    }
+
+    /* Đổi màu tiêu đề chương */
+    body.light-mode h1 {
+        color: #EAB308 !important;
+        /* Giữ màu vàng cho tiêu đề nếu muốn */
+        border-color: #e5e7eb !important;
+    }
+
+    /* Đổi màu thanh phân cách phía dưới */
+    body.light-mode .border-gray-700,
+    body.light-mode .border-gray-600 {
+        border-color: #e5e7eb !important;
+    }
+</style>
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -31,15 +62,20 @@
     <title>Danh sách Thể loại Truyện</title>
 </head>
 
-<body class="bg-dark-bg-body font-sans antialiased text-gray-100">
+<body class="bg-dark-bg-body font-sans text-gray-100 antialiased transition-colors duration-300">
     {% include 'story/header/header.html' %}
 
-    <div class="container mx-auto max-w-5xl my-8 px-4">
+    <div class="container mx-auto max-w-5xl my-8 px-4  ">
 
-        <h1 class="text-3xl md:text-4xl font-extrabold text-white text-center mb-8 pb-4 border-b border-gray-600">
-            📚 Danh Sách Thể Loại Truyện
-        </h1>
+        <div class="mb-10 mt-40">
+            <div class="flex items-center space-x-4 mb-2">
+                <div class="w-1.5 h-10 bg-primary rounded-full"></div>
+                <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                    📚 Danh Sách Thể Loại Truyện
 
+                </h1>
+            </div>
+        </div>
         <div class="bg-dark-bg-card rounded-xl shadow-2xl p-6 md:p-8">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

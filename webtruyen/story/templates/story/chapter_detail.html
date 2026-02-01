@@ -32,7 +32,6 @@
         /* ✅ Format nội dung truyện: xuống dòng, dễ đọc, thụt đầu dòng */
         .chapter-content {
             white-space: pre-line;
-            /* Giữ nguyên xuống dòng trong nội dung */
         }
 
         .chapter-content p {
@@ -50,11 +49,41 @@
             border-radius: 0.75rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
         }
+
+        body.light-mode {
+            background-color: #f8f9fa !important;
+            color: #000000 !important;
+        }
+
+        body.light-mode .bg-dark-bg-card {
+            background-color: #ffffff !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Ép tất cả chữ trong nội dung chương sang ĐEN */
+        body.light-mode .chapter-content,
+        body.light-mode .chapter-content p,
+        body.light-mode .text-gray-300,
+        body.light-mode .text-gray-400 {
+            color: #000000 !important;
+        }
+
+        /* Đổi màu tiêu đề chương */
+        body.light-mode h1 {
+            color: #EAB308 !important;
+            /* Giữ màu vàng cho tiêu đề nếu muốn */
+            border-color: #e5e7eb !important;
+        }
+
+        /* Đổi màu thanh phân cách phía dưới */
+        body.light-mode .border-gray-700,
+        body.light-mode .border-gray-600 {
+            border-color: #e5e7eb !important;
+        }
     </style>
 </head>
 
-<body class="bg-dark-bg-body font-sans text-gray-100 antialiased">
-
+<body class="bg-dark-bg-body font-sans text-gray-100 antialiased transition-colors duration-300">
     <!-- Header -->
     {% include 'story/header/header.html' %}
 
@@ -97,24 +126,24 @@
 
             {% if previous_chapter %}
             <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=previous_chapter.chapter_number %}"
-                class="flex-1 max-w-[200px] bg-gray-600 text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-gray-500 transition duration-200">
+                class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-primary transition duration-200">
                 ← Chương trước
             </a>
             {% else %}
             <button disabled
-                class="flex-1 max-w-[200px] bg-gray-700 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
+                class="flex-1 max-w-[200px] bg-gray-200 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
                 ← Chương trước
             </button>
             {% endif %}
 
             {% if next_chapter %}
             <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=next_chapter.chapter_number %}"
-                class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-blue-500 transition duration-200">
+                class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-primary transition duration-200">
                 Chương sau →
             </a>
             {% else %}
             <button disabled
-                class="flex-1 max-w-[200px] bg-gray-700 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
+                class="flex-1 max-w-[200px] bg-gray-200 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
                 Chương sau →
             </button>
             {% endif %}
@@ -122,6 +151,15 @@
 
     </div>
     {% include 'story/footer/footer.html' %}
+    <script>// Kiểm tra và áp dụng theme ngay khi trang load xong
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
+        });</script>
 </body>
 
 </html>

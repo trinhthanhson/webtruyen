@@ -27,9 +27,9 @@
         body {
             background-color: #121212;
             color: #e5e7eb;
+            overflow-x: hidden;
         }
 
-        /* Hiệu ứng kính cho các container */
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -37,7 +37,6 @@
             border-radius: 16px;
         }
 
-        /* Nút tùy chỉnh */
         .btn-primary {
             background: #EAB308;
             color: #000;
@@ -61,7 +60,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Sidebar card mini */
         .sidebar-card {
             display: flex;
             gap: 12px;
@@ -73,11 +71,71 @@
         .sidebar-card:hover {
             background: rgba(255, 255, 255, 0.05);
         }
+
+        /* Custom Scrollbar cho danh sách chương */
+        .chapter-list-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chapter-list-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chapter-list-scroll::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .chapter-list-scroll::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+
+        /* Hiệu ứng trượt Sidebar */
+        #chapter-sidebar {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-open {
+            transform: translateX(0) !important;
+        }
+
+        .overlay-active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
     </style>
 </head>
 
 <body class="font-sans antialiased">
     {% include 'story/header/header.html' %}
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1001] opacity-0 invisible transition-all duration-300">
+    </div>
+
+    <aside id="chapter-sidebar"
+        class="fixed top-0 right-0 h-full w-full max-w-md bg-[#181818] z-[1002] shadow-2xl translate-x-full border-l border-white/5 flex flex-col">
+        <div class="p-6 border-b border-white/5 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-white">Danh sách chương</h2>
+            <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto chapter-list-scroll p-4 space-y-1">
+            {% for chapter in chapters %}
+            <a href="{% url 'chapter_detail' story.slug chapter.chapter_number|floatformat:0 %}"
+                class="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-primary border-b border-white/5 transition-all text-sm">
+                {{ chapter.title }}
+            </a>
+            {% empty %}
+            <p class="p-4 text-gray-500 text-center">Chưa có chương nào.</p>
+            {% endfor %}
+        </div>
+    </aside>
 
     <main class="container mx-auto px-4 pt-28 pb-12 max-w-7xl">
         <nav class="flex text-sm text-gray-400 mb-6 space-x-2">
@@ -89,9 +147,7 @@
         </nav>
 
         <div class="flex flex-col lg:flex-row gap-8">
-
             <div class="lg:w-2/3 space-y-8">
-
                 <div class="flex flex-col md:flex-row gap-8">
                     <div class="w-full md:w-64 flex-shrink-0">
                         <div class="relative group">
@@ -105,26 +161,37 @@
 
                     <div class="flex-1 space-y-4">
                         <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight">{{ story.title }}</h1>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 text-sm">
-                            <p><span class="text-white">Tác giả:</span> <span class="text-primary ml-2">
+                        <div class="grid grid-cols-1 gap-y-3 text-sm">
+                            <p><span class="text-gray-400">Tác giả:</span> <span class="text-primary ml-2">
                                     {{story.author|default:"Đang cập nhật" }}</span></p>
-                            <p><span class="text-white">Thể loại:</span>
+                            <p><span class="text-gray-400">Thể loại:</span>
                                 <span class="text-primary ml-2">
                                     {% for cat in story.categories.all %}
-                                    <a href="#" class="text-primary hover:underline">{{ cat.category_name }}</a>
+                                    <a href="#" class="hover:underline">{{ cat.category_name }}</a>
                                     {% if not forloop.last %}, {% endif %}
                                     {% endfor %}
                                 </span>
                             </p>
-                            <p><span class="text-white">Dịch giả:</span> <span class="text-primary ml-2">Trúc Mộng
+                            <p><span class="text-gray-400">Dịch giả:</span> <span class="text-primary ml-2">Trúc Mộng
                                     Yên</span></p>
                         </div>
 
                         <div class="flex items-center gap-6 text-sm pt-2">
                             <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                <span class="text-gray-300">Đã full</span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full 
+        {% if story.status == 'ongoing' %}bg-blue-400
+        {% elif story.status == 'completed' %}bg-green-400
+        {% else %}bg-gray-400{% endif %}">
+                                    </span>
+
+                                    <span class="text-sm font-medium
+        {% if story.status == 'ongoing' %}text-blue-400
+        {% elif story.status == 'completed' %}text-green-400
+        {% else %}text-gray-400{% endif %}">
+                                        {{ story.get_status_display }}
+                                    </span>
+                                </span>
                             </div>
                             <div class="flex items-center gap-2 text-gray-300">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,69 +208,114 @@
                                 class="btn-primary px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px]">Đọc
                                 từ đầu</a>
                             {% endif %}
-                            <button
-                                class="btn-secondary px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px]">Danh
-                                sách chương</button>
+                            <button onclick="toggleSidebar()"
+                                class="btn-secondary px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px]">
+                                Danh sách chương
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="glass-panel p-6">
                     <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-white">
-                        <span class="w-1 h-6 bg-primary rounded-full"></span>
-                        Văn án
+                        <span class="w-1 h-6 bg-primary rounded-full"></span> Văn án
                     </h2>
-                    <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line">
+                    <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line text-justify italic">
                         {{ story.description }}
                     </div>
                 </div>
 
                 <div class="glass-panel p-6">
-                    <h2 class="text-xl font-bold mb-6 text-white">Danh sách chương</h2>
+                    <h2 class="text-xl font-bold mb-6 text-white">Chương mới nhất</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-                        {% for chapter in chapters %}
+                        {% for chapter in chapters|slice:":10" %}
                         <a href="{% url 'chapter_detail' story.slug chapter.chapter_number|floatformat:0 %}"
                             class="py-2 border-b border-gray-800 hover:text-primary transition flex justify-between group">
-                            <span class="truncate">
-                                Chương {{ chapter.chapter_number|floatformat:0 }}: {{ chapter.title}}
-                            </span>
-                            <span class="text-xs text-gray-500 group-hover:text-primary/70 italic">Mới</span>
+                            <span class="truncate text-sm">
+                                Chương {{ chapter.chapter_number|floatformat:0 }}: {{ chapter.title }}</span>
+                            <span class="text-[10px] text-gray-500 italic">Mới</span>
                         </a>
                         {% endfor %}
                     </div>
                 </div>
-
             </div>
 
             <div class="lg:w-1/3">
                 <div class="glass-panel p-5 sticky top-24">
-                    <h3 class="text-lg font-bold mb-6 text-white border-b border-gray-800 pb-2">Cùng thể loại</h3>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b border-gray-800 pb-3 flex items-center gap-2">
+                        <span class="w-1 h-5 bg-primary rounded-full shadow-[0_0_8px_#EAB308]"></span>
+                        Cùng thể loại
+                    </h3>
 
                     <div class="space-y-5">
-                        {% for same_story in related_stories|slice:":5" %}
-                        <a href="{% url 'story_detail' same_story.slug %}" class="sidebar-card group">
-                            <div class="w-16 h-20 flex-shrink-0 relative">
+                        {% for same_story in related_stories %}
+                        <a href="{% url 'story_detail' same_story.slug %}"
+                            class="sidebar-card group flex gap-3 items-start">
+                            <div
+                                class="w-16 h-20 flex-shrink-0 relative overflow-hidden rounded-lg shadow-md border border-white/5">
                                 <img src="{{ same_story.cover_image_url }}"
-                                    class="w-full h-full object-cover rounded shadow" alt="">
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    alt="{{ same_story.title }}">
+
+                                {% if same_story.status == 'full' %}
                                 <span
-                                    class="absolute top-1 left-1 bg-red-600 text-[8px] text-white px-1 rounded">Full</span>
+                                    class="absolute top-1 left-1 bg-red-600 text-[8px] text-white px-1.5 py-0.5 rounded-sm font-bold uppercase shadow-sm">
+                                    Full
+                                </span>
+                                {% endif %}
                             </div>
+
                             <div class="flex-1 min-w-0">
                                 <h4
-                                    class="text-sm font-semibold text-gray-200 group-hover:text-primary truncate transition">
-                                    {{ same_story.title }}</h4>
-                                <p class="text-[11px] text-gray-500 mt-1">Edit: Trúc Mộng Yên</p>
+                                    class="text-[13px] font-semibold text-gray-200 group-hover:text-primary leading-tight truncate transition-colors">
+                                    {{ same_story.title }}
+                                </h4>
+                                <p class="text-[11px] text-gray-500 mt-1.5 truncate">
+                                    Tác giả: {{ same_story.author|default:"Nhiều tác giả" }}
+                                </p>
+                                <div class="flex items-center gap-3 mt-2">
+                                    <div class="flex items-center gap-1 text-[10px] text-gray-600">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"></path>
+                                            <path
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                stroke-width="2"></path>
+                                        </svg>
+                                        {{ same_story.views_count|default:0 }}
+                                    </div>
+                                </div>
                             </div>
                         </a>
+                        {% empty %}
+                        <div class="text-center py-6">
+                            <p class="text-sm text-gray-500 italic">Không tìm thấy truyện tương tự.</p>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 
     {% include 'story/footer/footer.html' %}
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('chapter-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const body = document.body;
+
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('overlay-active');
+
+            // Khóa cuộn trang khi mở sidebar
+            if (sidebar.classList.contains('sidebar-open')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = 'auto';
+            }
+        }
+    </script>
 </body>
 
 </html>

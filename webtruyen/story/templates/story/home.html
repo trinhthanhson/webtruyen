@@ -17,7 +17,10 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { 'primary': '#EAB308' },
+                    colors: {
+                        'primary': '#EAB308',
+                        'bodybg': '#121212' // THÊM DÒNG NÀY (Màu bạn muốn)
+                    },
                     fontFamily: { 'logo': ['"Dancing Script"', 'cursive'], 'sans': ['Inter', 'sans-serif'] },
                 }
             }
@@ -25,6 +28,10 @@
     </script>
 
     <style>
+        :root {
+            --nmt-body-bg: #121212;
+        }
+
         #global-bg-blur {
             position: fixed;
             top: 0;
@@ -57,13 +64,17 @@
             background-color: transparent !important;
         }
 
+        .dropdown-content {
+            background-color: var(--nmt-body-bg) !important;
+            backdrop-filter: blur(20px);
+        }
+
         #main-header {
             transition: all 0.3s ease;
         }
 
         .banner-container {
             padding-top: 140px;
-            padding-bottom: 60px;
             min-height: 60vh;
         }
 
@@ -87,6 +98,7 @@
         .swiper {
             width: 260px;
             height: 380px;
+            right: 50px;
         }
 
         .swiper-slide {
@@ -103,6 +115,77 @@
         #active-title {
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             color: rgb(245, 199, 74);
+        }
+
+        /* Dropdown Logic */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .group:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Custom Active State */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link.active {
+            color: #EAB308 !important;
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #EAB308;
+            border-radius: 2px;
+        }
+
+        /* Style cho Light Mode */
+        body.light-mode {
+            color: #1a1a1a !important;
+        }
+
+        body.light-mode #global-bg-blur {
+            filter: blur(30px) brightness(1.1) saturate(1.1);
+            /* Làm nền sáng lên */
+        }
+
+        body.light-mode .global-overlay {
+            background: rgba(255, 255, 255, 0.7);
+            /* Lớp phủ trắng mờ thay vì đen */
+        }
+
+        body.light-mode .text-gray-100,
+        body.light-mode .text-gray-200,
+        body.light-mode .text-gray-300 {
+            color: #374151 !important;
+            /* Chuyển chữ xám sáng thành xám tối */
+        }
+
+        body.light-mode #main-header:not(.scrolled) .nav-link,
+        body.light-mode #main-header:not(.scrolled) button {
+            color: #1a1a1a;
+        }
+
+        /* Fix Card truyện khi ở chế độ sáng */
+        body.light-mode .story-card-link {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-color: rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -121,12 +204,43 @@
             <nav class="hidden md:flex items-center space-x-8 text-[15px] font-medium">
                 <a href="/" class="text-primary border-b-2 border-primary pb-1">Trang chủ</a>
                 <a href="/stories/" class="text-gray-200 hover:text-primary transition">Truyện</a>
-                <div
-                    class="relative group cursor-pointer flex items-center text-gray-200 hover:text-primary transition">
-                    <span>Thể loại</span>
-                    <svg class="w-4 h-4 ml-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
+                <div class="relative group">
+                    <button class="nav-link flex items-center text-gray-200 group-hover:text-primary transition font-medium outline-none py-5 
+                    {% if '/categories/' in request.path or '/category/' in request.path %}active{% endif %}">
+                        Thể loại
+                        <svg class="w-4 h-4 ml-1 mt-0.5 transition-transform group-hover:rotate-180" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 w-[550px] lg:w-[650px] pt-1">
+                        <div
+                            class="dropdown-content bg-bodybg border border-white/10 rounded-xl shadow-2xl overflow-hidden mt-1 backdrop-blur-md">
+
+                            <div class="grid grid-cols-3 gap-x-2 gap-y-1 p-5">
+                                {% for cat in categories %}
+                                <a href="{% url 'category_detail' cat.slug %}"
+                                    class="group/item flex items-center justify-between px-3 py-2 text-[14px] text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-all duration-200">
+                                    <span class="font-medium">{{ cat.category_name }}</span>
+                                    {% if cat.story_count %}
+                                    <span class="text-[10px] text-gray-500 group-hover/item:text-primary/70">
+                                        ( {{cat.story_count }} )
+                                    </span>
+                                    {% endif %}
+                                </a>
+                                {% endfor %}
+                            </div>
+
+                            <div class="bg-black/40 p-3 text-center border-t border-white/5">
+                                <a href="{% url 'categories' %}"
+                                    class="text-[11px] text-primary hover:text-yellow-400 uppercase tracking-[0.15em] font-bold transition-all duration-300">
+                                    Tất cả thể loại
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <a href="#" class="text-gray-200 hover:text-primary transition">Liên hệ</a>
             </nav>
@@ -136,12 +250,28 @@
                     <input type="text" placeholder="Tìm kiếm..."
                         class="bg-[#1a1a1a]/60 border border-gray-700/50 text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] focus:outline-none focus:border-primary transition">
                 </div>
-                <div class="text-gray-400 hover:text-primary cursor-pointer flex items-center">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                        </path>
-                    </svg>
+                <div class="relative group/mode">
+                    <div class="text-gray-400 hover:text-primary cursor-pointer flex items-center py-2"
+                        id="mode-toggle">
+                        <svg id="current-mode-icon" class="w-5 h-5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <div
+                        class="absolute right-0 mt-1 w-32 bg-bodybg border border-white/10 rounded-lg shadow-xl opacity-0 invisible group-hover/mode:opacity-100 group-hover/mode:visible transition-all z-[110] overflow-hidden">
+                        <button onclick="setTheme('light')"
+                            class="w-full text-left px-4 py-2 text-xs text-gray-300 hover:bg-white/10 hover:text-primary transition">
+                            ☀️ Sáng
+                        </button>
+                        <button onclick="setTheme('dark')"
+                            class="w-full text-left px-4 py-2 text-xs text-gray-300 hover:bg-white/10 hover:text-primary transition border-t border-white/5">
+                            🌙 Tối
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -239,6 +369,30 @@
                 header.style.backgroundColor = 'transparent';
                 header.style.backdropFilter = 'blur(0px)';
                 header.style.boxShadow = 'none';
+            }
+        });
+        function setTheme(theme) {
+            const body = document.body;
+            const icon = document.getElementById('current-mode-icon');
+
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+                // Đổi icon sang mặt trời
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path>`;
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-mode');
+                // Đổi icon sang mặt trăng
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>`;
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Kiểm tra tùy chọn cũ của người dùng khi load trang
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                setTheme('light');
             }
         });
     </script>

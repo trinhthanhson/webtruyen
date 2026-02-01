@@ -21,9 +21,11 @@ def home(request):
     
     # Lấy tất cả truyện, sắp xếp theo thời gian cập nhật giảm dần
     stories = Story.objects.all().order_by('-updated_at', '-created_at')
-    
+    categories = Category.objects.annotate(story_count=Count('stories')) # Phải gọi lại hàm này
+
     context = {
         'stories': stories,
+        'categories':categories
         # Bạn có thể thêm các biến khác nếu cần, ví dụ: 'top_stories': ...
     }
     return render(request, 'story/home.html', context)
@@ -51,33 +53,37 @@ def story_list(request):
 
 # Trang chi tiết truyện - hiển thị mô tả và chương
 def story_detail(request, story_slug): 
-    """
-    Hiển thị thông tin chi tiết truyện, tăng lượt xem và danh sách chương.
-    Đã thêm logic tính toán chương đầu tiên và chương mới nhất (dùng cho nút bấm).
-    """
-    
-    # 1. TĂNG LƯỢT XEM: Tăng views_count lên 1. 
-    # Sử dụng F() và update() để đảm bảo tính nguyên vẹn (atomic update).
+    # 1. TĂNG LƯỢT XEM
     Story.objects.filter(slug=story_slug).update(views_count=F('views_count') + 1)
 
-    # 2. Lấy Story VÀ Annotate để tính toán số chương đầu/cuối
-    # SỬA LỖI: Đã thay pk=story_id thành slug=story_slug.
+    # 2. Lấy Story và tính toán chương đầu/cuối
     story = get_object_or_404(
         Story.objects.annotate(
-            # Giả định related_name từ Chapter tới Story là 'chapters'
             first_chapter_number=Min('chapters__chapter_number'),
             latest_chapter_number=Max('chapters__chapter_number'),
         ), 
         slug=story_slug
     )
 
-    # 3. LẤY CHƯƠNG: Lấy tất cả chương, sắp xếp theo chapter_number (DecimalField/Int)
+    # 3. LẤY TRUYỆN CÙNG THỂ LOẠI
+    # Lấy danh sách thể loại của truyện hiện tại
+    current_categories = story.categories.all()
+    
+    # Lọc truyện: dùng story_id thay vì id
+    related_stories = Story.objects.filter(
+        categories__in=current_categories
+    ).exclude(story_id=story.story_id).distinct().order_by('-views_count')[:5]
+
+    # 4. DỮ LIỆU BỔ TRỢ
     chapters = story.chapters.all().order_by('chapter_number')
-        
+    all_categories = Category.objects.annotate(story_count=Count('stories'))
+    
     context = {
         'story': story, 
         'chapters': chapters,
-        'page_title': story.title # Lấy title từ đối tượng story đã fetch
+        'related_stories': related_stories,
+        'page_title': story.title,
+        'categories': all_categories
     }
     return render(request, 'story/story_detail.html', context)
 
@@ -120,6 +126,7 @@ def chapter_detail(request, story_slug, chapter_number):
         .only('chapter_number') # Tối ưu hóa: chỉ cần lấy chapter_number
         .first()
     )
+    categories = Category.objects.annotate(story_count=Count('stories')) # Phải gọi lại hàm này
 
     # 5. Truyền context sang template
     chapter_display = int(current_chapter.chapter_number) if current_chapter.chapter_number else 0
@@ -129,6 +136,7 @@ def chapter_detail(request, story_slug, chapter_number):
         'previous_chapter': previous_chapter,
         'next_chapter': next_chapter,
         'page_title': f"{story.title} - Chương {chapter_display}",
+        'categories':categories
     }
 
     return render(request, 'story/chapter_detail.html', context)
@@ -281,7 +289,8 @@ def search_results(request):
     query = request.GET.get('q') # Lấy chuỗi tìm kiếm từ thanh header
     results = []
     page_title = "Kết Quả Tìm Kiếm"
-    
+    categories = Category.objects.annotate(story_count=Count('stories')) # Phải gọi lại hàm này
+
     if query:
         try:
             # Truy vấn cơ sở dữ liệu: Tìm kiếm gần đúng (icontains)
@@ -298,6 +307,7 @@ def search_results(request):
         'query': query,
         'stories': results,
         'page_title': page_title,
+        'categories':categories
     }
     
     # Sử dụng lại template hiển thị danh sách truyện
@@ -313,10 +323,12 @@ def category_detail(request, category_slug):
     # Ta dùng related_name='stories' đã được định nghĩa trong ManyToManyField của Story.
     # Ví dụ: stories = Story.objects.filter(categories=category)
     stories = category.stories.all().order_by('-views_count') # Sắp xếp theo lượt xem
+    categories = Category.objects.annotate(story_count=Count('stories')) # Phải gọi lại hàm này
 
     context = {
         'category': category,
         'stories': stories,
+        'categories':categories
     }
     
     return render(request, 'story/category_detail.html', context)   
