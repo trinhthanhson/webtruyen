@@ -1,89 +1,9 @@
+{% load static %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-.main-footer,
-.footer-logo,
-.footer-social-icon {
-    transition: background-color 0.3s ease,
-                border-color 0.3s ease,
-                color 0.3s ease;
-}    /* 2. CSS riêng cho Footer */
-    .main-footer {
-        background-color: #1a1a1a;
-        /* Màu nền tối sâu */
-        padding: 50px 0;
-        width: 100%;
-        margin-top: auto;
-        /* Đẩy xuống cuối trang nếu dùng flex wrapper */
-        border-top: 1px solid #2a2a2a;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .footer-container {
-        text-align: center;
-    }
-
-    .footer-logo {
-        font-family: 'Dancing Script', cursive;
-        /* Font chữ nghệ thuật */
-        color: #e5a93d;
-        /* Màu vàng đồng (Nguyệt Mộng Thư) */
-        font-size: 2.2rem;
-        margin-bottom: 25px;
-        letter-spacing: 1px;
-    }
-
-    .footer-social-icon {
-        color: #e5a93d;
-        font-size: 3rem;
-        /* Kích thước icon lớn giống ảnh */
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .footer-social-icon:hover {
-        transform: scale(1.1);
-        color: #ffcc33;
-        /* Sáng hơn khi di chuột */
-        text-shadow: 0 0 10px rgba(229, 169, 61, 0.5);
-    }
-
-    /* Đảm bảo footer luôn ở dưới cùng của màn hình nếu nội dung ít */
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        margin: 0;
-    }
-
-    main {
-        flex: 1;
-    }
-    /* FOOTER – LIGHT MODE */
-html.light-mode .main-footer {
-    background-color: #f9fafb;      /* sáng nhẹ, không gắt */
-    border-top: 1px solid #e5e7eb;
-}
-
-html.light-mode .footer-logo {
-    color: #c99700;                 /* vàng dịu hơn */
-}
-
-html.light-mode .footer-social-icon {
-    color: #c99700;
-}
-
-html.light-mode .footer-social-icon:hover {
-    color: #b8860b;
-    text-shadow: 0 0 8px rgba(184, 134, 11, 0.35);
-}
-</style>
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
 <footer class="main-footer">
     <div class="footer-container">

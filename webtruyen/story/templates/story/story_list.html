@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
     <script>
         tailwind.config = {
             theme: {
@@ -29,49 +29,6 @@
             }
         }
     </script>
-
-    <style>
-        body {
-            background-color: #1c1c1d;
-            color: #e5e7eb;
-        }
-
-        /* Hiệu ứng Glassmorphism cho Card truyện */
-        .story-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .story-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #EAB308;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Badge Full đỏ đặc trưng trong ảnh */
-        .badge-full {
-            background-color: #ff0000;
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        /* Tên truyện và thông tin đè lên ảnh giống mẫu */
-        .story-info-overlay {
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
-        }
-
-        .font-logo {
-            font-family: 'Dancing Script', cursive;
-        }
-    </style>
 </head>
 
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
@@ -128,6 +85,7 @@
     </main>
 
     {% include 'story/footer/footer.html' %}
+    <script src="{% static 'story/js/theme.js' %}"></script>
 
 </body>
 

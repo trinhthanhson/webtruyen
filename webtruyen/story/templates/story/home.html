@@ -15,6 +15,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
     <script>
       tailwind.config = {
         theme: {
@@ -31,115 +32,6 @@
         },
       };
     </script>
-
-    <style>
-      :root {
-        --nmt-body-bg: #121212;
-      }
-
-      #global-bg-blur {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-size: cover;
-        background-position: center;
-        filter: blur(30px) brightness(0.5) saturate(1.3);
-        z-index: -2;
-        transform: scale(1.1);
-        /* Tốc độ chuyển nền 0.6s khớp với speed của Swiper */
-        transition: background-image 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: background-image;
-      }
-
-      /* Hiệu ứng chữ lướt đồng bộ */
-      #active-title,
-      #active-description {
-        transition:
-          opacity 0.4s ease,
-          transform 0.4s ease;
-        will-change: opacity, transform;
-      }
-
-      .global-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.15);
-        z-index: -1;
-      }
-
-      html,
-      body,
-      main,
-      section,
-      div {
-        background-color: transparent !important;
-      }
-
-      .dropdown-content {
-        background-color: var(--nmt-body-bg) !important;
-        backdrop-filter: blur(20px);
-      }
-
-      #main-header {
-        transition: all 0.3s ease;
-      }
-      .banner-container {
-        padding-top: 140px;
-        min-height: 60vh;
-      }
-
-      .story-card-link {
-        display: block;
-        background: rgba(255, 255, 255, 0.07) !important;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 10px;
-        transition: all 0.4s ease;
-      }
-
-      .story-card-link:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border-color: #eab308;
-        transform: translateY(-8px);
-      }
-
-      .swiper {
-        width: 260px;
-        height: 380px;
-        right: 50px;
-      }
-      .swiper-slide {
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .swiper-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      #active-title {
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        color: rgb(245, 199, 74);
-      }
-
-      /* Chế độ sáng */
-      body.light-mode #global-bg-blur {
-        filter: blur(30px) brightness(1.1) saturate(1.1);
-      }
-      body.light-mode .global-overlay {
-        background: rgba(255, 255, 255, 0.7);
-      }
-      body.light-mode .text-gray-100 {
-        color: #374151 !important;
-      }
-    </style>
   </head>
 
   <body class="text-white antialiased">

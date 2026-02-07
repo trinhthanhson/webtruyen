@@ -9,6 +9,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
     <script>
         tailwind.config = {
@@ -27,29 +28,9 @@
         }
     </script>
 
-    <style>
-        body {
-            background-color: #1b1a1a;
-            color: #e5e7eb;
-        }
-
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .line-clamp-1 {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased category-detail-page">
 
     {% include 'story/header/header.html' %}
 

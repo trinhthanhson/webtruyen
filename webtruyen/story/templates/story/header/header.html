@@ -4,6 +4,8 @@
   href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600&display=swap"
   rel="stylesheet"
 />
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   (function () {
@@ -26,115 +28,6 @@
     },
   };
 </script>
-
-<style>
-  /* --- TRẠNG THÁI MẶC ĐỊNH (DARK MODE) --- */
-  body {
-    background-color: #121212;
-    color: #eeeeee;
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-  }
-
-  #main-header {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .search-input {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-  }
-
-  /* Dropdown Logic */
-  .dropdown-menu {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(15px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-  }
-
-  .group:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .nav-link {
-    position: relative;
-    transition: all 0.3s ease;
-  }
-
-  .nav-link.active {
-    color: #eab308 !important;
-    font-weight: 600;
-  }
-
-  .nav-link.active::after {
-    content: "";
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #eab308;
-    border-radius: 2px;
-  }
-
-  /* --- CHẾ ĐỘ SÁNG (LIGHT MODE) --- */
-  html.light-mode body {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-  }
-
-  /* Chuyển TẤT CẢ chữ sang màu đen (trừ màu primary) */
-  html.light-mode body :not(.text-primary):not(.dropdown-content *) {
-    color: #000000;
-  }
-
-  /* Tinh chỉnh Header & Nav trong Light Mode */
-  html.light-mode body .nav-link,
-  html.light-mode body #header-inner a:not(.text-primary) {
-    color: #1a1a1a !important;
-  }
-
-  html.light-mode body .search-input {
-    background: #f3f4f6 !important;
-    border: 1px solid #d1d5db !important;
-    color: #000000 !important;
-  }
-
-  html.light-mode body .search-input::placeholder {
-    color: #6b7280 !important;
-  }
-
-  /* Dropdown trong chế độ sáng */
-  html.light-mode body .dropdown-content {
-    background-color: #ffffff !important;
-    border-color: #e5e7eb !important;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-
-  html.light-mode body .dropdown-content a {
-    color: #374151 !important;
-  }
-
-  html.light-mode body .dropdown-content a:hover {
-    background-color: #f3f4f6;
-    color: #eab308 !important;
-  }
-
-  /* Hiển thị Menu Sáng/Tối */
-  #theme-menu-container.show #theme-menu {
-    display: block !important;
-  }
-  html.preload * {
-    transition: none !important;
-  }
-</style>
 
 <header
   id="main-header"
@@ -258,7 +151,8 @@
 <script>
   function toggleTheme() {
     const html = document.documentElement;
-    const isLight = html.classList.toggle("light-mode");
+    const isLight = document.body.classList.toggle("light-mode");
+
 
     localStorage.setItem("theme", isLight ? "light" : "dark");
     setThemeIcon(isLight);

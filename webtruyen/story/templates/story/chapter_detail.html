@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }}</title>
+<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,63 +28,9 @@
             }
         }
     </script>
-
-    <style>
-        /* ✅ Format nội dung truyện: xuống dòng, dễ đọc, thụt đầu dòng */
-        .chapter-content {
-            white-space: pre-line;
-        }
-
-        .chapter-content p {
-            margin-bottom: 1.25rem;
-            text-indent: 1.75rem;
-            font-size: 1.1rem;
-            line-height: 1.85;
-        }
-
-        .chapter-content img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 1.5rem auto;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-        }
-
-        body.light-mode {
-            background-color: #f8f9fa !important;
-            color: #000000 !important;
-        }
-
-        body.light-mode .bg-dark-bg-card {
-            background-color: #ffffff !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-        }
-
-        /* Ép tất cả chữ trong nội dung chương sang ĐEN */
-        body.light-mode .chapter-content,
-        body.light-mode .chapter-content p,
-        body.light-mode .text-gray-300,
-        body.light-mode .text-gray-400 {
-            color: #000000 !important;
-        }
-
-        /* Đổi màu tiêu đề chương */
-        body.light-mode h1 {
-            color: #EAB308 !important;
-            /* Giữ màu vàng cho tiêu đề nếu muốn */
-            border-color: #e5e7eb !important;
-        }
-
-        /* Đổi màu thanh phân cách phía dưới */
-        body.light-mode .border-gray-700,
-        body.light-mode .border-gray-600 {
-            border-color: #e5e7eb !important;
-        }
-    </style>
 </head>
 
-<body class="bg-dark-bg-body font-sans text-gray-100 antialiased transition-colors duration-300">
+<body class="bg-dark-bg-body font-sans text-gray-100 antialiased transition-colors duration-300 chapter-detail-page">
     <!-- Header -->
     {% include 'story/header/header.html' %}
 
