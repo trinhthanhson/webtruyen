@@ -11,6 +11,21 @@
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+#current-mode-icon {
+  color: #9ca3af;
+  /* xám nhạt */
+  transition: color 0.3s ease;
+}
+
+#current-mode-icon:hover {
+  color: var(--primary-color);
+}
+
+body.light-mode #current-mode-icon {
+  color: #374151;
+  /* xám đậm cho light */
+}
+
 /* Reset cơ bản */
 main,
 section,
@@ -171,8 +186,16 @@ div {
 
 /* ===== HEADER STYLES ===== */
 #main-header {
-  transition: all var(--transition-smooth);
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  backdrop-filter: blur(0px);
+  transition:
+    background 0.35s ease,
+    backdrop-filter 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
 }
+
 
 /* Dropdown Logic */
 .dropdown-menu {
@@ -463,4 +486,30 @@ body {
 /* Category Detail Background */
 .category-detail-page {
   background-color: #1b1a1a !important;
+}
+
+#main-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  backdrop-filter: blur(0px);
+  transition:
+    background 0.35s ease,
+    backdrop-filter 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* Khi scroll */
+#main-header.header-scrolled {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(14px);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* Light mode */
+body.light-mode #main-header.header-scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-color: rgba(229, 231, 235, 0.8);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
