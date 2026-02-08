@@ -7,10 +7,13 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   (function () {
+    const html = document.documentElement;
+    html.classList.add("no-transition");
+
     try {
       const theme = localStorage.getItem("theme");
       if (theme === "light") {
-        document.documentElement.classList.add("light-mode");
+        html.classList.add("light-mode");
       }
     } catch (e) { }
   })();
@@ -28,22 +31,20 @@
 </script>
 
 <header id="main-header" class="fixed top-0 left-0 w-full z-[1000] bg-transparent">
-  <div id="header-inner"
-    class="container mx-auto px-4 py-5 flex justify-between items-center transition-all duration-300">
+  <div id="header-inner" class="container mx-auto px-4 py-5 flex justify-between items-center">
     <div class="flex items-center">
       <a href="/" class="text-3xl font-logo text-primary hover:scale-105 transition-transform">Nguyệt Mộng Thư</a>
     </div>
 
     <nav class="hidden md:flex items-center space-x-10">
-      <a href="/"
-        class="nav-link hover:text-primary transition font-medium {% if request.path == '/' %}active{% endif %}">Trang
+      <a href="/" class="nav-link hover:text-primary font-medium {% if request.path == '/' %}active{% endif %}">Trang
         chủ</a>
       <a href="/stories/"
-        class="nav-link hover:text-primary transition font-medium {% if '/stories/' in request.path %}active{% endif %}">Truyện</a>
+        class="nav-link hover:text-primary font-medium {% if '/stories/' in request.path %}active{% endif %}">Truyện</a>
 
       <div class="relative group">
         <button
-          class="nav-link flex items-center group-hover:text-primary transition font-medium outline-none py-5 {% if '/categories/' in request.path or '/category/' in request.path %}active{% endif %}">
+          class="nav-link flex items-center group-hover:text-primary font-medium outline-none py-5 {% if '/categories/' in request.path or '/category/' in request.path %}active{% endif %}">
           Thể loại
           <svg class="w-4 h-4 ml-1 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor"
             viewBox="0 0 24 24">
@@ -52,11 +53,11 @@
         </button>
 
         <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 w-[550px] lg:w-[650px] pt-1">
-          <div class="dropdown-content bg-[#1a1a1a] border border-[#333] rounded-xl shadow-2xl overflow-hidden mt-1">
+          <div class="dropdown-content border border-[#333] rounded-xl shadow-2xl overflow-hidden mt-1">
             <div class="grid grid-cols-3 gap-x-2 gap-y-1 p-5">
               {% for cat in categories %}
               <a href="{% url 'category_detail' cat.slug %}"
-                class="group/item flex items-center justify-between px-3 py-2 text-[14px] hover:bg-white/5 hover:text-primary rounded-lg transition-all">
+                class="group/item flex items-center justify-between px-3 py-2 text-[14px] hover:bg-white/5 hover:text-primary rounded-lg">
                 <span>{{ cat.category_name }}</span>
                 {% if cat.story_count %}<span
                   class="text-[10px] text-gray-500 group-hover/item:text-primary/70">({{cat.story_count}})</span>
@@ -66,7 +67,7 @@
             </div>
             <div class="bg-white/5 p-3 text-center border-t border-[#333]">
               <a href="{% url 'categories' %}"
-                class="text-[11px] text-primary hover:text-yellow-400 uppercase tracking-widest font-bold transition">Tất
+                class="text-[11px] text-primary hover:text-yellow-400 uppercase tracking-widest font-bold">Tất
                 cả thể loại</a>
             </div>
           </div>
@@ -74,7 +75,7 @@
       </div>
 
       <a href="/contact/"
-        class="nav-link hover:text-primary transition font-medium {% if request.path == '/contact/' %}active{% endif %}">Liên
+        class="nav-link hover:text-primary font-medium {% if request.path == '/contact/' %}active{% endif %}">Liên
         hệ</a>
     </nav>
 
@@ -88,7 +89,7 @@
 
       <div class="flex items-center space-x-5">
         <div onclick="toggleTheme()"
-          class="text-gray-400 hover:text-primary cursor-pointer flex items-center py-2 px-3 transition">
+          class="text-gray-400 hover:text-primary cursor-pointer flex items-center py-2 px-3">
           <svg id="mode-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <!-- icon sẽ được JS set -->
           </svg>
@@ -99,67 +100,55 @@
 </header>
 
 <script>
+  // 1. Hàm đặt Icon (☀️/🌙)
+  function setThemeIcon(isLight) {
+    const icon = document.getElementById("mode-icon");
+    if (!icon) return;
+
+    if (isLight) {
+      icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>`;
+    } else {
+      icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
+    }
+  }
+
+  // 2. Hàm Toggle Theme
   function toggleTheme() {
     const html = document.documentElement;
-    const isLight = document.body.classList.toggle("light-mode");
-
+    const isLight = html.classList.toggle("light-mode");
 
     localStorage.setItem("theme", isLight ? "light" : "dark");
     setThemeIcon(isLight);
-    updateHeaderStyle();
   }
 
-  function setThemeIcon(isLight) {
-    const icon = document.getElementById("mode-icon");
-
-    if (isLight) {
-      // ☀️ icon
-      icon.innerHTML = `
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 3v1m0 16v1m9-9h-1M4 12H3
-                    m15.364-6.364l-.707.707M6.343 17.657l-.707.707
-                    m12.728 0l-.707-.707M6.343 6.343l-.707-.707
-                    M12 8a4 4 0 100 8 4 4 0 000-8z"/>
-            `;
-    } else {
-      // 🌙 icon
-      icon.innerHTML = `
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M20.354 15.354A9 9 0 018.646 3.646
-                    9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-            `;
-    }
-  }
-
+  // 3. Khởi tạo khi DOM sẵn sàng
   document.addEventListener("DOMContentLoaded", () => {
-    const theme = localStorage.getItem("theme");
-    const isLight = theme === "light";
-
-    if (isLight) {
-      document.body.classList.add("light-mode");
-    }
-
+    const isLight = document.documentElement.classList.contains("light-mode");
     setThemeIcon(isLight);
-    updateHeaderStyle();
-  });
-  document.documentElement.classList.add("preload");
 
-  window.addEventListener("load", () => {
-    document.documentElement.classList.remove("preload");
+    // Xóa class no-transition sau 100ms
+    setTimeout(() => {
+      document.documentElement.classList.remove("no-transition");
+    }, 100);
   });
-  const header = document.getElementById("main-header")
-  let lastScroll = 0
-  let ticking = false
 
-  function onScroll() {
+  // 4. Xử lý Scroll Header
+  const header = document.getElementById("main-header");
+  let ticking = false;
+
+  window.addEventListener("scroll", () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
-        header.classList.toggle("header-scrolled", window.scrollY > 30)
-        ticking = false
-      })
-      ticking = true
+        if (header) {
+          header.classList.toggle("header-scrolled", window.scrollY > 30);
+        }
+        ticking = false;
+      });
+      ticking = true;
     }
-  }
+  }, { passive: true });
 
-  window.addEventListener("scroll", onScroll, { passive: true })
+  window.addEventListener("load", () => {
+    document.documentElement.classList.remove("no-transition");
+  });
 </script>

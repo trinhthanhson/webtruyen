@@ -1,4 +1,4 @@
-/* ===== STYLE.CSS - GỘP TẤT CẢ CSS ===== */
+/* ===== STYLE.CSS - CLEANED & OPTIMIZED ===== */
 
 /* ===== VARIABLES & RESET ===== */
 :root {
@@ -11,21 +11,6 @@
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#current-mode-icon {
-  color: #9ca3af;
-  /* xám nhạt */
-  transition: color 0.3s ease;
-}
-
-#current-mode-icon:hover {
-  color: var(--primary-color);
-}
-
-body.light-mode #current-mode-icon {
-  color: #374151;
-  /* xám đậm cho light */
-}
-
 /* Reset cơ bản */
 main,
 section,
@@ -33,14 +18,44 @@ div {
   background-color: transparent;
 }
 
-/* ===== COMMON STYLES - ÁP DỤNG CHO TẤT CẢ TRANG ===== */
+/* Preload */
+html.no-transition,
+html.no-transition * {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
 
-/* 1. Font chữ chung */
+/* ===== BODY LAYOUT ===== */
+body {
+  background-color: var(--nmt-body-bg);
+  color: var(--text-light);
+}
+
+main {
+  flex: 1;
+}
+
+/* Story List Background */
+.story-list-page {
+  background-color: #1c1c1d !important;
+}
+
+/* Category Detail Background */
+.category-detail-page {
+  background-color: #1b1a1a !important;
+}
+
+/* ===== COMMON STYLES ===== */
+
+/* Font chữ chung */
 .font-logo {
   font-family: 'Dancing Script', cursive;
 }
 
-/* 2. Hiệu ứng thẻ card chung */
+/* Hiệu ứng thẻ card chung */
 .glass-panel,
 .story-card,
 .story-card-link {
@@ -48,7 +63,8 @@ div {
   backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  transition: all var(--transition-smooth);
+  /* Chỉ transition cho transform và box-shadow, KHÔNG cho background và border */
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
 }
 
 .story-card-link {
@@ -64,7 +80,7 @@ div {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* 3. Nút chung */
+/* Nút chung */
 .btn-primary {
   background: var(--primary-color);
   color: #000;
@@ -88,7 +104,7 @@ div {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* 4. Text utilities */
+/* Text utilities */
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -110,7 +126,7 @@ div {
   overflow: hidden;
 }
 
-/* 5. Badge */
+/* Badge */
 .badge-full {
   background-color: #ff0000;
   color: white;
@@ -158,12 +174,15 @@ div {
 #active-title {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   color: rgb(245, 199, 74);
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-#active-title,
 #active-description {
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  will-change: opacity, transform;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* Swiper */
@@ -187,15 +206,31 @@ div {
 /* ===== HEADER STYLES ===== */
 #main-header {
   background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  border-bottom: none;
   backdrop-filter: blur(0px);
-  transition:
-    background 0.35s ease,
-    backdrop-filter 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
 }
 
+/* Chỉ transition khi scroll, không khi đổi theme */
+#main-header {
+  transition: background 0.25s ease, backdrop-filter 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Khi scroll - Dark mode */
+#main-header.header-scrolled {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Mode Icon */
+#current-mode-icon {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+#current-mode-icon:hover {
+  color: var(--primary-color);
+}
 
 /* Dropdown Logic */
 .dropdown-menu {
@@ -216,12 +251,13 @@ div {
 .dropdown-content {
   background-color: var(--nmt-body-bg) !important;
   backdrop-filter: blur(20px);
+  /* Không transition background để chuyển theme tức thì */
 }
 
 /* Navigation */
 .nav-link {
   position: relative;
-  transition: all 0.3s ease;
+  /* Chỉ transition cho hover effect, KHÔNG cho color */
 }
 
 .nav-link.active {
@@ -257,6 +293,7 @@ div {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* Không transition để chuyển theme tức thì */
 }
 
 .footer-container {
@@ -269,12 +306,14 @@ div {
   font-size: 2.2rem;
   margin-bottom: 25px;
   letter-spacing: 1px;
+  /* Không transition color */
 }
 
 .footer-social-icon {
   color: #e5a93d;
   font-size: 3rem;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+  /* Chỉ transition transform và shadow, không transition color */
   text-decoration: none;
   display: inline-block;
 }
@@ -354,162 +393,167 @@ div {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
-/* ===== LIGHT MODE STYLES ===== */
-
-/* Body chung cho Light Mode */
-body.light-mode {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-/* Home Page Light Mode */
-body.light-mode #global-bg-blur {
-  filter: blur(30px) brightness(1.1) saturate(1.1);
-}
-
-body.light-mode .global-overlay {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-/* Header Light Mode */
-body.light-mode .nav-link,
-body.light-mode #header-inner a:not(.text-primary) {
-  color: #1a1a1a !important;
-}
-
-body.light-mode .search-input {
-  background: #f3f4f6 !important;
-  border: 1px solid #d1d5db !important;
-  color: #000000 !important;
-}
-
-body.light-mode .search-input::placeholder {
-  color: #6b7280 !important;
-}
-
-/* Dropdown Light Mode */
-body.light-mode .dropdown-content {
-  background-color: #ffffff !important;
-  border-color: #e5e7eb !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-body.light-mode .dropdown-content a {
-  color: #374151 !important;
-}
-
-body.light-mode .dropdown-content a:hover {
-  background-color: #f3f4f6;
-  color: var(--primary-color) !important;
-}
-
-/* Footer Light Mode */
-body.light-mode .main-footer {
-  background-color: #f9fafb;
-  border-top: 1px solid #e5e7eb;
-}
-
-body.light-mode .footer-logo {
-  color: #c99700;
-}
-
-body.light-mode .footer-social-icon {
-  color: #c99700;
-}
-
-body.light-mode .footer-social-icon:hover {
-  color: #b8860b;
-  text-shadow: 0 0 8px rgba(184, 134, 11, 0.35);
-}
-
-/* Story Detail/Card Light Mode */
-body.light-mode .bg-dark-bg-card {
-  background-color: #ffffff !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Text Light Mode - Ép tất cả chữ sang đen */
-body.light-mode .text-gray-100,
-body.light-mode .text-gray-200,
-body.light-mode .text-gray-300,
-body.light-mode .text-gray-400,
-body.light-mode .chapter-content,
-body.light-mode .chapter-content p {
-  color: #000000 !important;
-}
-
-/* Tiêu đề chương giữ màu vàng */
-body.light-mode h1 {
-  color: var(--primary-color) !important;
-  border-color: #e5e7eb !important;
-}
-
-/* Thanh phân cách */
-body.light-mode .border-gray-700,
-body.light-mode .border-gray-600 {
-  border-color: #e5e7eb !important;
-}
-
 /* Theme Menu */
 #theme-menu-container.show #theme-menu {
   display: block !important;
 }
 
-/* Preload */
-html.preload * {
+/* ===== LIGHT MODE STYLES ===== */
+
+/* Body chung cho Light Mode */
+html.light-mode body {
+  background-color: #ffffff;
+}
+
+html.light-mode body,
+html.light-mode p,
+html.light-mode span,
+html.light-mode div:not(.text-primary) {
+  color: #000000;
+}
+
+/* Home Page Light Mode */
+html.light-mode #global-bg-blur {
+  filter: blur(30px) brightness(1.1) saturate(1.1);
+}
+
+html.light-mode .global-overlay {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Header Light Mode */
+html.light-mode #main-header {
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: none;
+}
+
+html.light-mode #main-header.header-scrolled {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+html.light-mode .nav-link,
+html.light-mode #header-inner a:not(.text-primary) {
+  color: #1a1a1a !important;
   transition: none !important;
 }
 
-/* ===== BODY LAYOUT FIXES ===== */
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
+html.light-mode #current-mode-icon,
+html.light-mode #mode-icon {
+  color: #374151;
 }
 
-main {
-  flex: 1;
+html.light-mode .search-input {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #000000;
 }
 
-/* Màu nền body mặc định (Dark Mode) */
-body {
-  background-color: var(--nmt-body-bg);
-  color: var(--text-light);
+html.light-mode .search-input::placeholder {
+  color: #6b7280;
 }
 
-/* Story List Background */
-.story-list-page {
-  background-color: #1c1c1d !important;
+/* Dropdown Light Mode */
+html.light-mode .dropdown-content {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Category Detail Background */
-.category-detail-page {
-  background-color: #1b1a1a !important;
+html.light-mode .dropdown-content .border-t {
+  border-color: #e5e7eb !important;
 }
 
-#main-header {
-  background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0);
-  backdrop-filter: blur(0px);
-  transition:
-    background 0.35s ease,
-    backdrop-filter 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
+html.light-mode .dropdown-content a {
+  color: #374151 !important;
 }
 
-/* Khi scroll */
-#main-header.header-scrolled {
-  background: rgba(18, 18, 18, 0.85);
-  backdrop-filter: blur(14px);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+html.light-mode .dropdown-content a span {
+  color: #374151 !important;
 }
 
-/* Light mode */
-body.light-mode #main-header.header-scrolled {
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom-color: rgba(229, 231, 235, 0.8);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+html.light-mode .dropdown-content a:hover {
+  background-color: #f3f4f6;
+  color: var(--primary-color) !important;
+}
+
+html.light-mode .dropdown-content a:hover span {
+  color: var(--primary-color) !important;
+}
+
+html.light-mode .dropdown-content .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+/* Footer Light Mode */
+html.light-mode .main-footer {
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+html.light-mode .footer-logo {
+  color: #c99700;
+}
+
+html.light-mode .footer-social-icon {
+  color: #c99700;
+}
+
+html.light-mode .footer-social-icon:hover {
+  color: #b8860b;
+  text-shadow: 0 0 8px rgba(184, 134, 11, 0.35);
+}
+
+html.light-mode .footer-container * {
+  color: #000000;
+}
+
+/* Story Detail/Card Light Mode */
+html.light-mode .bg-dark-bg-card {
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+html.light-mode .glass-panel,
+html.light-mode .story-card,
+html.light-mode .story-card-link {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Text Light Mode */
+html.light-mode .text-gray-400,
+html.light-mode .text-gray-200,
+html.light-mode .text-gray-300,
+html.light-mode .chapter-content,
+html.light-mode .chapter-content p {
+  color: #000000;
+}
+
+html.light-mode .text-primary,
+html.light-mode .nav-link.active,
+html.light-mode h1 {
+  color: var(--primary-color) !important;
+}
+
+/* Input Light Mode */
+html.light-mode input,
+html.light-mode textarea {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #d1d5db;
+}
+
+html.light-mode input::placeholder {
+  color: #6b7280;
+}
+
+/* Borders Light Mode */
+html.light-mode .border-gray-700,
+html.light-mode .border-gray-600 {
+  border-color: #e5e7eb;
 }
