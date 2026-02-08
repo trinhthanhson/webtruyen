@@ -46,7 +46,7 @@
   </script>
 </head>
 
-<body class="text-white antialiased">
+<body class="text-white antialiased overflow-x-hidden">
   <div id="global-bg-blur"></div>
   <div class="global-overlay"></div>
 
@@ -142,7 +142,7 @@
       {% endfor %}
     </div>
   </main>
-
+  {% include 'story/footer/footer.html' %}
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     const titleEl = document.getElementById("active-title");

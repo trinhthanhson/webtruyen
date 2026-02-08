@@ -6,7 +6,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }}</title>
-<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+
+    <!-- Preload theme để tránh chớp -->
+    <script>
+        (function () {
+            const html = document.documentElement;
+            html.classList.add("no-transition");
+            try {
+                const theme = localStorage.getItem("theme");
+                if (theme === "light") {
+                    html.classList.add("light-mode");
+                }
+            } catch (e) { }
+        })();
+    </script>
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +29,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'primary': '#60a5fa',
+                        'primary': '#EAB308',
                         'secondary': '#f97316',
                         'dark-bg-body': '#262626',
                         'dark-bg-card': '#333333',
@@ -30,13 +44,12 @@
     </script>
 </head>
 
-<body class="bg-dark-bg-body font-sans text-gray-100 antialiased transition-colors duration-300 chapter-detail-page">
+<body class="font-sans antialiased chapter-detail-page">
     <!-- Header -->
     {% include 'story/header/header.html' %}
 
-
     <!-- Nội dung -->
-    <div class="container mx-auto max-w-5xl my-10 mt-20 p-6 md:p-10 bg-dark-bg-card rounded-2xl shadow-2xl">
+    <div class="container mx-auto max-w-5xl my-10 mt-20 p-6 md:p-10 glass-panel rounded-2xl shadow-2xl">
 
         <!-- Tiêu đề chương -->
         <h1 class="text-3xl md:text-4xl font-extrabold text-primary text-center pb-4 mb-6 border-b border-gray-600">
@@ -48,7 +61,7 @@
         <p class="text-center text-gray-400 mb-8">
             Truyện:
             <a href="{% url 'story_detail' story_slug=story.slug %}"
-                class="text-primary hover:text-secondary font-semibold transition duration-300">
+                class="text-primary hover:text-secondary font-semibold">
                 {{ story.title }}
             </a>
             <span class="text-sm ml-1">| Tác giả: {{ story.author }}</span>
@@ -56,7 +69,7 @@
         {% endif %}
 
         <!-- Nội dung chương -->
-        <div class="chapter-content text-gray-300 leading-relaxed">
+        <div class="chapter-content">
             {% if chapter.content %}
             {{ chapter.content|linebreaksbr }}
             {% elif chapter.image_urls %}
@@ -73,24 +86,24 @@
 
             {% if previous_chapter %}
             <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=previous_chapter.chapter_number %}"
-                class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-primary transition duration-200">
+                class="flex-1 max-w-[200px] btn-primary text-center py-3 px-6 rounded-lg font-bold shadow-md">
                 ← Chương trước
             </a>
             {% else %}
             <button disabled
-                class="flex-1 max-w-[200px] bg-gray-200 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
+                class="flex-1 max-w-[200px] bg-gray-300 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
                 ← Chương trước
             </button>
             {% endif %}
 
             {% if next_chapter %}
             <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=next_chapter.chapter_number %}"
-                class="flex-1 max-w-[200px] bg-primary text-white text-center py-3 px-6 rounded-lg font-bold shadow-md hover:bg-primary transition duration-200">
+                class="flex-1 max-w-[200px] btn-primary text-center py-3 px-6 rounded-lg font-bold shadow-md">
                 Chương sau →
             </a>
             {% else %}
             <button disabled
-                class="flex-1 max-w-[200px] bg-gray-200 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
+                class="flex-1 max-w-[200px] bg-gray-300 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
                 Chương sau →
             </button>
             {% endif %}
@@ -98,15 +111,15 @@
 
     </div>
     {% include 'story/footer/footer.html' %}
-    <script>// Kiểm tra và áp dụng theme ngay khi trang load xong
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                document.body.classList.add('light-mode');
-            } else {
-                document.body.classList.remove('light-mode');
-            }
-        });</script>
+
+    <script>
+        // Xóa class no-transition sau khi load xong
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                document.documentElement.classList.remove("no-transition");
+            }, 100);
+        });
+    </script>
 </body>
 
 </html>

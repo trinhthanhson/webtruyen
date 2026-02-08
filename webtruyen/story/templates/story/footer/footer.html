@@ -5,15 +5,122 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
-<footer class="main-footer">
-    <div class="footer-container">
-        <div class="footer-logo">Nguyệt Mộng Thư</div>
+<footer class="modern-footer">
+    <div class="footer-top">
+        <div class="footer-grid">
+            <!-- Brand Section -->
+            <div class="footer-brand">
+                <div class="footer-logo-modern">Nguyệt Mộng Thư</div>
+                <p class="footer-tagline">Khám phá kho tàng truyện chữ vô tận</p>
+                <div class="footer-social-modern">
+                    <a href="https://www.facebook.com/your_page" target="_blank" class="social-icon-modern facebook"
+                        title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-icon-modern twitter" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-icon-modern instagram" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-icon-modern discord" title="Discord">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </div>
+            </div>
 
-        <div class="footer-social">
-            <a href="https://www.facebook.com/your_page" target="_blank" class="footer-social-icon"
-                title="Theo dõi chúng tôi trên Facebook">
-                <i class="fab fa-facebook"></i>
-            </a>
+            <!-- Quick Links -->
+            <div class="footer-links">
+                <h3 class="footer-heading">Danh Mục</h3>
+                <ul class="footer-menu">
+                    <li><a href="/"><i class="fas fa-home"></i> Trang chủ</a></li>
+                    <li><a href="/stories/"><i class="fas fa-book"></i> Truyện</a></li>
+                    <li><a href="/categories/"><i class="fas fa-th-large"></i> Thể loại</a></li>
+                    <li><a href="/ranking/"><i class="fas fa-trophy"></i> Bảng xếp hạng</a></li>
+                </ul>
+            </div>
+
+            <!-- Support -->
+            <div class="footer-links">
+                <h3 class="footer-heading">Hỗ Trợ</h3>
+                <ul class="footer-menu">
+                    <li><a href="/help/"><i class="fas fa-question-circle"></i> Trợ giúp</a></li>
+                    <li><a href="/contact/"><i class="fas fa-envelope"></i> Liên hệ</a></li>
+                    <li><a href="/terms/"><i class="fas fa-file-contract"></i> Điều khoản</a></li>
+                    <li><a href="/privacy/"><i class="fas fa-shield-alt"></i> Bảo mật</a></li>
+                </ul>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="footer-newsletter">
+                <h3 class="footer-heading">Nhận Thông Báo</h3>
+                <p class="newsletter-desc">Đăng ký để nhận cập nhật truyện mới nhất</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Email của bạn" class="newsletter-input">
+                    <button type="submit" class="newsletter-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <div class="footer-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-book-open"></i>
+                        <span>1000+ Truyện</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <span>50K+ Độc giả</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+        <div class="footer-bottom-content">
+            <p class="copyright">
+                © 2024 <span class="highlight">Nguyệt Mộng Thư</span>. All rights reserved.
+            </p>
+            <div class="footer-bottom-links">
+                <a href="#">Sitemap</a>
+                <a href="#">RSS</a>
+                <a href="#">API</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 </footer>
+
+<script>
+    // Scroll to top functionality
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollTopBtn.classList.add('show');
+        } else {
+            scrollTopBtn.classList.remove('show');
+        }
+    });
+
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Newsletter form
+    document.querySelector('.newsletter-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = e.target.querySelector('input').value;
+        if (email) {
+            alert('Cảm ơn bạn đã đăng ký! 🎉');
+            e.target.reset();
+        }
+    });
+</script>

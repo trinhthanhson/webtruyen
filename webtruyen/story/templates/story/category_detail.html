@@ -11,12 +11,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
+    <!-- Preload theme để tránh chớp -->
+    <script>
+        (function () {
+            const html = document.documentElement;
+            html.classList.add("no-transition");
+            try {
+                const theme = localStorage.getItem("theme");
+                if (theme === "light") {
+                    html.classList.add("light-mode");
+                }
+            } catch (e) { }
+        })();
+    </script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'primary': '#EAB308', // Vàng gold chuẩn mẫu Nguyệt Mộng Thư
+                        'primary': '#EAB308',
                         'dark-bg': '#141414',
                         'card-bg': '#1f1f1f',
                     },
@@ -39,7 +53,7 @@
         <div class="mb-10">
             <div class="flex items-center space-x-4 mb-2">
                 <div class="w-1.5 h-10 bg-primary rounded-full"></div>
-                <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                <h1 class="text-3xl md:text-4xl font-bold tracking-tight">
                     Thể loại: {{ category.category_name }}
                 </h1>
             </div>
@@ -58,8 +72,7 @@
                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
 
                     {% if story.status == 'Hoàn thành' %}
-                    <span
-                        class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md uppercase">
+                    <span class="badge-full absolute top-2 left-2">
                         Full
                     </span>
                     {% endif %}
@@ -73,9 +86,8 @@
                 </a>
 
                 <div class="flex flex-col flex-grow">
-                    <a href="{% url 'story_detail' story_slug=story.slug %}"
-                        class="hover:text-primary transition-colors duration-200">
-                        <h2 class="text-[15px] font-bold text-gray-100 line-clamp-2 leading-snug mb-1">
+                    <a href="{% url 'story_detail' story_slug=story.slug %}" class="hover:text-primary">
+                        <h2 class="text-[15px] font-bold line-clamp-2 leading-snug mb-1">
                             {{ story.title }}
                         </h2>
                     </a>
@@ -103,7 +115,7 @@
 
         </div>
         {% else %}
-        <div class="text-center py-24 bg-[#1f1f1f] rounded-2xl border border-dashed border-gray-700">
+        <div class="glass-panel text-center py-24 rounded-2xl border border-dashed border-gray-700">
             <div class="text-6xl mb-4">📚</div>
             <p class="text-xl text-gray-400 font-medium">Chưa có truyện nào trong danh mục này.</p>
             <a href="/"
@@ -115,6 +127,15 @@
     </main>
 
     {% include 'story/footer/footer.html' %}
+
+    <script>
+        // Xóa class no-transition sau khi load xong
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                document.documentElement.classList.remove("no-transition");
+            }, 100);
+        });
+    </script>
 
 </body>
 
