@@ -87,28 +87,109 @@
       </nav>
 
       <div class="flex items-center space-x-4">
-        <input type="text" placeholder="Tìm kiếm..."
-          class="search-input bg-[#1a1a1a]/60 border border-gray-700/50 text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] focus:outline-none focus:border-primary" />
+
+        <!-- Desktop search -->
+        <input type="text" placeholder="Tìm kiếm..." class="hidden md:block search-input bg-[#1a1a1a]/60 border border-gray-700/50 
+           text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] 
+           focus:outline-none focus:border-primary" />
+
+        <!-- Nút dark mode (HIỆN CẢ MOBILE & DESKTOP) -->
         <button onclick="toggleTheme()" class="text-gray-400 hover:text-primary">
-          <svg id="mode-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+          <svg id="mode-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
         </button>
+
+        <!-- Nút hamburger (chỉ mobile) -->
+        <button onclick="toggleMobileMenu()" class="md:hidden text-white focus:outline-none">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
       </div>
+
     </div>
   </header>
+  <div id="mobile-menu" class="fixed inset-0 bg-[#121212] z-[200] 
+            transform translate-x-full transition-transform duration-300 
+            md:hidden">
 
-  <section class="banner-container">
-    <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
-      <div class="flex-1 text-center md:text-left">
+    <div class="p-6">
+
+      <div class="flex justify-between items-center mb-10">
+        <h2 class="text-2xl font-logo text-primary">Nguyệt Mộng Thư</h2>
+
+        <!-- nút đóng -->
+        <button onclick="toggleMobileMenu()" class="text-white">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <nav class="flex flex-col space-y-6 text-lg">
+
+        <a href="/" class="text-primary">Trang chủ</a>
+        <a href="/stories/">Truyện</a>
+
+        <!-- THỂ LOẠI -->
+        <div>
+          <button onclick="toggleCategory()" class="flex items-center justify-between w-full text-left">
+            <span>Thể loại</span>
+            <svg id="cat-icon" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- DANH SÁCH CATEGORY -->
+          <div id="mobile-category-list" class="hidden mt-4 border border-white/10 rounded-xl p-4">
+
+            <div class="grid grid-cols-2 gap-3 text-sm">
+
+              {% for cat in categories %}
+              <a href="{% url 'category_detail' cat.slug %}"
+                class="flex justify-between text-gray-300 hover:text-primary">
+                <span>{{ cat.category_name }}</span>
+                {% if cat.story_count %}
+                <span class="text-gray-500 text-xs">
+                  ({{ cat.story_count }})
+                </span>
+                {% endif %}
+              </a>
+              {% endfor %}
+
+            </div>
+
+          </div>
+        </div>
+
+        <a href="#">Liên hệ</a>
+
+      </nav>
+
+    </div>
+  </div>
+  <section class="banner-container pt-20 md:pt-0">
+    <div class="container mx-auto px-4 md:px-6
+            flex flex-col md:flex-row
+            items-center justify-center
+            gap-6 md:gap-12">
+      <div class="hidden md:flex flex-1 flex-col text-left">
         <a href="#" id="active-title-link" class="inline-block group">
           <h2 id="active-title" class="text-5xl font-bold mb-6 leading-tight group-hover:text-primary"></h2>
         </a>
-        <p id="active-description" class="text-gray-100 text-lg mb-10 line-clamp-3"></p>
+        <p id="active-description" class="text-gray-100 text-lg mb-10 mr-10 line-clamp-3 text-justify"></p>
         <a href="#" id="active-readmore-link"
-          class="inline-block bg-white text-black px-10 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition shadow-lg">Đọc
-          Ngay</a>
+          class="inline-block w-fit bg-white text-black px-10 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition shadow-lg">
+          Đọc Ngay
+        </a>
       </div>
 
-      <div class="swiper mySwiper">
+      <div class="swiper mySwiper 
+            w-[90%] 
+            max-w-sm 
+            mx-auto 
+            md:w-auto md:mx-0">
         <div class="swiper-wrapper">
           {% for story in stories %}
           <div class="swiper-slide" data-title="{{ story.title }}" data-desc="{{ story.description }}"
@@ -144,91 +225,8 @@
   </main>
   {% include 'story/footer/footer.html' %}
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    const titleEl = document.getElementById("active-title");
-    const descEl = document.getElementById("active-description");
-    const bgBlurEl = document.getElementById("global-bg-blur");
+  <script src="{% static 'story/js/home.js' %}"></script>
 
-    var swiper = new Swiper(".mySwiper", {
-      effect: "cards",
-      grabCursor: true,
-      rewind: true,
-      speed: 300,
-      autoplay: { delay: 4500, disableOnInteraction: true },
-      on: {
-        init: function () {
-          syncBanner(this);
-        },
-        // Đồng bộ NGAY khi slide đổi
-        slideChange: function () {
-          syncBanner(this);
-        },
-      },
-    });
-
-    function syncBanner(s) {
-      const slide = s.slides[s.activeIndex];
-      if (!slide) return;
-
-      const data = slide.dataset;
-      const imgPath = slide.querySelector("img").src;
-
-      // Set tất cả NGAY LẬP TỨC
-      bgBlurEl.style.backgroundImage = `url('${imgPath}')`;
-      titleEl.textContent = data.title;
-      descEl.textContent = data.desc;
-
-      const url = data.url;
-      document.getElementById("active-title-link").href = url;
-      document.getElementById("active-readmore-link").href = url;
-    }
-
-    // ===== HEADER SCROLL =====
-    const header = document.getElementById("main-header");
-    let ticking = false;
-
-    window.addEventListener("scroll", () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (header) {
-            header.classList.toggle("header-scrolled", window.scrollY > 30);
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-
-    // ===== THEME TOGGLE =====
-    function setThemeIcon(isLight) {
-      const icon = document.getElementById("mode-icon");
-      if (!icon) return;
-
-      if (isLight) {
-        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>`;
-      } else {
-        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
-      }
-    }
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      const isLight = html.classList.toggle("light-mode");
-
-      localStorage.setItem("theme", isLight ? "light" : "dark");
-      setThemeIcon(isLight);
-    }
-
-    // Khởi tạo theme khi trang load
-    document.addEventListener("DOMContentLoaded", () => {
-      const isLight = document.documentElement.classList.contains("light-mode");
-      setThemeIcon(isLight);
-
-      setTimeout(() => {
-        document.documentElement.classList.remove("no-transition");
-      }, 100);
-    });
-  </script>
 </body>
 
 </html>
