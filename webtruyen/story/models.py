@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
-from django.contrib.postgres.fields import ArrayField # Có thể dùng JSONField thay thế nếu cần
+from django.contrib.postgres.fields import ArrayField 
 # --- 1. STORIES (Truyện) ---
 class Story(models.Model):
     STATUS_CHOICES = [
@@ -62,25 +62,20 @@ class Category(models.Model):
         verbose_name = "Thể loại"
         verbose_name_plural = "Thể loại"
 
-# Mối quan hệ Many-to-Many giữa Story và Category
-# Django sẽ tự tạo bảng trung gian (StoryCategories) nếu bạn dùngManyToManyField.
+#Story Many-to-Many Category
 Story.add_to_class('categories', models.ManyToManyField(Category, related_name='stories'))
-
 
 # --- 3. CHAPTERS (Chương/Tập) ---
 class Chapter(models.Model):
     chapter_id = models.AutoField(primary_key=True)
     
-    # ForeignKey tới Story (ON DELETE CASCADE mặc định)
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='chapters', verbose_name="Truyện")
     
-    # NUMERIC(10, 2)
     chapter_number = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Số chương")
     
     title = models.CharField(max_length=255, verbose_name="Tên chương")
     content = models.TextField(blank=True, null=True, verbose_name="Nội dung chữ")
     
-    # Sử dụng JSONField cho danh sách URL ảnh (tương đương JSONB của Postgres)
     image_urls = models.JSONField(default=list, blank=True, null=True, verbose_name="Danh sách ảnh") 
     
     published_at = models.DateTimeField(default=timezone.now, verbose_name="Thời gian xuất bản")
@@ -91,17 +86,14 @@ class Chapter(models.Model):
     class Meta:
         verbose_name = "Chương truyện"
         verbose_name_plural = "Chương truyện"
-        # Ràng buộc UNIQUE (story_id, chapter_number)
         unique_together = ('story', 'chapter_number')
 
 
 # --- 4. RATINGS (Đánh giá - Sao) ---
 class Rating(models.Model):
-    # Sử dụng User model mặc định của Django
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='ratings', verbose_name="Truyện")
     
-    # SMALLINT NOT NULL CHECK (score BETWEEN 1 AND 5)
     score = models.SmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         verbose_name="Điểm đánh giá (1-5)"
@@ -112,17 +104,14 @@ class Rating(models.Model):
     class Meta:
         verbose_name = "Đánh giá"
         verbose_name_plural = "Đánh giá"
-        # Ràng buộc UNIQUE (story_id, user_id)
         unique_together = ('story', 'user')
 
 
 # --- 5. COMMENTS (Bình luận - Tích hợp AI) ---
 class Comment(models.Model):
-    # Sử dụng User model mặc định của Django
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='comments', verbose_name="Truyện")
     
-    # Bình luận cha (parent_comment_id)
     parent_comment = models.ForeignKey(
         'self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies', verbose_name="Bình luận cha"
     )
@@ -130,10 +119,8 @@ class Comment(models.Model):
     content = models.TextField(verbose_name="Nội dung bình luận")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Thời gian bình luận")
     
-    # is_approved BOOLEAN NOT NULL DEFAULT FALSE
     is_approved = models.BooleanField(default=False, verbose_name="Đã được duyệt")
     
-    # ai_score NUMERIC(5, 2)
     ai_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, verbose_name="Điểm AI phản cảm")
     
     def __str__(self):
@@ -142,9 +129,8 @@ class Comment(models.Model):
     class Meta:
         verbose_name = "Bình luận"
         verbose_name_plural = "Bình luận"
-        ordering = ['created_at'] # Sắp xếp theo thời gian
+        ordering = ['created_at']
         indexes = [
-            # Tối ưu truy vấn bình luận theo truyện và trạng thái duyệt
             models.Index(fields=['story', 'is_approved', '-created_at']), 
         ]
 
@@ -158,7 +144,6 @@ class UserFavorite(models.Model):
     class Meta:
         verbose_name = "Truyện yêu thích"
         verbose_name_plural = "Truyện yêu thích"
-        # Ràng buộc PRIMARY KEY (user_id, story_id)
         unique_together = ('user', 'story')
 
 
@@ -167,7 +152,6 @@ class ReadingHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='history', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='history', verbose_name="Truyện")
     
-    # chapter_id REFERENCES chapters (NULL nếu chương đó bị xóa)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Chương đã đọc")
     
     last_read_at = models.DateTimeField(default=timezone.now, verbose_name="Lần đọc cuối")
@@ -175,7 +159,6 @@ class ReadingHistory(models.Model):
     class Meta:
         verbose_name = "Lịch sử đọc"
         verbose_name_plural = "Lịch sử đọc"
-        # Ràng buộc UNIQUE (user_id, story_id)
         unique_together = ('user', 'story')
         indexes = [
             models.Index(fields=['user', '-last_read_at']), 

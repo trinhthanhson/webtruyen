@@ -3,16 +3,31 @@
 <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
 <script>
-    // Định nghĩa cấu hình màu Dark Mode
+    (function () {
+        const html = document.documentElement;
+        html.classList.add("no-transition");
+        try {
+            const theme = localStorage.getItem("theme");
+            if (theme === "light") {
+                html.classList.add("light-mode");
+            }
+        } catch (e) { }
+    })();
+
+</script>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'secondary': '#f97316', // Orange-500
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền container
-                    'dark-border': '#4b5563', // Gray-600
+                    'primary': '#EAB308',
+                    'secondary': '#f97316',
+                    'dark-bg-body': '#262626',
+                    'dark-bg-card': '#333333',
+                    'dark-border': '#4b5563',
                 },
                 fontFamily: {
                     sans: ['Inter', 'sans-serif'],

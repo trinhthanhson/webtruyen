@@ -10,8 +10,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-
-    <!-- Preload theme để tránh chớp -->
     <script>
         (function () {
             const html = document.documentElement;
@@ -23,16 +21,21 @@
                 }
             } catch (e) { }
         })();
+
     </script>
 
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         'primary': '#EAB308',
-                        'dark-bg': '#141414',
-                        'card-bg': '#1f1f1f',
+                        'secondary': '#f97316',
+                        'dark-bg-body': '#262626',
+                        'dark-bg-card': '#333333',
+                        'dark-border': '#4b5563',
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
