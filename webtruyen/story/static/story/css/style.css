@@ -725,10 +725,7 @@ html.light-mode .footer-bottom-links a {
   background: #444;
 }
 
-/* Hiệu ứng trượt Sidebar */
-#chapter-sidebar {
-  transition: transform var(--transition-smooth);
-}
+
 
 .sidebar-open {
   transform: translateX(0) !important;
@@ -956,4 +953,11 @@ html.light-mode button:disabled {
 html.light-mode .border-gray-700,
 html.light-mode .border-gray-600 {
   border-color: #e5e7eb;
+}
+
+html.light-mode #chapter-sidebar {
+  background: #ffffff !important;
+  backdrop-filter: none;
+  border-left: 1px solid #e5e7eb !important;
+  box-shadow: -8px 0 20px rgba(0, 0, 0, 0.05);
 }

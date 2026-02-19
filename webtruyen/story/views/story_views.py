@@ -34,6 +34,8 @@ def story_detail(request, story_slug):
         Story.objects.annotate(
             first_chapter_number=Min('chapters__chapter_number'),
             latest_chapter_number=Max('chapters__chapter_number'),
+            chapter_count=Count('chapters')
+
         ), 
         slug=story_slug
     )
