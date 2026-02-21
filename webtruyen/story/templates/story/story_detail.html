@@ -56,7 +56,7 @@
     </div>
 
     <aside id="chapter-sidebar"
-        class="chapter-mode fixed top-0 right-0 h-full w-full max-w-md z-[1002] translate-x-full border-l flex flex-col">
+        class="chapter-mode fixed top-0 right-0 h-full w-full bg-black max-w-md z-[1002] translate-x-full border-l flex flex-col">
         <div class="p-6 border-b flex justify-between items-center">
             <h2 class="text-xl font-bold text-gray-400">Danh sách chương</h2>
             <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white transition">
@@ -114,8 +114,16 @@
                                     {% endfor %}
                                 </span>
                             </p>
-                            <p><span class="text-gray-400">Dịch giả:</span> <span class="text-primary ml-2">Trúc Mộng
-                                    Yên</span></p>
+                            <p>
+                                <span class="text-gray-400">Dịch giả:</span>
+                                <span class="text-primary ml-2">
+                                    {% if story.translator %}
+                                    {{ story.translator }}
+                                    {% else %}
+                                    <span class="text-primary ml-2">Đang cập nhật</span>
+                                    {% endif %}
+                                </span>
+                            </p>
                         </div>
 
                         <div class="flex items-center gap-6 text-sm pt-2">

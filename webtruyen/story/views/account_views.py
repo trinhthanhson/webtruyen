@@ -6,11 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Count
 
-# Import từ thư mục cha (story/)
 from ..models import Category
 from ..form import ProfileEditForm 
 
-# Lấy cấu hình redirect từ settings
 LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 def register_view(request):

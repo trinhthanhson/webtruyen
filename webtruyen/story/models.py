@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField 
-# --- 1. STORIES (Truyện) ---
 class Story(models.Model):
     STATUS_CHOICES = [
         ('ongoing', 'Đang tiến hành'),
@@ -15,6 +14,7 @@ class Story(models.Model):
     title = models.CharField(max_length=255, verbose_name="Tên truyện")
     author = models.CharField(max_length=100, blank=True, null=True, verbose_name="Tác giả")
     description = models.TextField(blank=True, null=True, verbose_name="Tóm tắt")
+    translator = models.CharField(max_length=100, blank=True, null=True,default="Đang cập nhật", verbose_name="Dịch giả") 
     upload_image_temp = models.ImageField(
         upload_to='temp_uploads/',
         blank=True,
@@ -31,7 +31,6 @@ class Story(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ongoing', verbose_name="Trạng thái")
     views_count = models.BigIntegerField(default=0, verbose_name="Lượt xem")
     
-    # NUMERIC(3, 2)
     avg_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00, verbose_name="Đánh giá TB") 
     
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Thời gian đăng")
@@ -47,9 +46,9 @@ class Story(models.Model):
         indexes = [
             models.Index(fields=['title']),
             models.Index(fields=['author']),
+            models.Index(fields=['translator']),
         ]
 
-# --- 2. CATEGORIES (Thể loại) ---
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=50, unique=True, verbose_name="Tên thể loại")
@@ -62,10 +61,8 @@ class Category(models.Model):
         verbose_name = "Thể loại"
         verbose_name_plural = "Thể loại"
 
-#Story Many-to-Many Category
 Story.add_to_class('categories', models.ManyToManyField(Category, related_name='stories'))
 
-# --- 3. CHAPTERS (Chương/Tập) ---
 class Chapter(models.Model):
     chapter_id = models.AutoField(primary_key=True)
     
@@ -75,7 +72,6 @@ class Chapter(models.Model):
     
     title = models.CharField(max_length=255, verbose_name="Tên chương")
     content = models.TextField(blank=True, null=True, verbose_name="Nội dung chữ")
-    
     image_urls = models.JSONField(default=list, blank=True, null=True, verbose_name="Danh sách ảnh") 
     
     published_at = models.DateTimeField(default=timezone.now, verbose_name="Thời gian xuất bản")
@@ -89,7 +85,6 @@ class Chapter(models.Model):
         unique_together = ('story', 'chapter_number')
 
 
-# --- 4. RATINGS (Đánh giá - Sao) ---
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='ratings', verbose_name="Truyện")
@@ -107,7 +102,6 @@ class Rating(models.Model):
         unique_together = ('story', 'user')
 
 
-# --- 5. COMMENTS (Bình luận - Tích hợp AI) ---
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='comments', verbose_name="Truyện")
@@ -135,7 +129,6 @@ class Comment(models.Model):
         ]
 
 
-# --- 6. USER_FAVORITES (Truyện yêu thích) ---
 class UserFavorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='favorited_by', verbose_name="Truyện")
@@ -147,7 +140,6 @@ class UserFavorite(models.Model):
         unique_together = ('user', 'story')
 
 
-# --- 7. READING_HISTORY (Lịch sử đọc truyện) ---
 class ReadingHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='history', verbose_name="Người dùng")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='history', verbose_name="Truyện")

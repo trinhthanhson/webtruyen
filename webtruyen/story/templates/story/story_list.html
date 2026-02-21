@@ -98,7 +98,50 @@
             </div>
             {% endfor %}
         </div>
+        {% if page_obj.has_other_pages %}
+        <div class="mt-16 flex justify-center">
+            <nav class="inline-flex items-center -space-x-px bg-dark-bg-card p-2 rounded-2xl border border-white/5 shadow-2xl backdrop-blur-md"
+                aria-label="Pagination">
 
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}"
+                    class="w-11 h-11 flex items-center justify-center rounded-xl text-gray-400 hover:bg-primary/20 hover:text-primary transition-all duration-300 group">
+                    <svg class="w-6 h-6 group-hover:-translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+                {% endif %}
+
+                <div class="flex items-center px-2 gap-1.5">
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <span
+                        class="w-11 h-11 flex items-center justify-center rounded-xl bg-primary text-black font-bold shadow-lg shadow-primary/30 transform scale-110 z-10">
+                        {{ num }}
+                    </span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a
+                        href="?page={{ num }}"
+                        class="w-11 h-11 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200">
+                        {{ num }}
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                </div>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}"
+                    class="w-11 h-11 flex items-center justify-center rounded-xl text-gray-400 hover:bg-primary/20 hover:text-primary transition-all duration-300 group">
+                    <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+                {% endif %}
+
+            </nav>
+        </div>
+        {% endif %}
     </main>
 
     {% include 'story/footer/footer.html' %}

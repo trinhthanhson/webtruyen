@@ -20,6 +20,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +31,34 @@ INSTALLED_APPS = [
     'story',
 ]
 
+JAZZMIN_SETTINGS = {
+    "site_title": "Nguyệt Mộng Thư Admin",
+    "site_header": "Nguyệt Mộng Thư",
+    "site_brand": "Quản trị Nguyệt Mộng",
+    "welcome_sign": "Chào mừng bạn đến với hệ thống quản trị truyện",
+    "copyright": "Nguyệt Mộng Thư Ltd",
+    "search_model": ["story.Story"],
+    "topmenu_links": [
+        {"name": "Trang chủ web", "url": "/", "new_window": True},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "story.Story": "fas fa-book",
+        "story.Category": "fas fa-list",
+        "story.Chapter": "fas fa-file-alt",
+        "story.Comment": "fas fa-comments",
+    },
+    "order_with_respect_to": ["story", "story.Story", "story.Chapter", "story.Category"],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",  # Có thể chọn: pulse, flatly, darkly, slate
+    "navbar_variant": "navbar-dark",
+    "accent": "accent-primary",
+}
 # 1. Cấu hình thông tin Cloudinary (Lấy từ Dashboard của Cloudinary)
 CLOUDINARY_CLOUD_NAME = 'dqb9trxs4'  # Ví dụ: 'webtruyen-project'
 CLOUDINARY_API_KEY = '526277124128331'

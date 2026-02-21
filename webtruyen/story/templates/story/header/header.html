@@ -47,9 +47,10 @@
 
       <!-- SEARCH DESKTOP -->
       <div class="hidden md:block">
-        <form action="/search/" method="GET">
-          <input type="text" name="q" placeholder="Tìm kiếm..."
-            class="w-52 px-4 py-1.5 text-sm rounded-md text-white bg-[#1a1a1a]/60 border border-gray-700 focus:border-primary focus:outline-none" />
+        <form action="{% url 'search_results' %}" method="GET" class="hidden md:block">
+          <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Tìm kiếm..." class="search-input bg-[#1a1a1a]/60 border border-gray-700/50 
+               text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] 
+               focus:outline-none focus:border-primary" />
         </form>
       </div>
 

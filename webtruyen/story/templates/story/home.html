@@ -88,17 +88,16 @@
 
       <div class="flex items-center space-x-4">
 
-        <!-- Desktop search -->
-        <input type="text" placeholder="Tìm kiếm..." class="hidden md:block search-input bg-[#1a1a1a]/60 border border-gray-700/50 
-           text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] 
-           focus:outline-none focus:border-primary" />
+        <form action="{% url 'search_results' %}" method="GET" class="hidden md:block">
+          <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Tìm kiếm..." class="search-input bg-[#1a1a1a]/60 border border-gray-700/50 
+               text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] 
+               focus:outline-none focus:border-primary" />
+        </form>
 
-        <!-- Nút dark mode (HIỆN CẢ MOBILE & DESKTOP) -->
         <button onclick="toggleTheme()" class="text-gray-400 hover:text-primary">
           <svg id="mode-icon" class="w-6 h-6" fill="none" stroke="#6b7280" viewBox="0 0 24 24"></svg>
         </button>
 
-        <!-- Nút hamburger (chỉ mobile) -->
         <button onclick="toggleMobileMenu()" class="md:hidden focus:outline-none">
           <svg class="w-7 h-7" fill="none" stroke="#6b7280" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -194,7 +193,12 @@
           {% for story in stories %}
           <div class="swiper-slide" data-title="{{ story.title }}" data-desc="{{ story.description }}"
             data-url="{% url 'story_detail' story.slug %}">
-            <img src="{{ story.cover_image_url }}" alt="{{ story.title }}" />
+
+            <a href="{% url 'story_detail' story.slug %}" class="block w-full h-full">
+              <img src="{{ story.cover_image_url }}" alt="{{ story.title }}"
+                class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity" />
+            </a>
+
           </div>
           {% endfor %}
         </div>

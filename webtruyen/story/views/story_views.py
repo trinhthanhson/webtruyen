@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import F, Min, Max, Count, Q
-# Dấu .. để gọi models từ thư mục cha (story/)
+from django.core.paginator import Paginator 
 from ..models import Story, Category, Chapter
 
 def home(request):
@@ -15,21 +15,24 @@ def home(request):
     return render(request, 'story/home.html', context)
 
 def story_list(request):
-    """Danh sách tất cả truyện với tối ưu hóa query."""
-    stories = Story.objects.prefetch_related('categories').order_by('-updated_at', '-created_at')
+    """Danh sách tất cả truyện với phân trang 50 mục/trang."""
+    all_stories = Story.objects.prefetch_related('categories').order_by('-updated_at', '-created_at')
     categories = Category.objects.annotate(story_count=Count('stories'))
     
+    paginator = Paginator(all_stories, 20) 
+    page_number = request.GET.get('page') 
+    page_obj = paginator.get_page(page_number)
+    
     context = {
-        'stories': stories,
-        'categories': categories
+        'stories': page_obj, 
+        'categories': categories,
+        'page_obj': page_obj 
     }
     return render(request, 'story/story_list.html', context)
 
 def story_detail(request, story_slug): 
-    # 1. Tăng lượt xem (sử dụng F expression để tránh race condition)
     Story.objects.filter(slug=story_slug).update(views_count=F('views_count') + 1)
 
-    # 2. Lấy thông tin truyện và tính toán chương đầu/cuối
     story = get_object_or_404(
         Story.objects.annotate(
             first_chapter_number=Min('chapters__chapter_number'),
@@ -40,13 +43,11 @@ def story_detail(request, story_slug):
         slug=story_slug
     )
 
-    # 3. Lấy truyện cùng thể loại (Related Stories)
     current_categories = story.categories.all()
     related_stories = Story.objects.filter(
         categories__in=current_categories
     ).exclude(story_id=story.story_id).distinct().order_by('-views_count')[:5]
 
-    # 4. Lấy danh sách chương và danh mục sidebar
     chapters = story.chapters.all().order_by('chapter_number')
     all_categories = Category.objects.annotate(story_count=Count('stories'))
     
@@ -63,26 +64,35 @@ def home_banner(request):
     """Lấy top 5 truyện có ảnh bìa nhiều view nhất cho banner."""
     stories_for_banner = Story.objects.exclude(cover_image_url='').order_by('-views_count')[:5]
     return render(request, 'story/banner/banner.html', {'stories': stories_for_banner})
-
 def search_results(request):
-    """Xử lý tìm kiếm truyện theo tên, tác giả hoặc mô tả."""
-    query = request.GET.get('q', '')
-    results = []
-    page_title = "Kết Quả Tìm Kiếm"
+    """Xử lý tìm kiếm truyện theo tên, tác giả, dịch giả, mô tả hoặc thể loại."""
+    query = request.GET.get('q', '').strip()
     categories = Category.objects.annotate(story_count=Count('stories'))
-
+    
     if query:
-        results = Story.objects.filter(
-            Q(title__icontains=query) | 
-            Q(author__icontains=query) | 
-            Q(description__icontains=query)
+        results_list = Story.objects.filter(
+            Q(title__icontains=query) |              # Tìm theo tiêu đề
+            Q(author__icontains=query) |             # Tìm theo tác giả
+            Q(translator__icontains=query) |         # Tìm theo dịch giả (MỚI)
+            Q(description__icontains=query) |        # Tìm theo tóm tắt
+            Q(categories__category_name__icontains=query) # Tìm theo thể loại
         ).distinct().order_by('-created_at')
+        
         page_title = f"Kết Quả Tìm Kiếm cho: \"{query}\""
-            
+    else:
+        results_list = Story.objects.none()
+        page_title = "Vui lòng nhập từ khóa tìm kiếm"
+
+    # Phân trang
+    paginator = Paginator(results_list, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'query': query,
-        'stories': results,
+        'stories': page_obj,
+        'page_obj': page_obj,
         'page_title': page_title,
-        'categories': categories
+        'categories': categories,
     }
     return render(request, 'story/story_list.html', context)

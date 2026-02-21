@@ -961,3 +961,60 @@ html.light-mode #chapter-sidebar {
   border-left: 1px solid #e5e7eb !important;
   box-shadow: -8px 0 20px rgba(0, 0, 0, 0.05);
 }
+
+/* ===== CHAPTER SIDEBAR - Dark/Light Mode ===== */
+
+/* Dark mode (default) */
+#chapter-sidebar {
+  background: #181818 !important;
+  border-left-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: -8px 0 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#chapter-sidebar h2,
+#chapter-sidebar button {
+  color: #e5e7eb !important;
+}
+
+#chapter-sidebar .border-b {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+#chapter-sidebar a {
+  color: #d1d5db !important;
+}
+
+#chapter-sidebar a:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #eab308 !important;
+}
+
+/* Light mode */
+html.light-mode #chapter-sidebar {
+  background: #ffffff !important;
+  border-left-color: #e5e7eb !important;
+  box-shadow: -8px 0 20px rgba(0, 0, 0, 0.08);
+}
+
+html.light-mode #chapter-sidebar h2,
+html.light-mode #chapter-sidebar button {
+  color: #111111 !important;
+}
+
+html.light-mode #chapter-sidebar .border-b {
+  border-color: #e5e7eb !important;
+}
+
+html.light-mode #chapter-sidebar a {
+  color: #374151 !important;
+}
+
+html.light-mode #chapter-sidebar a:hover {
+  background: #f3f4f6 !important;
+  color: #eab308 !important;
+}
+
+html.light-mode #chapter-sidebar button:hover {
+  color: #000000 !important;
+}
