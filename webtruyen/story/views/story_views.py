@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import F, Min, Max, Count, Q
 from django.core.paginator import Paginator 
-from ..models import Story, Category, Chapter
+from ..models import Story, Category, Chapter, UserFavorite
 
 def home(request):
     """Trang chủ hiển thị danh sách truyện mới cập nhật."""
@@ -32,7 +32,7 @@ def story_list(request):
 
 def story_detail(request, story_slug): 
     Story.objects.filter(slug=story_slug).update(views_count=F('views_count') + 1)
-
+    
     story = get_object_or_404(
         Story.objects.annotate(
             first_chapter_number=Min('chapters__chapter_number'),
@@ -42,7 +42,9 @@ def story_detail(request, story_slug):
         ), 
         slug=story_slug
     )
-
+    is_favorite = False
+    if request.user.is_authenticated:
+        is_favorite = UserFavorite.objects.filter(user=request.user, story=story).exists()
     current_categories = story.categories.all()
     related_stories = Story.objects.filter(
         categories__in=current_categories
@@ -56,7 +58,8 @@ def story_detail(request, story_slug):
         'chapters': chapters,
         'related_stories': related_stories,
         'page_title': story.title,
-        'categories': all_categories
+        'categories': all_categories,
+        'is_favorite': is_favorite,
     }
     return render(request, 'story/story_detail.html', context)
 

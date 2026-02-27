@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📚 Nguyệt Mộng Thư - Trang chủ</title>
+  <title>📚 Thiên Mộng Hành - Trang chủ</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link
@@ -53,7 +53,7 @@
   <header id="main-header" class="fixed top-0 left-0 w-full z-[100]">
     <div class="container mx-auto px-6 h-[64px] flex justify-between items-center">
       <div class="flex-shrink-0">
-        <a href="/" class="text-2xl font-logo text-primary tracking-wide">Nguyệt Mộng Thư</a>
+        <a href="/" class="text-2xl font-logo text-primary tracking-wide">Thiên Mộng Hành</a>
       </div>
       <nav class="hidden md:flex items-center space-x-8 text-[15px] font-medium">
         <a href="/" class="nav-link active">Trang chủ</a>
@@ -87,7 +87,54 @@
       </nav>
 
       <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-4">
+          <form action="{% url 'search_results' %}" method="GET" class="hidden md:block">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Tìm kiếm..."
+              class="search-input bg-[#1a1a1a]/60 border border-gray-700/50 text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] focus:outline-none focus:border-primary" />
+          </form>
 
+          <button onclick="toggleTheme()" class="text-gray-400 hover:text-primary">
+            <svg id="mode-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+          </button>
+
+          <div class="flex items-center border-l border-gray-700/50 pl-4 ml-2 space-x-3">
+            {% if user.is_authenticated %}
+            <div class="relative group">
+              <button class="flex items-center space-x-2 focus:outline-none py-2">
+                <div
+                  class="w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold text-sm uppercase">
+                  {{ user.username|slice:":1" }}
+                </div>
+                <span class="hidden lg:block text-sm text-gray-300 font-medium group-hover:text-primary">
+                  {{user.username }}</span>
+              </button>
+
+              <div class="dropdown-menu absolute right-0 w-48 pt-1">
+                <div
+                  class="dropdown-content border border-white/10 rounded-xl shadow-2xl overflow-hidden mt-1 backdrop-blur-md bg-[#121212]/95 p-1">
+                  <a href="{% url 'profile' %}"
+                    class="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-colors">
+                    Trang cá nhân
+                  </a>
+                  <hr class="border-white/5 my-1">
+                  <a href="{% url 'logout' %}"
+                    class="block px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                    Đăng xuất
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <a href="{% url 'login' %}" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors">
+              Đăng nhập
+            </a>
+            <a href="{% url 'register' %}"
+              class="hidden sm:block px-4 py-1.5 bg-primary hover:bg-primary-dark text-black text-sm font-bold rounded-md transition-all shadow-lg shadow-primary/20">
+              Đăng ký
+            </a>
+            {% endif %}
+          </div>
+        </div>
         <form action="{% url 'search_results' %}" method="GET" class="hidden md:block">
           <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Tìm kiếm..." class="search-input bg-[#1a1a1a]/60 border border-gray-700/50 
                text-gray-200 text-sm rounded-md px-4 py-1.5 w-[200px] 
@@ -115,7 +162,7 @@
     <div class="p-6">
 
       <div class="flex justify-between items-center mb-10">
-        <h2 class="text-2xl font-logo text-primary">Nguyệt Mộng Thư</h2>
+        <h2 class="text-2xl font-logo text-primary">Thiên Mộng Hành</h2>
 
         <!-- nút đóng -->
         <button onclick="toggleMobileMenu()" class="text-white">

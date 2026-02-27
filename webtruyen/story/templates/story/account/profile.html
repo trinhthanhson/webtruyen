@@ -1,45 +1,57 @@
 {% load static %}
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    // Định nghĩa cấu hình màu Dark Mode
+    (function () {
+        const html = document.documentElement;
+        html.classList.add("no-transition");
+        try {
+            const theme = localStorage.getItem("theme");
+            if (theme === "light") {
+                html.classList.add("light-mode");
+            }
+        } catch (e) { }
+    })();
+</script>
+
+<script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền container
-                    'dark-border': '#4b5563', // Gray-600
-                    'secondary': '#f97316', // Orange-500
+                    primary: "#EAB308",
+                    bodybg: "#121212",
                 },
                 fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
+                    logo: ['"Dancing Script"', "cursive"],
+                    sans: ["Inter", "sans-serif"],
                 },
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông Tin Hồ Sơ | {{ user.username }}</title>
 </head>
+
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
 
     {% include 'story/header/header.html' %}
 
     <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
-        <div class="bg-dark-bg-card p-8 rounded-xl shadow-2xl border border-gray-700">
-            
+        <div class="w-full bg-dark-bg-card mt-20 p-8 rounded-xl shadow-2xl border border-gray-700">
+
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-extrabold text-white mb-2">HỒ SƠ NGƯỜI DÙNG</h1>
                 <p class="text-gray-400">Thông tin tài khoản của bạn.</p>
             </div>
 
             <div class="space-y-6">
-                
+
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-dark-border pb-4">
                     <span class="font-semibold text-gray-300 sm:w-1/3">Tên người dùng</span>
                     <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">{{ user.username }}</span>
@@ -47,32 +59,38 @@
 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-dark-border pb-4">
                     <span class="font-semibold text-gray-300 sm:w-1/3">Email</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">{{ user.email|default:"Chưa cập nhật" }}</span>
+                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">
+                        {{ user.email|default:"Chưa cập nhật"}}
+                    </span>
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-dark-border pb-4">
                     <span class="font-semibold text-gray-300 sm:w-1/3">Họ</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">{{ user.first_name|default:"Chưa cập nhật" }}</span>
+                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">
+                        {{ user.first_name|default:"Chưa cập nhật"}}</span>
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4">
                     <span class="font-semibold text-gray-300 sm:w-1/3">Tên đệm & Tên</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">{{ user.last_name|default:"Chưa cập nhật" }}</span>
+                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">
+                        {{ user.last_name|default:"Chưa cập nhật"}}
+                    </span>
                 </div>
 
             </div>
 
             <div class="mt-8 text-center">
-                <a href="{% url 'profile_edit' %}" 
-                   class="inline-block bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300">
+                <a href="{% url 'profile_edit' %}"
+                    class="inline-block bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300">
                     Chỉnh Sửa Hồ Sơ
                 </a>
             </div>
-            
+
         </div>
     </main>
 
     {% include 'story/footer/footer.html' %}
 
 </body>
+
 </html>

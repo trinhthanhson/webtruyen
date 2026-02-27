@@ -2,114 +2,127 @@
 <!-- Load Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    // Định nghĩa cấu hình màu Dark Mode
+    (function () {
+        const html = document.documentElement;
+        html.classList.add("no-transition");
+        try {
+            const theme = localStorage.getItem("theme");
+            if (theme === "light") {
+                html.classList.add("light-mode");
+            }
+        } catch (e) { }
+    })();
+</script>
+
+<script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền container
-                    'dark-border': '#4b5563', // Gray-600
+                    primary: "#EAB308",
+                    bodybg: "#121212",
                 },
                 fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
+                    logo: ['"Dancing Script"', "cursive"],
+                    sans: ["Inter", "sans-serif"],
                 },
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký Tài Khoản</title>
 </head>
+
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 flex items-center justify-center min-h-screen">
 
-<div class="w-full max-w-md p-8 m-4 bg-dark-bg-card rounded-xl shadow-2xl border border-gray-700">
-    
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-extrabold text-white mb-2">Đăng Ký Tài Khoản</h1>
-        <p class="text-gray-400">Tạo tài khoản mới để bắt đầu đọc truyện.</p>
-    </div>
+    <div class="w-full max-w-md p-8 m-4 bg-dark-bg-card rounded-xl shadow-2xl border border-gray-700">
 
-    {% if messages %}
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold text-white mb-2">Đăng Ký Tài Khoản</h1>
+            <p class="text-gray-400">Tạo tài khoản mới để bắt đầu đọc truyện.</p>
+        </div>
+
+        {% if messages %}
         <div class="mb-4">
             {% for message in messages %}
-                <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg relative" role="alert">
-                    {{ message }}
-                </div>
+            <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg relative" role="alert">
+                {{ message }}
+            </div>
             {% endfor %}
         </div>
-    {% endif %}
+        {% endif %}
 
-    {% if form.non_field_errors %}
+        {% if form.non_field_errors %}
         <div class="mb-4 p-3 bg-red-900/50 border border-red-700 text-red-300 rounded-lg">
             {% for error in form.non_field_errors %}
-                <p class="text-sm">{{ error }}</p>
+            <p class="text-sm">{{ error }}</p>
             {% endfor %}
         </div>
-    {% endif %}
+        {% endif %}
 
-    <form method="post" action="{% url 'register' %}" class="space-y-6">
-        {% csrf_token %}
-        
-        <!-- Trường Tên người dùng -->
-        <div>
-            <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Tên người dùng</label>
-            <input type="text" id="id_username" name="username" required 
-                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập tên người dùng..."
-                   value="{{ form.username.value|default:'' }}">
-            <!-- Hiển thị lỗi cụ thể cho trường username -->
-            {% for error in form.username.errors %}
+        <form method="post" action="{% url 'register' %}" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Trường Tên người dùng -->
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Tên người dùng</label>
+                <input type="text" id="id_username" name="username" required
+                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                    placeholder="Nhập tên người dùng..." value="{{ form.username.value|default:'' }}">
+                <!-- Hiển thị lỗi cụ thể cho trường username -->
+                {% for error in form.username.errors %}
                 <p class="text-red-400 text-xs mt-1">{{ error }}</p>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-        <!-- Đã loại bỏ trường Email vì UserCreationForm mặc định không sử dụng nó -->
+            <!-- Đã loại bỏ trường Email vì UserCreationForm mặc định không sử dụng nó -->
 
-        <!-- Trường Mật khẩu -->
-        <div>
-            <label for="id_password1" class="block text-sm font-medium text-gray-300 mb-1">Mật khẩu</label>
-            <input type="password" id="id_password1" name="password1" required 
-                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập mật khẩu...">
-            <!-- Hiển thị lỗi cụ thể cho trường password1 -->
-            {% for error in form.password1.errors %}
+            <!-- Trường Mật khẩu -->
+            <div>
+                <label for="id_password1" class="block text-sm font-medium text-gray-300 mb-1">Mật khẩu</label>
+                <input type="password" id="id_password1" name="password1" required
+                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                    placeholder="Nhập mật khẩu...">
+                <!-- Hiển thị lỗi cụ thể cho trường password1 -->
+                {% for error in form.password1.errors %}
                 <p class="text-red-400 text-xs mt-1">{{ error }}</p>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-        <!-- Trường Xác nhận mật khẩu -->
-        <div>
-            <label for="id_password2" class="block text-sm font-medium text-gray-300 mb-1">Xác nhận mật khẩu</label>
-            <input type="password" id="id_password2" name="password2" required 
-                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập lại mật khẩu...">
-            <!-- Hiển thị lỗi cụ thể cho trường password2 -->
-            {% for error in form.password2.errors %}
+            <!-- Trường Xác nhận mật khẩu -->
+            <div>
+                <label for="id_password2" class="block text-sm font-medium text-gray-300 mb-1">Xác nhận mật khẩu</label>
+                <input type="password" id="id_password2" name="password2" required
+                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                    placeholder="Nhập lại mật khẩu...">
+                <!-- Hiển thị lỗi cụ thể cho trường password2 -->
+                {% for error in form.password2.errors %}
                 <!-- Đây là nơi các lỗi như "password is too common" sẽ xuất hiện -->
                 <p class="text-red-400 text-xs mt-1">{{ error }}</p>
-            {% endfor %}
+                {% endfor %}
+            </div>
+
+            <!-- Nút Đăng ký -->
+            <button type="submit"
+                class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
+                Đăng Ký
+            </button>
+        </form>
+
+        <!-- Link chuyển hướng sang Đăng nhập -->
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-400">Đã có tài khoản?
+                <a href="{% url 'login' %}" class="font-medium text-primary hover:underline">Đăng nhập ngay</a>
+            </p>
         </div>
-        
-        <!-- Nút Đăng ký -->
-        <button type="submit" 
-                 class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
-            Đăng Ký
-        </button>
-    </form>
-    
-    <!-- Link chuyển hướng sang Đăng nhập -->
-    <div class="mt-6 text-center">
-        <p class="text-sm text-gray-400">Đã có tài khoản? 
-            <a href="{% url 'login' %}" class="font-medium text-primary hover:underline">Đăng nhập ngay</a>
-        </p>
     </div>
-</div>
 
 </body>
+
 </html>

@@ -6,3 +6,10 @@
 4. Response mobile (Quan trọng vì user dùng mobile nhiều)
 5. Điều chỉnh footer theo 1 layout mới khác hiện tại.
 6. Gom assets (css, js) lại.
+
+
+- Thêm truyện vào yêu thích
+- Lưu vết khi đang đọc
+- banner 5 truyện được đánh giá cao nhất 
+- Thêm đánh giá 
+- Tên đại diện to hơn

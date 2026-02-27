@@ -1,80 +1,95 @@
 <!-- Load Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    // Định nghĩa cấu hình màu Dark Mode
+    (function () {
+        const html = document.documentElement;
+        html.classList.add("no-transition");
+        try {
+            const theme = localStorage.getItem("theme");
+            if (theme === "light") {
+                html.classList.add("light-mode");
+            }
+        } catch (e) { }
+    })();
+</script>
+
+<script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    'primary': '#60a5fa', // Blue-400
-                    'dark-bg-body': '#262626', // Màu nền #262626
-                    'dark-bg-card': '#333333', // Màu nền container
-                    'dark-border': '#4b5563', // Gray-600
+                    primary: "#EAB308",
+                    bodybg: "#121212",
                 },
                 fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
+                    logo: ['"Dancing Script"', "cursive"],
+                    sans: ["Inter", "sans-serif"],
                 },
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <!DOCTYPE html>
 {% load static %}
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập Tài Khoản</title>
 </head>
+
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 flex items-center justify-center min-h-screen">
 
-<div class="w-full max-w-md p-8 m-4 bg-dark-bg-card rounded-xl shadow-2xl border border-gray-700">
-    
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-extrabold text-white mb-2">Đăng Nhập</h1>
-        <p class="text-gray-400">Chào mừng trở lại WebStory.</p>
-    </div>
+    <div class="w-full max-w-md p-8 m-4 bg-dark-bg-card rounded-xl shadow-2xl border border-gray-700">
 
-    <!-- Giả định form Django được đặt trong đây -->
-    <form method="post" action="{% url 'login' %}" class="space-y-6">
-        {% csrf_token %}
-        
-        <!-- Trường Tên người dùng/Email -->
-        <div>
-            <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Tên người dùng hoặc Email</label>
-            <input type="text" id="id_username" name="username" required 
-                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập tên hoặc email...">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold text-white mb-2">Đăng Nhập</h1>
+            <p class="text-gray-400">Chào mừng trở lại WebStory.</p>
         </div>
 
-        <!-- Trường Mật khẩu -->
-        <div>
-            <label for="id_password" class="block text-sm font-medium text-gray-300 mb-1">Mật khẩu</label>
-            <input type="password" id="id_password" name="password" required 
-                   class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
-                   placeholder="Nhập mật khẩu...">
-        </div>
-        
-        <!-- Link Quên mật khẩu -->
-        <div class="flex justify-end text-sm">
-            <!-- Giả định có URL pattern 'password_reset' -->
-            <a href="{% url 'password_reset' %}" class="font-medium text-primary hover:underline">Quên mật khẩu?</a>
-        </div>
-        
-        <!-- Nút Đăng nhập -->
-        <button type="submit" 
+        <!-- Giả định form Django được đặt trong đây -->
+        <form method="post" action="{% url 'login' %}" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Trường Tên người dùng/Email -->
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Tên người dùng hoặc
+                    Email</label>
+                <input type="text" id="id_username" name="username" required
+                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                    placeholder="Nhập tên hoặc email...">
+            </div>
+
+            <!-- Trường Mật khẩu -->
+            <div>
+                <label for="id_password" class="block text-sm font-medium text-gray-300 mb-1">Mật khẩu</label>
+                <input type="password" id="id_password" name="password" required
+                    class="w-full px-4 py-2 border border-dark-border bg-gray-700 text-white rounded-lg focus:ring-primary focus:border-primary transition duration-200 placeholder-gray-500"
+                    placeholder="Nhập mật khẩu...">
+            </div>
+
+            <!-- Link Quên mật khẩu -->
+            <div class="flex justify-end text-sm">
+                <!-- Giả định có URL pattern 'password_reset' -->
+                <a href="{% url 'password_reset' %}" class="font-medium text-primary hover:underline">Quên mật khẩu?</a>
+            </div>
+
+            <!-- Nút Đăng nhập -->
+            <button type="submit"
                 class="w-full bg-primary text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-bg-card">
-            Đăng Nhập
-        </button>
-    </form>
-    
-    <!-- Link chuyển hướng sang Đăng ký -->
-    <div class="mt-6 text-center">
-        <p class="text-sm text-gray-400">Chưa có tài khoản? 
-            <a href="{% url 'register' %}" class="font-medium text-primary hover:underline">Đăng ký ngay</a>
-        </p>
+                Đăng Nhập
+            </button>
+        </form>
+
+        <!-- Link chuyển hướng sang Đăng ký -->
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-400">Chưa có tài khoản?
+                <a href="{% url 'register' %}" class="font-medium text-primary hover:underline">Đăng ký ngay</a>
+            </p>
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>

@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }}</title>
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+    <style>
 
+    </style>
     <!-- Preload theme để tránh chớp -->
     <script>
         (function () {
@@ -112,15 +114,33 @@
 
     </div>
     {% include 'story/footer/footer.html' %}
+    <div id="font-control-container"
+        class="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center transition-transform duration-300 translate-x-[calc(100%-12px)] shadow-2xl">
 
-    <script>
-        // Xóa class no-transition sau khi load xong
-        document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(() => {
-                document.documentElement.classList.remove("no-transition");
-            }, 100);
-        });
-    </script>
+        <button id="font-toggle-btn"
+            class="w-8 h-12 md:w-10 md:h-16 bg-primary text-white rounded-l-xl flex items-center justify-center shadow-lg focus:outline-none">
+            <span id="toggle-icon" class="transition-transform duration-300">❮</span>
+        </button>
+
+        <div
+            class="flex flex-col gap-3 p-3 bg-dark-bg-card border-l border-y border-dark-border rounded-l-2xl shadow-inner min-w-[56px] md:min-w-[64px]">
+            <button onclick="changeFontSize(1)"
+                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-primary hover:bg-secondary text-white rounded-full font-bold text-xl active:scale-90 transition-all">
+                A+
+            </button>
+            <div id="current-size-display" class="text-xs text-center font-bold text-gray-400">18</div>
+            <button onclick="changeFontSize(-1)"
+                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white rounded-full font-bold text-sm active:scale-90 transition-all">
+                A-
+            </button>
+            <button onclick="resetFontSize()"
+                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-red-600 hover:bg-red-500 text-white rounded-full text-xs active:scale-90 transition-all">
+                ↺
+            </button>
+        </div>
+    </div>
+    <script src="{% static 'story/js/chapter_detail.js' %}"></script>
+
 </body>
 
 </html>

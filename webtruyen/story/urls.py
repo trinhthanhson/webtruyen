@@ -58,4 +58,5 @@ urlpatterns = [
     path("accounts/profile/", views.profile_view, name="profile"),
     path("accounts/profile/edit/", views.profile_edit_view, name="profile_edit"),
     path("logout/", views.custom_logout_view, name="logout"),
+    path('favorite/<int:story_id>/', views.toggle_favorite, name='toggle_favorite'),
 ]

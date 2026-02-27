@@ -1018,3 +1018,24 @@ html.light-mode #chapter-sidebar a:hover {
 html.light-mode #chapter-sidebar button:hover {
   color: #000000 !important;
 }
+
+/* CSS hỗ trợ cho nội dung chương */
+.chapter-content {
+  transition: font-size 0.2s ease-out;
+  line-height: 1.8;
+  /* Khoảng cách dòng giúp dễ đọc hơn */
+  word-wrap: break-word;
+}
+
+/* Tối ưu mobile: đẩy bảng điều khiển sát lề hơn để không che chữ */
+@media (max-width: 768px) {
+  #font-size-controls {
+    background-color: rgba(51, 51, 51, 0.8);
+    backdrop-filter: blur(4px);
+  }
+
+  .chapter-content {
+    font-size: 16px;
+    /* Cỡ chữ mặc định cho mobile */
+  }
+}

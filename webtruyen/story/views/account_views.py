@@ -17,7 +17,6 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, f'Đăng ký thành công! Chào mừng {user.username}.')
             return redirect(LOGIN_REDIRECT_URL)
         else:
             print("LỖI VALIDATION ĐĂNG KÝ:", form.errors)
@@ -71,5 +70,22 @@ def profile_edit_view(request):
 
 def custom_logout_view(request):
     logout(request)
-    messages.info(request, "Bạn đã đăng xuất thành công.")
     return redirect('home')
+
+@login_required
+def toggle_favorite(request, story_id):
+    if request.method == "POST":
+        story = Story.objects.get(id=story_id)
+        favorite, created = UserFavorite.objects.get_or_create(user=request.user, story=story)
+        
+        if not created:
+            favorite.delete()
+            is_favorite = False
+        else:
+            is_favorite = True
+            
+        return JsonResponse({
+            'status': 'success',
+            'is_favorite': is_favorite,
+        })
+    return JsonResponse({'status': 'error'}, status=400)

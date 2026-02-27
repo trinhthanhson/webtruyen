@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ story.title|default:"Chi tiết truyện" }} - Nguyệt Mộng Thư</title>
+    <title>{{ story.title|default:"Chi tiết truyện" }} - Thiên Mộng Hành</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -66,7 +66,6 @@
                 </svg>
             </button>
         </div>
-
         <div class="flex-1 overflow-y-auto chapter-list-scroll p-4 space-y-1">
             {% for chapter in chapters %}
             <a href="{% url 'chapter_detail' story.slug chapter.chapter_number|floatformat:0 %}"
@@ -158,31 +157,40 @@
                                 class="btn-primary px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px]">Đọc
                                 từ đầu</a>
                             {% endif %}
-                            <div class="flex flex-col items-start">
+                            <div class="flex items-center gap-3">
+    <button onclick="toggleSidebar()"
+        class="h-10 px-5 rounded-lg flex items-center justify-center bg-gray-300 text-gray-800 text-sm font-semibold transition-all hover:bg-gray-400">
+        Danh sách chương
+        {% if story.chapter_count > 0 %}
+            <span class="ml-1 text-xs">({{ story.chapter_count }})</span>
+        {% endif %}
+    </button>
 
-                                <button onclick="toggleSidebar()"
-                                    class="px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px] text-gray-800 bg-gray-300">
+    <button id="favorite-btn" data-story-id="{{ story.id }}"
+        class="h-10 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 border text-sm font-medium
+        {% if is_favorite %} border-red-500 text-red-500 bg-red-500/10 {% else %} border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500 {% endif %}">
+        
+        <svg id="heart-icon" class="w-4 h-4 {% if is_favorite %} fill-current {% endif %}" 
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+            </path>
+        </svg>
+        
+        <span id="favorite-text">
+            {% if is_favorite %} Đã thích {% else %} Yêu thích {% endif %}
+        </span>
+    </button>
+</div>
 
-                                    Danh sách chương
-
-                                    {% if story.chapter_count > 0 %}
-                                    <span class="ml-2 text-sm">
-                                        ({{ story.chapter_count }})
-                                    </span>
-                                    {% endif %}
-
-                                </button>
-
-                                {% if story.chapter_count == 0 %}
-                                <span class="text-xs text-gray-400 mt-1 italic ml-10">
-                                    Đang cập nhật...
-                                </span>
-                                {% endif %}
-
-                            </div>
-
-                        </div>
+    
+                       </div>
+                        
+{% if story.chapter_count == 0 %}
+    <p class="text-xs text-gray-500 italic mt-1.5 ml-8">Đang cập nhật...</p>
+{% endif %}
                     </div>
+                    
                 </div>
 
                 <div class="glass-panel p-6">
@@ -301,6 +309,43 @@
                 body.style.overflow = 'auto';
             }
         }
+
+document.getElementById('favorite-btn')?.addEventListener('click', function() {
+    const storyId = this.getAttribute('data-story-id');
+    const btn = this;
+    const text = document.getElementById('favorite-text');
+    const icon = document.getElementById('heart-icon');
+
+    fetch(`/favorite/${storyId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => {
+        if (response.status === 401 || response.url.includes('login')) {
+            window.location.href = "{% url 'login' %}"; // Chuyển hướng nếu chưa đăng nhập
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            if (data.is_favorite) {
+                btn.classList.add('border-red-500', 'text-red-500', 'bg-red-500/10');
+                btn.classList.remove('border-gray-600', 'text-gray-400');
+                icon.classList.add('fill-current');
+                text.innerText = 'Đã yêu thích';
+            } else {
+                btn.classList.remove('border-red-500', 'text-red-500', 'bg-red-500/10');
+                btn.classList.add('border-gray-600', 'text-gray-400');
+                icon.classList.remove('fill-current');
+                text.innerText = 'Yêu thích';
+            }
+        }
+    });
+});
     </script>
 </body>
 
