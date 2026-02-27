@@ -6,8 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Count
 
-from ..models import Category
+from ..models import Category, Story, UserFavorite , ReadingHistory
 from ..form import ProfileEditForm 
+from django.http import JsonResponse
+
 
 LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
@@ -39,7 +41,7 @@ def login_view(request):
             messages.success(request, f'Đăng nhập thành công! Chào mừng trở lại, {user.username}.')
             return redirect(request.GET.get('next') or LOGIN_REDIRECT_URL)
         else:
-            messages.error(request, "Đăng nhập không thành công. Tên người dùng hoặc mật khẩu không đúng.")
+            messages.error(request, "")
     else:
         form = AuthenticationForm()
         
@@ -51,7 +53,25 @@ def login_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'story/account/profile.html')
+    # 1. Lấy 10 truyện đã đọc gần đây nhất (sắp xếp theo thời gian mới nhất)
+    recent_history = ReadingHistory.objects.filter(user=request.user)\
+        .select_related('story', 'chapter')\
+        .order_by('-last_read_at')[:10]
+
+    # 2. Lấy danh sách tất cả truyện yêu thích của người dùng
+    favorite_stories = UserFavorite.objects.filter(user=request.user)\
+        .select_related('story')\
+        .order_by('-created_at') # Giả sử bạn có trường created_at, nếu không thì bỏ order_by
+    categories = Category.objects.annotate(story_count=Count('stories'))
+    context = {
+        'user': request.user,
+        'recent_history': recent_history,
+        'favorite_stories': favorite_stories,
+        'page_title': f"Hồ sơ của {request.user.username}",
+        'categories':categories
+    }
+    
+    return render(request, 'story/account/profile.html', context)
 
 @login_required
 def profile_edit_view(request):
@@ -65,7 +85,7 @@ def profile_edit_view(request):
             messages.error(request, 'Đã xảy ra lỗi khi cập nhật hồ sơ.')
     else:
         form = ProfileEditForm(instance=request.user) 
-        
+    
     return render(request, 'story/account/profile_edit.html', {'form': form})
 
 def custom_logout_view(request):
@@ -73,9 +93,9 @@ def custom_logout_view(request):
     return redirect('home')
 
 @login_required
-def toggle_favorite(request, story_id):
+def toggle_favorite(request, story_slug):
     if request.method == "POST":
-        story = Story.objects.get(id=story_id)
+        story = Story.objects.get(slug=story_slug)
         favorite, created = UserFavorite.objects.get_or_create(user=request.user, story=story)
         
         if not created:

@@ -1,5 +1,15 @@
 {% load static %}
-<script src="https://cdn.tailwindcss.com"></script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ | {{ user.username }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+
+    
 <script>
     (function () {
         const html = document.documentElement;
@@ -30,67 +40,150 @@
     };
 </script>
 
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông Tin Hồ Sơ | {{ user.username }}</title>
+    <style>
+        .glass-panel { background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        .tab-active { border-bottom: 3px solid #EAB308; color: #EAB308; }
+    </style>
 </head>
 
-<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
-
+<body class="bg-dark-bg text-gray-200 font-sans antialiased">
     {% include 'story/header/header.html' %}
 
-    <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
-        <div class="w-full bg-dark-bg-card mt-20 p-8 rounded-xl shadow-2xl border border-gray-700">
+    <main class="container mx-auto px-4 pt-28 pb-12 max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass-panel rounded-2xl p-6 text-center">
+                    <div class="relative w-32 h-32 mx-auto mb-4">
+                        <div class="w-full h-full rounded-full bg-gradient-to-tr from-primary to-yellow-600 flex items-center justify-center text-4xl font-bold text-white shadow-2xl">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                        <div class="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-dark-card rounded-full"></div>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">{{ user.username }}</h2>
+                    <p class="text-gray-400 text-sm mb-6">{{ user.email|default:"Chưa cập nhật email" }}</p>
+                    
+                    <div class="space-y-3 text-left bg-black/20 p-4 rounded-xl border border-white/5">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Họ & Tên:</span>
+                            <span class="text-gray-200">{{ user.get_full_name|default:"Chưa đặt tên" }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Ngày tham gia:</span>
+                            <span class="text-gray-200">{{ user.date_joined|date:"d/m/Y" }}</span>
+                        </div>
+                    </div>
 
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-extrabold text-white mb-2">HỒ SƠ NGƯỜI DÙNG</h1>
-                <p class="text-gray-400">Thông tin tài khoản của bạn.</p>
+                    <a href="{% url 'profile_edit' %}" class="w-full mt-6 inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-black border border-white/10 py-3 rounded-xl font-semibold transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        Chỉnh sửa hồ sơ
+                    </a>
+                </div>
             </div>
 
-            <div class="space-y-6">
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-panel rounded-2xl flex flex-col h-[600px]">
+                    <div class="flex border-b border-white/10 px-6">
+                        <button onclick="switchTab('history')" id="tab-history-btn" class="py-4 px-6 font-semibold transition-all tab-active">
+                            Lịch sử đọc
+                        </button>
+                        <button onclick="switchTab('favorite')" id="tab-favorite-btn" class="py-4 px-6 font-semibold transition-all text-gray-500 hover:text-gray-400">
+                            Truyện yêu thích
+                        </button>
+                    </div>
 
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-dark-border pb-4">
-                    <span class="font-semibold text-gray-300 sm:w-1/3">Tên người dùng</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">{{ user.username }}</span>
+                    <div id="content-history" class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                        {% if recent_history %}
+                        <div class="space-y-4">
+                            {% for history in recent_history %}
+                            <div class="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
+                                <img src="{{ history.story.cover_image_url }}" class="w-14 h-20 rounded-lg object-cover shadow-lg">
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-200 group-hover:text-primary transition-colors">
+                                        <a href="{% url 'story_detail' history.story.slug %}">{{ history.story.title }}</a>
+                                    </h4>
+                                    <p class="text-sm text-gray-400">
+                                        Đang đọc: <a href="{% url 'chapter_detail' history.story.slug history.chapter.chapter_number %}" class="text-primary/80 hover:underline">Chương {{ history.chapter.chapter_number|floatformat:0 }}</a>
+                                    </p>
+                                    <span class="text-[10px] text-gray-600 italic">{{ history.last_read_at|timesince }} trước</span>
+                                </div>
+                                <a href="{% url 'chapter_detail' history.story.slug history.chapter.chapter_number %}" class="px-4 py-2 bg-primary/10 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-black transition-all">Đọc tiếp</a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="h-full flex flex-col items-center justify-center text-gray-500">
+                            <svg class="w-12 h-12 mb-2 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p>Chưa có lịch sử đọc truyện.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div id="content-favorite" class="hidden flex-1 overflow-y-auto p-6 custom-scrollbar">
+                        {% if favorite_stories %}
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            {% for fav in favorite_stories %}
+                            <a href="{% url 'story_detail' fav.story.slug %}" class="group relative rounded-xl overflow-hidden aspect-[3/4]">
+                                <img src="{{ fav.story.cover_image_url }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-0 p-3 w-full">
+                                    <h4 class="text-xs font-bold text-white truncate">{{ fav.story.title }}</h4>
+                                    <p class="text-[10px] text-primary">{{ fav.story.author }}</p>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="h-full flex flex-col items-center justify-center text-gray-500">
+                            <svg class="w-12 h-12 mb-2 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            <p>Danh sách yêu thích trống.</p>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-dark-border pb-4">
-                    <span class="font-semibold text-gray-300 sm:w-1/3">Email</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">
-                        {{ user.email|default:"Chưa cập nhật"}}
-                    </span>
-                </div>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-dark-border pb-4">
-                    <span class="font-semibold text-gray-300 sm:w-1/3">Họ</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">
-                        {{ user.first_name|default:"Chưa cập nhật"}}</span>
-                </div>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4">
-                    <span class="font-semibold text-gray-300 sm:w-1/3">Tên đệm & Tên</span>
-                    <span class="text-white text-lg mt-1 sm:mt-0 sm:w-2/3">
-                        {{ user.last_name|default:"Chưa cập nhật"}}
-                    </span>
-                </div>
-
             </div>
-
-            <div class="mt-8 text-center">
-                <a href="{% url 'profile_edit' %}"
-                    class="inline-block bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition duration-300">
-                    Chỉnh Sửa Hồ Sơ
-                </a>
-            </div>
-
         </div>
     </main>
 
     {% include 'story/footer/footer.html' %}
 
-</body>
+    <script>
+    function switchTab(tab) {
+        const histCont = document.getElementById('content-history');
+        const favCont = document.getElementById('content-favorite');
+        const histBtn = document.getElementById('tab-history-btn');
+        const favBtn = document.getElementById('tab-favorite-btn');
 
+        if (tab === 'history') {
+            histCont.classList.remove('hidden');
+            favCont.classList.add('hidden');
+            histBtn.classList.add('tab-active');
+            histBtn.classList.remove('text-gray-500');
+            favBtn.classList.remove('tab-active');
+            favBtn.classList.add('text-gray-500');
+        } else if (tab === 'favorite') {
+            histCont.classList.add('hidden');
+            favCont.classList.remove('hidden');
+            favBtn.classList.add('tab-active');
+            favBtn.classList.remove('text-gray-500');
+            histBtn.classList.remove('tab-active');
+            histBtn.classList.add('text-gray-500');
+        }
+    }
+
+    // --- LOGIC MỚI: Tự động chuyển tab dựa trên URL ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab');
+
+        if (activeTab === 'history') {
+            switchTab('history');
+        } else if (activeTab === 'favorite') {
+            switchTab('favorite');
+        }
+    });
+</script>
+</body>
 </html>

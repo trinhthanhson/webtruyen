@@ -166,7 +166,7 @@
         {% endif %}
     </button>
 
-    <button id="favorite-btn" data-story-id="{{ story.id }}"
+<button type="button" id="favorite-btn" data-story-id="{{ story.slug }}"
         class="h-10 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 border text-sm font-medium
         {% if is_favorite %} border-red-500 text-red-500 bg-red-500/10 {% else %} border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500 {% endif %}">
         
@@ -310,41 +310,54 @@
             }
         }
 
-document.getElementById('favorite-btn')?.addEventListener('click', function() {
-    const storyId = this.getAttribute('data-story-id');
-    const btn = this;
-    const text = document.getElementById('favorite-text');
-    const icon = document.getElementById('heart-icon');
+document.addEventListener('DOMContentLoaded', function() {
+    const favoriteBtn = document.getElementById('favorite-btn');
+    
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', function(e) {
+            // Sử dụng currentTarget để luôn lấy đúng phần tử mang ID (dù click vào icon hay text)
+            const btn = e.currentTarget;
+            const storyId = btn.getAttribute('data-story-id');
+            const text = document.getElementById('favorite-text');
+            const icon = document.getElementById('heart-icon');
 
-    fetch(`/favorite/${storyId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-            'Content-Type': 'application/json'
-        },
-    })
-    .then(response => {
-        if (response.status === 401 || response.url.includes('login')) {
-            window.location.href = "{% url 'login' %}"; // Chuyển hướng nếu chưa đăng nhập
-            return;
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            if (data.is_favorite) {
-                btn.classList.add('border-red-500', 'text-red-500', 'bg-red-500/10');
-                btn.classList.remove('border-gray-600', 'text-gray-400');
-                icon.classList.add('fill-current');
-                text.innerText = 'Đã yêu thích';
-            } else {
-                btn.classList.remove('border-red-500', 'text-red-500', 'bg-red-500/10');
-                btn.classList.add('border-gray-600', 'text-gray-400');
-                icon.classList.remove('fill-current');
-                text.innerText = 'Yêu thích';
+            if (!storyId) {
+                console.error("Không tìm thấy Story ID trên thuộc tính data-story-id");
+                return;
             }
-        }
-    });
+
+            fetch(`/favorite/${storyId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.status === 401 || response.redirected) {
+                    window.location.href = "{% url 'login' %}";
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.status === 'success') {
+                    if (data.is_favorite) {
+                        btn.classList.add('border-red-500', 'text-red-500', 'bg-red-500/10');
+                        btn.classList.remove('border-gray-600', 'text-gray-400');
+                        icon.classList.add('fill-current');
+                        text.innerText = 'Đã thích';
+                    } else {
+                        btn.classList.remove('border-red-500', 'text-red-500', 'bg-red-500/10');
+                        btn.classList.add('border-gray-600', 'text-gray-400');
+                        icon.classList.remove('fill-current');
+                        text.innerText = 'Yêu thích';
+                    }
+                }
+            })
+            .catch(err => console.error("Lỗi Fetch:", err));
+        });
+    }
 });
     </script>
 </body>
