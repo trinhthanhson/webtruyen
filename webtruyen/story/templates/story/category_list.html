@@ -1,41 +1,10 @@
 {% load static %}
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-
-<script>
-    (function () {
-        const html = document.documentElement;
-        html.classList.add("no-transition");
-        try {
-            const theme = localStorage.getItem("theme");
-            if (theme === "light") {
-                html.classList.add("light-mode");
-            }
-        } catch (e) { }
-    })();
-
-</script>
-
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    'primary': '#EAB308',
-                    'secondary': '#f97316',
-                    'dark-bg-body': '#262626',
-                    'dark-bg-card': '#333333',
-                    'dark-border': '#4b5563',
-                },
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                },
-            }
-        }
-    }
-</script>
+<script src="{% static 'story/js/base.js' %}"></script>
+
 <!DOCTYPE html>
 {% load static %}
 <html>

@@ -9,36 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
-    
-<script>
-    (function () {
-        const html = document.documentElement;
-        html.classList.add("no-transition");
-        try {
-            const theme = localStorage.getItem("theme");
-            if (theme === "light") {
-                html.classList.add("light-mode");
-            }
-        } catch (e) { }
-    })();
-</script>
-
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: "#EAB308",
-                    bodybg: "#121212",
-                },
-                fontFamily: {
-                    logo: ['"Dancing Script"', "cursive"],
-                    sans: ["Inter", "sans-serif"],
-                },
-            },
-        },
-    };
-</script>
+  <script src="{% static 'story/js/base.js' %}"></script>
 
     <style>
         .glass-panel { background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }

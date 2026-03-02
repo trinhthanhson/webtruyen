@@ -10,27 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}?v=1.1">
     
-    <script>
-        // Khởi tạo theme ngay lập tức để tránh bị nhấp nháy trắng/đen
-        (function () {
-            const html = document.documentElement;
-            const theme = localStorage.getItem("theme");
-            if (theme === "light") html.classList.add("light-mode");
-        })();
+    <script src="{% static 'story/js/base.js' %}"></script>
 
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: "#EAB308" },
-                    fontFamily: {
-                        logo: ['"Dancing Script"', "cursive"],
-                        sans: ["Inter", "sans-serif"],
-                    },
-                },
-            },
-        };
-    </script>
-    
     <style>
         /* Ép kiểu cho các input mà Django tự render */
         input[type="text"], input[type="email"], input[type="password"], textarea, select {

@@ -1,26 +1,20 @@
 import os
 from pathlib import Path
 import dj_database_url
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.utils.translation import gettext_lazy as _
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- SECURITY ---
-# Sử dụng biến môi trường để bảo mật Secret Key trên Render
+
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-15&9bm1ik@+8py!xjzxn&6k3_td#8mi79wq-#m4df%bz(0$3r7')
 
-# Tự động tắt DEBUG khi chạy trên Render (môi trường Production)
 DEBUG = 'RENDER' not in os.environ
 
-# --- TỰ ĐỘNG CẤU HÌNH HOST ---
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# Lấy hostname từ Render (ví dụ: web-story-deployment-new.onrender.com)
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-# --- APPLICATION DEFINITION ---
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -28,16 +22,23 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', # Hỗ trợ static file
+    'whitenoise.runserver_nostatic', 
     'django.contrib.staticfiles',
     'cloudinary', 
     'story',
 ]
 
+LANGUAGES = [
+    ('vi', _('Tiếng Việt')),
+    ('en', _('English')),
+    ('zh-hans', _('Chinese')), # Tiếng Trung giản thể
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # QUAN TRỌNG: Phải nằm sau SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -47,6 +48,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'webtruyen.urls'
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/',
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -64,26 +68,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'webtruyen.wsgi.application'
 
-# --- DATABASE (Tự động chuyển đổi Local <-> Render) ---
 DATABASES = {
     'default': dj_database_url.config(
-        # Nếu không thấy biến môi trường DATABASE_URL, nó sẽ dùng Database ở localhost
         default='postgresql://postgres:1234@localhost:5432/webtruyen',
         conn_max_age=600
     )
 }
 
-# --- STATIC & MEDIA FILES ---
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Cấu hình lưu trữ file tĩnh tối ưu cho Render
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# --- CLOUDINARY CONFIG ---
 CLOUDINARY_CLOUD_NAME = 'dqb9trxs4'
 CLOUDINARY_API_KEY = '526277124128331'
 CLOUDINARY_API_SECRET = 'lBNZfs38GP1iGvMKXCRzjDzZcss'
@@ -96,7 +95,6 @@ cloudinary.config(
     secure=True
 )
 
-# --- JAZZMIN SETTINGS ---
 JAZZMIN_SETTINGS = {
     "site_title": "Thiên Mộng Hành Admin",
     "site_header": "Thiên Mộng Hành",

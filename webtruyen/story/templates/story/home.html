@@ -14,36 +14,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
-  <!-- Preload theme để tránh chớp -->
-  <script>
-    (function () {
-      const html = document.documentElement;
-      html.classList.add("no-transition");
-      try {
-        const theme = localStorage.getItem("theme");
-        if (theme === "light") {
-          html.classList.add("light-mode");
-        }
-      } catch (e) { }
-    })();
-  </script>
+<script src="{% static 'story/js/base.js' %}"></script>
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: "#EAB308",
-            bodybg: "#121212",
-          },
-          fontFamily: {
-            logo: ['"Dancing Script"', "cursive"],
-            sans: ["Inter", "sans-serif"],
-          },
-        },
-      },
-    };
-  </script>
 </head>
 
 <body class="text-white antialiased overflow-x-hidden">

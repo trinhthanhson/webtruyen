@@ -1,5 +1,5 @@
 {% load static %}
-<header id="main-header" class="fixed top-0 left-0 w-full z-[1000] transition-all duration-300">
+ {% load i18n %}<header id="main-header" class="fixed top-0 left-0 w-full z-[1000] transition-all duration-300">
   <div id="header-inner" class="container mx-auto px-4 h-[70px] flex justify-between items-center">
 
     <div class="flex-shrink-0">
@@ -117,7 +117,15 @@
         </div>
         {% endif %}
       </div>
-
+<form action="{% url 'set_language' %}" method="post" class="flex gap-2">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+    <select name="language" onchange="this.form.submit()" class="bg-transparent text-gray-400 text-xs border border-gray-700 rounded px-1">
+        <option value="vi" {% if request.LANGUAGE_CODE == 'vi' %}selected{% endif %}>VI</option>
+        <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
+        <option value="zh-hans" {% if request.LANGUAGE_CODE == 'zh-hans' %}selected{% endif %}>CN</option>
+    </select>
+</form>
       <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-500 hover:text-white focus:outline-none">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />

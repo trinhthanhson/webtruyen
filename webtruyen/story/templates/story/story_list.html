@@ -12,40 +12,10 @@
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-    <script>
-        (function () {
-            const html = document.documentElement;
-            html.classList.add("no-transition");
-            try {
-                const theme = localStorage.getItem("theme");
-                if (theme === "light") {
-                    html.classList.add("light-mode");
-                }
-            } catch (e) { }
-        })();
 
-    </script>
-
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#EAB308',
-                        'secondary': '#f97316',
-                        'dark-bg-body': '#262626',
-                        'dark-bg-card': '#333333',
-                        'dark-border': '#4b5563',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+    <script src="{% static 'story/js/base.js' %}"></script>
+
 </head>
 
 <body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col">
