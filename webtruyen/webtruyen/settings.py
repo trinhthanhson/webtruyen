@@ -16,6 +16,7 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,7 +28,7 @@ INSTALLED_APPS = [
     'cloudinary', 
     'story',
 ]
-
+LANGUAGE_CODE = 'vi'
 LANGUAGES = [
     ('vi', _('Tiếng Việt')),
     ('en', _('English')),

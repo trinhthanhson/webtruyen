@@ -1,38 +1,33 @@
 {% load static %}
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-<!-- Tailwind CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="{% static 'story/js/base.js' %}"></script>
-
-<!DOCTYPE html>
-{% load static %}
-<html>
-
-<head>
+{% load i18n %} <!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}"> <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách Thể loại Truyện</title>
+    <title>{% blocktrans %}Danh sách Thể loại Truyện{% endblocktrans %} | Thiên Mộng Hành</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+    <script src="{% static 'story/js/base.js' %}"></script>
 </head>
 
 <body class="bg-dark-bg-body font-sans text-gray-100 antialiased transition-colors duration-300 category-list-page">
     {% include 'story/header/header.html' %}
 
-    <div class="container mx-auto max-w-5xl my-8 px-4  ">
+    <div class="container mx-auto max-w-5xl my-8 px-4">
 
         <div class="mb-10 mt-40">
             <div class="flex items-center space-x-4 mb-2">
                 <div class="w-1.5 h-10 bg-primary rounded-full"></div>
                 <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
-                    📚 Danh Sách Thể Loại Truyện
-
+                    📚 {% blocktrans %}Danh Sách Thể Loại Truyện{% endblocktrans %}
                 </h1>
             </div>
         </div>
+
         <div class="bg-dark-bg-card rounded-xl shadow-2xl p-6 md:p-8">
-
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                
                 {% for category in categories %}
-
                 <a href="{% url 'category_detail' category_slug=category.slug %}"
                     class="block p-5 bg-gray-700/50 rounded-lg border border-dark-border hover:border-primary transition duration-300 hover:shadow-lg">
 
@@ -42,21 +37,27 @@
 
                     <p class="text-sm text-gray-400">
                         {% if category.story_count is not None %}
-                        ({{ category.story_count }} truyện)
+                            {% blocktrans count count=category.story_count %}
+                                ({{ count }} truyện)
+                            {% plural %}
+                                ({{ count }} truyện)
+                            {% endblocktrans %}
                         {% else %}
-                        (Chưa có thông tin số truyện)
+                            ({% blocktrans %}Chưa có thông tin số truyện{% endblocktrans %})
                         {% endif %}
                     </p>
                 </a>
 
                 {% empty %}
-                <p class="col-span-full text-center text-gray-400 py-10">Hiện không có thể loại nào được tìm thấy.</p>
+                <p class="col-span-full text-center text-gray-400 py-10">
+                    {% blocktrans %}Hiện không có thể loại nào được tìm thấy.{% endblocktrans %}
+                </p>
                 {% endfor %}
+
             </div>
         </div>
     </div>
+
     {% include 'story/footer/footer.html' %}
-
 </body>
-
 </html>

@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -28,7 +29,7 @@
     <aside id="chapter-sidebar"
         class="chapter-mode fixed top-0 right-0 h-full w-full bg-black max-w-md z-[1002] translate-x-full border-l flex flex-col">
         <div class="p-6 border-b flex justify-between items-center">
-            <h2 class="text-xl font-bold text-gray-400">Danh sách chương</h2>
+            <h2 class="text-xl font-bold text-gray-400"> {% blocktrans %}Danh sách chương{% endblocktrans %}</h2>
             <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white transition">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -43,16 +44,16 @@
                 {{ chapter.title }}
             </a>
             {% empty %}
-            <p class="p-4 text-gray-500 text-center">Chưa có chương nào.</p>
+            <p class="p-4 text-gray-500 text-center">{% blocktrans %}Chưa có chương nào"{% endblocktrans %}</p>
             {% endfor %}
         </div>
     </aside>
 
     <main class="container mx-auto px-4 pt-28 pb-12 max-w-7xl">
         <nav class="flex text-sm text-gray-400 mb-6 space-x-2">
-            <a href="/" class="hover:text-primary">Trang chủ</a>
+            <a href="/" class="hover:text-primary">{% blocktrans %}Trang chủ{% endblocktrans %}</a>
             <span>/</span>
-            <a href="/stories/" class="hover:text-primary">Truyện</a>
+            <a href="/stories/" class="hover:text-primary">{% blocktrans %}Truyện{% endblocktrans %}</a>
             <span>/</span>
             <span class="text-gray-200">{{ story.title }}</span>
         </nav>
@@ -73,9 +74,9 @@
                     <div class="flex-1 space-y-4">
                         <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight">{{ story.title }}</h1>
                         <div class="grid grid-cols-1 gap-y-3 text-sm">
-                            <p><span class="text-gray-400">Tác giả:</span> <span class="text-primary ml-2">
+                            <p><span class="text-gray-400">{% blocktrans %}Tác giả{% endblocktrans %}:</span> <span class="text-primary ml-2">
                                     {{story.author|default:"Đang cập nhật" }}</span></p>
-                            <p><span class="text-gray-400">Thể loại:</span>
+                            <p><span class="text-gray-400">{% blocktrans %}Thể loại{% endblocktrans %}:</span>
                                 <span class="text-primary ml-2">
                                     {% for cat in story.categories.all %}
                                     <a href="#" class="hover:underline">{{ cat.category_name }}</a>
@@ -84,12 +85,12 @@
                                 </span>
                             </p>
                             <p>
-                                <span class="text-gray-400">Dịch giả:</span>
+                                <span class="text-gray-400"> {% blocktrans %}Dịch giả{% endblocktrans %}:</span>
                                 <span class="text-primary ml-2">
                                     {% if story.translator %}
                                     {{ story.translator }}
                                     {% else %}
-                                    <span class="text-primary ml-2">Đang cập nhật</span>
+                                    <span class="text-primary ml-2">{% blocktrans %}Đang cập nhật{% endblocktrans %}</span>
                                     {% endif %}
                                 </span>
                             </p>
@@ -117,20 +118,19 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
                                 </svg>
-                                <span>{{ chapters|length }} chương</span>
+                                <span>{{ chapters|length }} {% blocktrans %}chương{% endblocktrans %}</span>
                             </div>
                         </div>
 
                         <div class="flex flex-wrap gap-4 pt-4">
                             {% if story.first_chapter_number %}
                             <a href="{% url 'chapter_detail' story.slug story.first_chapter_number|floatformat:0 %}"
-                                class="btn-primary px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px]">Đọc
-                                từ đầu</a>
+                                class="btn-primary px-8 py-3 rounded-lg flex items-center justify-center min-w-[140px]"> {% blocktrans %}Đọc từ đầu{% endblocktrans %}</a>
                             {% endif %}
                             <div class="flex items-center gap-3">
     <button onclick="toggleSidebar()"
         class="h-10 px-5 rounded-lg flex items-center justify-center bg-gray-300 text-gray-800 text-sm font-semibold transition-all hover:bg-gray-400">
-        Danh sách chương
+        {% blocktrans %}Danh sách chương{% endblocktrans %}
         {% if story.chapter_count > 0 %}
             <span class="ml-1 text-xs">({{ story.chapter_count }})</span>
         {% endif %}
@@ -148,7 +148,7 @@
         </svg>
         
         <span id="favorite-text">
-            {% if is_favorite %} Đã thích {% else %} Yêu thích {% endif %}
+            {% if is_favorite %} {% blocktrans %}Đã thích{% endblocktrans %} {% else %} {% blocktrans %}Yêu thích{% endblocktrans %} {% endif %}
         </span>
     </button>
 </div>
@@ -157,7 +157,7 @@
                        </div>
                         
 {% if story.chapter_count == 0 %}
-    <p class="text-xs text-gray-500 italic mt-1.5 ml-8">Đang cập nhật...</p>
+    <p class="text-xs text-gray-500 italic mt-1.5 ml-8"> {% blocktrans %}Đang cập nhật...{% endblocktrans %}</p>
 {% endif %}
                     </div>
                     
@@ -165,7 +165,7 @@
 
                 <div class="glass-panel p-6">
                     <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-gray-300">
-                        <span class="w-1 h-6 bg-primary rounded-full"></span> Văn án
+                        <span class="w-1 h-6 bg-primary rounded-full"></span> {% blocktrans %}Văn án{% endblocktrans %}
                     </h2>
                     <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line text-justify italic">
                         {{ story.description }}
@@ -174,26 +174,26 @@
 
                 <div class="glass-panel p-6">
                     <h2 class="text-xl font-bold mb-6 text-gray-300">
-                        Chương mới nhất
+                        {% blocktrans %}Chương mới nhất{% endblocktrans %}
                     </h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
 
-                        {% for chapter in chapters|slice:":10" %}
+                        {% for chapter in chapters|slice:":10{% endblocktrans %}
                         <a href="{% url 'chapter_detail' story.slug chapter.chapter_number|floatformat:0 %}"
                             class="py-2 border-b border-gray-800 hover:text-primary transition flex justify-between group">
 
                             <span class="truncate text-sm">
-                                Chương {{ chapter.chapter_number|floatformat:0 }}: {{ chapter.title }}
+                                {% blocktrans %}Chương{% endblocktrans %} {{ chapter.chapter_number|floatformat:0 }}: {{ chapter.title }}
                             </span>
 
-                            <span class="text-[10px] text-gray-500 italic">Mới</span>
+                            <span class="text-[10px] text-gray-500 italic"> {% blocktrans %}Mới{% endblocktrans %}</span>
                         </a>
 
                         {% empty %}
                         <!-- Khi không có chương -->
                         <div class="col-span-1 md:col-span-2 text-center py-2 text-gray-500 italic">
-                            Đang cập nhật...
+                           {% blocktrans %}Đang cập nhật...{% endblocktrans %}
                         </div>
                         {% endfor %}
 
@@ -206,7 +206,7 @@
                     <h3
                         class="text-lg font-bold mb-6 text-gray-400 border-b border-gray-800 pb-3 flex items-center gap-2">
                         <span class="w-1 h-5 bg-primary rounded-full shadow-[0_0_8px_#EAB308]"></span>
-                        Cùng thể loại
+                        {% blocktrans %}Cùng thể loại{% endblocktrans %}
                     </h3>
 
                     <div class="space-y-5">
@@ -250,7 +250,7 @@
                         </a>
                         {% empty %}
                         <div class="text-center py-6">
-                            <p class="text-sm text-gray-500 italic">Không tìm thấy truyện tương tự.</p>
+                            <p class="text-sm text-gray-500 italic"> {% blocktrans %}Không tìm thấy truyện tương tự.{% endblocktrans %}</p>
                         </div>
                         {% endfor %}
                     </div>

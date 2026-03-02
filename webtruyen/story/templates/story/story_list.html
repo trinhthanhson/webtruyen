@@ -1,11 +1,13 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page_title|default:"Thiên Mộng Hành - Danh Sách Truyện" }}</title>
+    <title>{{ page_title|default:" {% blocktrans %}Thiên Mộng Hành - Danh Sách Truyện{% endblocktrans %}" }}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link

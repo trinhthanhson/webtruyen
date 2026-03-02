@@ -1,90 +1,78 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
+{% load i18n %} <!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }}</title>
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-    <style>
-
-    </style>
-    <!-- Preload theme để tránh chớp -->
-   
-    <!-- Tailwind CDN -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'story/js/base.js' %}"></script>
-
 </head>
 
 <body class="font-sans antialiased chapter-detail-page">
-    <!-- Header -->
     {% include 'story/header/header.html' %}
 
-    <!-- Nội dung -->
     <div class="container mx-auto max-w-5xl my-10 mt-20 p-6 md:p-10 glass-panel rounded-2xl shadow-2xl">
 
-        <!-- Tiêu đề chương -->
         <h1 class="text-3xl md:text-4xl font-extrabold text-primary text-center pb-4 mb-6 border-b border-gray-600">
             {{ page_title }}
         </h1>
 
-        <!-- Thông tin truyện -->
         {% if story %}
         <p class="text-center text-gray-400 mb-8">
-            Truyện:
+            {% blocktrans %}Truyện{% endblocktrans %}:
             <a href="{% url 'story_detail' story_slug=story.slug %}"
                 class="text-primary hover:text-secondary font-semibold">
                 {{ story.title }}
             </a>
-            <span class="text-sm ml-1">| Tác giả: {{ story.author }}</span>
+            <span class="text-sm ml-1">| {% blocktrans %}Tác giả{% endblocktrans %}: {{ story.author }}</span>
         </p>
         {% endif %}
 
-        <!-- Nội dung chương -->
         <div class="chapter-content">
             {% if chapter.content %}
-            {{ chapter.content|linebreaksbr }}
+                {{ chapter.content|linebreaksbr }}
             {% elif chapter.image_urls %}
-            {% for image_url in chapter.image_urls %}
-            <img src="{{ image_url }}" alt="Hình ảnh minh họa chương">
-            {% endfor %}
+                {% for image_url in chapter.image_urls %}
+                    <img src="{{ image_url }}" alt="{% trans 'Hình ảnh minh họa chương' %}">
+                {% endfor %}
             {% else %}
-            <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
+                <p class="text-center text-gray-500 py-10">{% blocktrans %}Chương này hiện chưa có nội dung.{% endblocktrans %}</p>
             {% endif %}
         </div>
 
-        <!-- Thanh điều hướng chương -->
         <div class="flex justify-center gap-4 mt-12 pt-6 border-t border-gray-700">
 
             {% if previous_chapter %}
             <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=previous_chapter.chapter_number %}"
                 class="flex-1 max-w-[200px] btn-primary text-center py-3 px-6 rounded-lg font-bold shadow-md">
-                ← Chương trước
+                ← {% blocktrans %}Chương trước{% endblocktrans %}
             </a>
             {% else %}
             <button disabled
                 class="flex-1 max-w-[200px] bg-gray-300 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
-                ← Chương trước
+                ← {% blocktrans %}Chương trước{% endblocktrans %}
             </button>
             {% endif %}
 
             {% if next_chapter %}
             <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=next_chapter.chapter_number %}"
                 class="flex-1 max-w-[200px] btn-primary text-center py-3 px-6 rounded-lg font-bold shadow-md">
-                Chương sau →
+                {% blocktrans %}Chương sau{% endblocktrans %} →
             </a>
             {% else %}
             <button disabled
                 class="flex-1 max-w-[200px] bg-gray-300 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
-                Chương sau →
+                {% blocktrans %}Chương sau{% endblocktrans %} →
             </button>
             {% endif %}
         </div>
 
     </div>
+
     {% include 'story/footer/footer.html' %}
+
     <div id="font-control-container"
         class="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center transition-transform duration-300 translate-x-[calc(100%-12px)] shadow-2xl">
 
@@ -93,25 +81,23 @@
             <span id="toggle-icon" class="transition-transform duration-300">❮</span>
         </button>
 
-        <div
-            class="flex flex-col gap-3 p-3 bg-dark-bg-card border-l border-y border-dark-border rounded-l-2xl shadow-inner min-w-[56px] md:min-w-[64px]">
-            <button onclick="changeFontSize(1)"
+        <div class="flex flex-col gap-3 p-3 bg-dark-bg-card border-l border-y border-dark-border rounded-l-2xl shadow-inner min-w-[56px] md:min-w-[64px]">
+            <button onclick="changeFontSize(1)" title="{% trans 'Phóng to chữ' %}"
                 class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-primary hover:bg-secondary text-white rounded-full font-bold text-xl active:scale-90 transition-all">
                 A+
             </button>
             <div id="current-size-display" class="text-xs text-center font-bold text-gray-400">18</div>
-            <button onclick="changeFontSize(-1)"
+            <button onclick="changeFontSize(-1)" title="{% trans 'Thu nhỏ chữ' %}"
                 class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white rounded-full font-bold text-sm active:scale-90 transition-all">
                 A-
             </button>
-            <button onclick="resetFontSize()"
+            <button onclick="resetFontSize()" title="{% trans 'Khôi phục mặc định' %}"
                 class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-red-600 hover:bg-red-500 text-white rounded-full text-xs active:scale-90 transition-all">
                 ↺
             </button>
         </div>
     </div>
+
     <script src="{% static 'story/js/chapter_detail.js' %}"></script>
-
 </body>
-
 </html>

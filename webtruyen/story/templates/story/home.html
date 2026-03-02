@@ -1,12 +1,12 @@
 {% load static %}
+{% load i18n %}
 <!doctype html>
 <html lang="vi">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📚 Thiên Mộng Hành - Trang chủ</title>
-
+<title>📚 {% blocktrans %}Thiên Mộng Hành - Trang chủ{% endblocktrans %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
@@ -25,14 +25,14 @@
   <header id="main-header" class="fixed top-0 left-0 w-full z-[100]">
     <div class="container mx-auto px-6 h-[64px] flex justify-between items-center">
       <div class="flex-shrink-0">
-        <a href="/" class="text-2xl font-logo text-primary tracking-wide">Thiên Mộng Hành</a>
+        <a href="/" class="text-2xl font-logo text-primary tracking-wide"> Thiên Mộng Hành</a>
       </div>
       <nav class="hidden md:flex items-center space-x-8 text-[15px] font-medium">
-        <a href="/" class="nav-link active">Trang chủ</a>
-        <a href="/stories/" class="nav-link">Truyện</a>
+        <a href="/" class="nav-link active"> {% blocktrans %}Trang chủ{% endblocktrans %}</a>
+        <a href="/stories/" class="nav-link">{% blocktrans %}Truyện{% endblocktrans %}</a>
         <div class="relative group">
           <button class="nav-link flex items-center group-hover:text-primary font-medium outline-none py-5">
-            Thể loại
+            {% blocktrans %}Thể loại{% endblocktrans %}
             <svg class="w-4 h-4 ml-1 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="#6b7280"
               viewBox="0 0 24 24">
               <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <a href="#" class="nav-link">Liên hệ</a>
+        <a href="#" class="nav-link"> {% blocktrans %}Liên hệ{% endblocktrans %}</a>
       </nav>
 
       <div class="flex items-center space-x-4">
@@ -86,17 +86,17 @@
                 
                 <a href="{% url 'profile' %}" class="dropdown-item-link flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2"></path></svg>
-                    <span>Trang cá nhân</span>
+                    <span>{% blocktrans %}Trang cá nhân{% endblocktrans %}</span>
                 </a>
 
                 <a href="{% url 'profile' %}?tab=history" class="dropdown-item-link flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round"></path></svg>
-                    <span>Lịch sử đọc</span>
+                    <span> {% blocktrans %}Lịch sử đọc{% endblocktrans %}</span>
                 </a>
 
                 <a href="{% url 'profile' %}?tab=favorite" class="dropdown-item-link flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke-width="2" stroke-linecap="round"></path></svg>
-                    <span>Truyện yêu thích</span>
+                    <span>{% blocktrans %}Truyện yêu thích{% endblocktrans %}</span>
                 </a>
 
                 <div class="dropdown-divider border-t border-white/5 my-1"></div>
@@ -105,23 +105,31 @@
                     {% csrf_token %}
                     <button type="submit" class="dropdown-item-logout w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-width="2"></path></svg>
-                        <span>Đăng xuất</span>
+                        <span> {% blocktrans %}Đăng xuất{% endblocktrans %}</span>
                     </button>
                 </form>
             </div>
             {% else %}
             <a href="{% url 'login' %}" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors">
-              Đăng nhập
+              {% blocktrans %}Đăng nhập{% endblocktrans %}
             </a>
             <a href="{% url 'register' %}"
               class="hidden sm:block px-4 py-1.5 bg-primary hover:bg-primary-dark text-black text-sm font-bold rounded-md transition-all shadow-lg shadow-primary/20">
-              Đăng ký
+              {% blocktrans %}Đăng ký{% endblocktrans %}
             </a>
             {% endif %}
           </div>
         </div>
        
-
+<form action="{% url 'set_language' %}" method="post" class="flex gap-2">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+    <select name="language" onchange="this.form.submit()" class="bg-transparent text-gray-400 text-xs border border-gray-700 rounded px-1">
+        <option value="vi" {% if request.LANGUAGE_CODE == 'vi' %}selected{% endif %}>VI</option>
+        <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
+        <option value="zh-hans" {% if request.LANGUAGE_CODE == 'zh-hans' %}selected{% endif %}>CN</option>
+    </select>
+</form>
         <button onclick="toggleTheme()" class="text-gray-400 hover:text-primary">
           <svg id="mode-icon" class="w-6 h-6" fill="none" stroke="#6b7280" viewBox="0 0 24 24"></svg>
         </button>
@@ -155,13 +163,13 @@
 
       <nav class="flex flex-col space-y-6 text-lg">
 
-        <a href="/" class="text-primary">Trang chủ</a>
-        <a href="/stories/">Truyện</a>
+        <a href="/" class="text-primary"> {% blocktrans %}Trang chủ{% endblocktrans %}</a>
+        <a href="/stories/"> {% blocktrans %}Truyện{% endblocktrans %}</a>
 
         <!-- THỂ LOẠI -->
         <div>
           <button onclick="toggleCategory()" class="flex items-center justify-between w-full text-left">
-            <span>Thể loại</span>
+            <span> {% blocktrans %}Thể loại{% endblocktrans %}</span>
             <svg id="cat-icon" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="#6b7280"
               viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -190,7 +198,7 @@
           </div>
         </div>
 
-        <a href="#">Liên hệ</a>
+        <a href="#"> {% blocktrans %}Liên hệ{% endblocktrans %}</a>
 
       </nav>
 
@@ -208,7 +216,7 @@
         <p id="active-description" class="text-gray-100 text-lg mb-10 mr-10 line-clamp-3 text-justify"></p>
         <a href="#" id="active-readmore-link"
           class="inline-block w-fit bg-white text-black px-10 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition shadow-lg">
-          Đọc Ngay
+           {% blocktrans %}Đọc Ngay{% endblocktrans %}
         </a>
       </div>
 
@@ -236,7 +244,7 @@
 
   <main class="container mx-auto px-6 py-20">
     <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
-      <span class="w-1.5 h-8 bg-primary rounded-full"></span>Truyện Mới Cập Nhật
+      <span class="w-1.5 h-8 bg-primary rounded-full"></span> {% blocktrans %}Truyện Mới Cập Nhật{% endblocktrans %}
     </h2>
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
       {% for story in stories %}

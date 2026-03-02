@@ -1,0 +1,260 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-02 13:38+0700\n"
+"PO-Revision-Date: 2026-03-02 13:45+0700\n"
+"Last-Translator: Gemini\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\story\templates\story\category_detail.html:6
+#: .\story\templates\story\category_detail.html:24
+#: .\story\templates\story\header\header.html:18
+#: .\story\templates\story\header\header.html:158
+#: .\story\templates\story\home.html:35 .\story\templates\story\home.html:164
+#: .\story\templates\story\story_detail.html:79
+msgid "Thể loại"
+msgstr "Genre"
+
+#: .\story\templates\story\category_detail.html:28
+#, python-format
+msgid "Khám phá kho truyện thuộc thể loại %(cat_name)s"
+msgstr "Explore the %(cat_name)s genre library"
+
+#: .\story\templates\story\category_detail.html:45
+msgid "Full"
+msgstr "Completed"
+
+#: .\story\templates\story\category_detail.html:51
+msgid "Đọc ngay"
+msgstr "Read now"
+
+#: .\story\templates\story\category_detail.html:76
+#: .\story\templates\story\story_detail.html:187
+msgid "Chương"
+msgstr "Chapter"
+
+#: .\story\templates\story\category_detail.html:86
+msgid "Chưa có truyện nào trong danh mục này."
+msgstr "No stories found in this category."
+
+#: .\story\templates\story\category_detail.html:88
+msgid "Khám phá truyện khác"
+msgstr "Explore other stories"
+
+#: .\story\templates\story\category_list.html:6
+msgid "Danh sách Thể loại Truyện"
+msgstr "Story Genres List"
+
+#: .\story\templates\story\category_list.html:22
+msgid "Danh Sách Thể Loại Truyện"
+msgstr "Story Genres List"
+
+#: .\story\templates\story\category_list.html:40
+#, python-format
+msgid ""
+"\n"
+"                                (%(count)s truyện)\n"
+"                            "
+msgid_plural ""
+"\n"
+"                                (%(count)s truyện)\n"
+"                            "
+msgstr[0] "\n                                (%(count)s story)\n                            "
+msgstr[1] "\n                                (%(count)s stories)\n                            "
+
+#: .\story\templates\story\category_list.html:46
+msgid "Chưa có thông tin số truyện"
+msgstr "No information on story count"
+
+#: .\story\templates\story\category_list.html:53
+msgid "Hiện không có thể loại nào được tìm thấy."
+msgstr "No categories found."
+
+#: .\story\templates\story\chapter_detail.html:24
+#: .\story\templates\story\header\header.html:14
+#: .\story\templates\story\header\header.html:154
+#: .\story\templates\story\home.html:32 .\story\templates\story\home.html:159
+#: .\story\templates\story\story_detail.html:56
+msgid "Truyện"
+msgstr "Stories"
+
+#: .\story\templates\story\chapter_detail.html:29
+#: .\story\templates\story\story_detail.html:77
+msgid "Tác giả"
+msgstr "Author"
+
+#: .\story\templates\story\chapter_detail.html:38
+msgid "Hình ảnh minh họa chương"
+msgstr "Chapter illustration"
+
+#: .\story\templates\story\chapter_detail.html:41
+msgid "Chương này hiện chưa có nội dung."
+msgstr "This chapter currently has no content."
+
+#: .\story\templates\story\chapter_detail.html:50
+#: .\story\templates\story\chapter_detail.html:55
+msgid "Chương trước"
+msgstr "Previous Chapter"
+
+#: .\story\templates\story\chapter_detail.html:62
+#: .\story\templates\story\chapter_detail.html:67
+msgid "Chương sau"
+msgstr "Next Chapter"
+
+#: .\story\templates\story\chapter_detail.html:85
+msgid "Phóng to chữ"
+msgstr "Zoom In"
+
+#: .\story\templates\story\chapter_detail.html:90
+msgid "Thu nhỏ chữ"
+msgstr "Zoom Out"
+
+#: .\story\templates\story\chapter_detail.html:94
+msgid "Khôi phục mặc định"
+msgstr "Reset Default"
+
+#: .\story\templates\story\header\header.html:13
+#: .\story\templates\story\header\header.html:153
+#: .\story\templates\story\home.html:31 .\story\templates\story\home.html:158
+#: .\story\templates\story\story_detail.html:54
+msgid "Trang chủ"
+msgstr "Home"
+
+#: .\story\templates\story\header\header.html:43
+#: .\story\templates\story\header\header.html:173
+#: .\story\templates\story\home.html:58 .\story\templates\story\home.html:193
+msgid "Liên hệ"
+msgstr "Contact"
+
+#: .\story\templates\story\header\header.html:79
+#: .\story\templates\story\home.html:89
+msgid "Trang cá nhân"
+msgstr "Profile"
+
+#: .\story\templates\story\header\header.html:86
+#: .\story\templates\story\home.html:94
+msgid "Lịch sử đọc"
+msgstr "Reading History"
+
+#: .\story\templates\story\header\header.html:93
+#: .\story\templates\story\home.html:99
+msgid "Truyện yêu thích"
+msgstr "Favorites"
+
+#: .\story\templates\story\header\header.html:104
+#: .\story\templates\story\header\header.html:187
+#: .\story\templates\story\home.html:108
+msgid "Đăng xuất"
+msgstr "Logout"
+
+#: .\story\templates\story\header\header.html:113
+#: .\story\templates\story\header\header.html:192
+#: .\story\templates\story\home.html:114
+msgid "Đăng nhập"
+msgstr "Login"
+
+#: .\story\templates\story\header\header.html:116
+msgid "Đăng ký "
+msgstr "Register"
+
+#: .\story\templates\story\header\header.html:183
+msgid "Hồ sơ"
+msgstr "My Profile"
+
+#: .\story\templates\story\header\header.html:194
+#: .\story\templates\story\home.html:118
+msgid "Đăng ký"
+msgstr "Register"
+
+#: .\story\templates\story\home.html:9
+msgid "Thiên Mộng Hành - Trang chủ"
+msgstr "Thien Mong Hanh - Home"
+
+#: .\story\templates\story\home.html:211
+msgid "Đọc Ngay"
+msgstr "Read Now"
+
+#: .\story\templates\story\home.html:239
+msgid "Truyện Mới Cập Nhật"
+msgstr "Latest Updates"
+
+#: .\story\templates\story\story_detail.html:32
+#: .\story\templates\story\story_detail.html:133
+msgid "Danh sách chương"
+msgstr "Chapter List"
+
+#: .\story\templates\story\story_detail.html:47
+msgid "Chưa có chương nào\""
+msgstr "No chapters yet\""
+
+#: .\story\templates\story\story_detail.html:88
+msgid "Dịch giả"
+msgstr "Translator"
+
+#: .\story\templates\story\story_detail.html:93
+msgid "Đang cập nhật"
+msgstr "Updating"
+
+#: .\story\templates\story\story_detail.html:121
+msgid "chương"
+msgstr "chapters"
+
+#: .\story\templates\story\story_detail.html:128
+msgid "Đọc từ đầu"
+msgstr "Read from start"
+
+#: .\story\templates\story\story_detail.html:151
+msgid "Đã thích"
+msgstr "Liked"
+
+#: .\story\templates\story\story_detail.html:151
+msgid "Yêu thích"
+msgstr "Favorite"
+
+#: .\story\templates\story\story_detail.html:160
+#: .\story\templates\story\story_detail.html:196
+msgid "Đang cập nhật..."
+msgstr "Updating..."
+
+#: .\story\templates\story\story_detail.html:168
+msgid "Văn án"
+msgstr "Summary"
+
+#: .\story\templates\story\story_detail.html:177
+msgid "Chương mới nhất"
+msgstr "Latest Chapter"
+
+#: .\story\templates\story\story_detail.html:190
+msgid "Mới"
+msgstr "New"
+
+#: .\story\templates\story\story_detail.html:209
+msgid "Cùng thể loại"
+msgstr "Related Stories"
+
+#: .\story\templates\story\story_detail.html:253
+msgid "Không tìm thấy truyện tương tự."
+msgstr "No similar stories found."
+
+#: .\webtruyen\settings.py:32
+msgid "Tiếng Việt"
+msgstr "Vietnamese"
+
+#: .\webtruyen\settings.py:33
+msgid "English"
+msgstr "English"
+
+#: .\webtruyen\settings.py:34
+msgid "Chinese"
+msgstr "Chinese"
