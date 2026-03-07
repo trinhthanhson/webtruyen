@@ -1,18 +1,35 @@
 const titleEl = document.getElementById("active-title");
 const descEl = document.getElementById("active-description");
 const bgBlurEl = document.getElementById("global-bg-blur");
+// 1. Kiểm tra thiết bị ngay từ đầu
+const isMobile = window.innerWidth < 768;
 
 var swiper = new Swiper(".mySwiper", {
-    effect: "cards",
+    // Cấu hình dựa trên thiết bị
+    effect: isMobile ? "slide" : "cards", // Mobile: trượt phẳng, PC: xếp chồng
+    slidesPerView: isMobile ? 1.2 : 1,    // Mobile: hiện 1 ảnh và 1 phần ảnh sau
+    centeredSlides: isMobile ? true : false,
+    spaceBetween: isMobile ? 20 : 0,
+    
     grabCursor: true,
-    rewind: true,
-    speed: 300,
-    autoplay: { delay: 4500, disableOnInteraction: true },
+    speed: isMobile ? 600 : 300, // Mobile trượt chậm lại chút cho mượt
+    loop: isMobile,              // Mobile nên dùng loop để lướt vô tận
+    rewind: !isMobile,           // PC dùng rewind nếu không loop
+    
+    autoplay: { 
+        delay: 4500, 
+        disableOnInteraction: false // Để người dùng lướt xong vẫn tự chạy tiếp
+    },
+    
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+    },
+
     on: {
         init: function () {
             syncBanner(this);
         },
-        // Đồng bộ NGAY khi slide đổi
         slideChange: function () {
             syncBanner(this);
         },
@@ -24,18 +41,28 @@ function syncBanner(s) {
     if (!slide) return;
 
     const data = slide.dataset;
-    const imgPath = slide.querySelector("img").src;
+    const img = slide.querySelector("img");
+    if (!img) return;
+    
+    const imgPath = img.src;
 
-    // Set tất cả NGAY LẬP TỨC
-    bgBlurEl.style.backgroundImage = `url('${imgPath}')`;
-    titleEl.textContent = data.title;
-    descEl.textContent = data.desc;
+    // Cập nhật Background (nếu có phần tử bgBlurEl)
+    if (typeof bgBlurEl !== 'undefined') {
+        bgBlurEl.style.backgroundImage = `url('${imgPath}')`;
+    }
+
+    // Trên Mobile, thường ta sẽ ẩn phần text bên trái để tránh dài trang
+    // Nhưng nếu anh vẫn hiện text thì logic này giữ nguyên
+    if (typeof titleEl !== 'undefined') titleEl.textContent = data.title;
+    if (typeof descEl !== 'undefined') descEl.textContent = data.desc;
 
     const url = data.url;
-    document.getElementById("active-title-link").href = url;
-    document.getElementById("active-readmore-link").href = url;
-}
+    const titleLink = document.getElementById("active-title-link");
+    const readMoreLink = document.getElementById("active-readmore-link");
 
+    if (titleLink) titleLink.href = url;
+    if (readMoreLink) readMoreLink.href = url;
+}
 // ===== HEADER SCROLL =====
 const header = document.getElementById("main-header");
 let ticking = false;
@@ -83,13 +110,37 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function toggleMobileMenu() {
-    const menu = document.getElementById("mobile-menu");
-    menu.classList.toggle("translate-x-full");
+    const mobileMenu = document.getElementById('mobile-menu');
+    const body = document.body;
+    
+    if (!mobileMenu) return;
+
+    // Kiểm tra menu đang đóng (có class translate-x-full)
+    const isOpening = mobileMenu.classList.contains('translate-x-full');
+
+    if (isOpening) {
+        // MỞ MENU
+        mobileMenu.classList.remove('translate-x-full');
+        mobileMenu.classList.add('translate-x-0');
+        body.classList.add('menu-open'); // CSS sẽ tự ẩn banner nhờ class này
+    } else {
+        // ĐÓNG MENU
+        mobileMenu.classList.remove('translate-x-0');
+        mobileMenu.classList.add('translate-x-full');
+        body.classList.remove('menu-open'); // Hiện lại banner
+    }
 }
 function toggleCategory() {
-    const list = document.getElementById("mobile-category-list");
-    const icon = document.getElementById("cat-icon");
-
-    list.classList.toggle("hidden");
-    icon.classList.toggle("rotate-180");
+    const list = document.getElementById('mobile-category-list');
+    const icon = document.getElementById('cat-icon');
+    
+    if (list.classList.contains('hidden')) {
+        list.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+        // Đảm bảo khi mở ra thì chữ không bị mờ
+        list.style.opacity = '1';
+    } else {
+        list.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+    }
 }

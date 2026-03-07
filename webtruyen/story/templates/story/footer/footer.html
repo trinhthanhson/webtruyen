@@ -5,12 +5,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
 
-<footer class="modern-footer">
-    <div class="footer-top">
-        <div class="footer-grid">
-            <!-- Brand Section -->
-            <div class="footer-brand">
-                <div class="footer-logo-modern">Thiên Mộng Hành</div>
+<footer class="modern-footer border-t border-gray-700/50 bg-[#121212]/95 backdrop-blur-md">
+       <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            
+            <div class="footer-brand space-y-4">
+                <div class="footer-logo-modern text-primary">Thiên Mộng Hành</div>
                 <p class="footer-tagline">Khám phá kho tàng truyện chữ vô tận</p>
                 <div class="footer-social-modern">
                     <a href="https://www.facebook.com/your_page" target="_blank" class="social-icon-modern facebook"
@@ -30,26 +30,29 @@
             </div>
 
             <!-- Quick Links -->
-            <div class="footer-links">
-                <h3 class="footer-heading">Danh Mục</h3>
-                <ul class="footer-menu">
-                    <li><a href="/"><i class="fas fa-home"></i> Trang chủ</a></li>
-                    <li><a href="/stories/"><i class="fas fa-book"></i> Truyện</a></li>
-                    <li><a href="/categories/"><i class="fas fa-th-large"></i> Thể loại</a></li>
-                    <li><a href="/ranking/"><i class="fas fa-trophy"></i> Bảng xếp hạng</a></li>
-                </ul>
-            </div>
+            <div class="col-span-2 lg:col-span-2 grid grid-cols-2 gap-4">
+    
+    <div class="footer-links">
+        <h3 class="footer-heading text-base font-bold mb-4 border-l-4 border-primary pl-3 text-white">Danh Mục</h3>
+        <ul class="footer-menu space-y-2 text-sm text-gray-400">
+            <li><a href="/"><i class="fas fa-home w-5"></i> Trang chủ</a></li>
+            <li><a href="/stories/"><i class="fas fa-book w-5"></i> Truyện</a></li>
+            <li><a href="/categories/"><i class="fas fa-th-large w-5"></i> Thể loại</a></li>
+            <li><a href="/ranking/"><i class="fas fa-trophy w-5"></i> Bảng xếp hạng</a></li>
+        </ul>
+    </div>
 
-            <!-- Support -->
-            <div class="footer-links">
-                <h3 class="footer-heading">Hỗ Trợ</h3>
-                <ul class="footer-menu">
-                    <li><a href="/help/"><i class="fas fa-question-circle"></i> Trợ giúp</a></li>
-                    <li><a href="/contact/"><i class="fas fa-envelope"></i> Liên hệ</a></li>
-                    <li><a href="/terms/"><i class="fas fa-file-contract"></i> Điều khoản</a></li>
-                    <li><a href="/privacy/"><i class="fas fa-shield-alt"></i> Bảo mật</a></li>
-                </ul>
-            </div>
+    <div class="footer-links">
+        <h3 class="footer-heading text-base font-bold mb-4 border-l-4 border-primary pl-3 text-white">Hỗ Trợ</h3>
+        <ul class="footer-menu space-y-2 text-sm text-gray-400">
+            <li><a href="/help/"><i class="fas fa-question-circle w-5"></i> Trợ giúp</a></li>
+            <li><a href="/contact/"><i class="fas fa-envelope w-5"></i> Liên hệ</a></li>
+            <li><a href="/terms/"><i class="fas fa-file-contract w-5"></i> Điều khoản</a></li>
+            <li><a href="/privacy/"><i class="fas fa-shield-alt w-5"></i> Bảo mật</a></li>
+        </ul>
+    </div>
+    
+</div>
 
             <!-- Newsletter -->
             <div class="footer-newsletter">

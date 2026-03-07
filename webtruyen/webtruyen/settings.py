@@ -27,13 +27,6 @@ INSTALLED_APPS = [
     'cloudinary', 
     'story',
 ]
-
-LANGUAGES = [
-    ('vi', _('Tiếng Việt')),
-    ('en', _('English')),
-    ('zh-hans', _('Chinese')), # Tiếng Trung giản thể
-]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', 

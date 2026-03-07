@@ -1075,3 +1075,98 @@ html.light-mode .dropdown-item-logout {
 html.light-mode .dropdown-item-logout:hover {
     background-color: #fef2f2 !important;
 }
+
+@media (max-width: 767px) {
+    /* Ép container Swiper rộng vừa phải để thấy ảnh hai bên */
+    .mySwiper {
+        width: 100% !important;
+        padding: 20px 0 40px 0 !important; /* Thêm padding để lộ ảnh bên cạnh */
+    }
+
+    .swiper-slide {
+        /* Chỉnh lại độ trong suốt của các slide xung quanh cho đẹp */
+        transition: opacity 0.3s;
+        opacity: 0.5;
+    }
+
+    /* Chỉ slide đang nằm giữa mới rõ nét */
+    .swiper-slide-active {
+        opacity: 1;
+        transform: scale(1.05); /* Phóng to nhẹ ảnh ở giữa để tạo điểm nhấn */
+        transition: transform 0.3s;
+    }
+}
+/* Khi body có class 'menu-open', ẩn banner ngay lập tức */
+body.menu-open #main-banner {
+    display: none !important;
+}
+
+/* Sửa lỗi màu sắc Menu Mobile trong Dark Mode */
+#mobile-menu {
+    background-color: #121212 !important; /* Nền tối chuẩn */
+    z-index: 9999 !important;
+}
+
+#mobile-menu a, #mobile-menu button {
+    color: #e5e7eb !important; /* Chữ xám sáng để không bị chìm */
+}
+
+#mobile-menu a.text-primary, #mobile-menu .text-primary {
+    color: #facc15 !important; /* Màu vàng thương hiệu */
+}
+
+/* Sửa lỗi Banner không ẩn khi Menu mở */
+body.menu-open .banner-container {
+    display: none !important;
+}
+
+/* Ngăn cuộn trang khi mở menu */
+body.menu-open {
+    overflow: hidden !important;
+}
+/* Màu cho nút bấm Thể loại và Icon mũi tên */
+#mobile-menu button, 
+#mobile-menu button span,
+#mobile-menu button svg {
+    color: #facc15 !important; /* Màu vàng để nổi bật */
+    stroke: #facc15 !important; /* Ép màu cho icon mũi tên */
+}
+
+/* Màu cho danh sách các thể loại bên trong khi xổ ra */
+#mobile-category-list a {
+    color: #e5e7eb !important; /* Màu xám trắng sáng */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Đường kẻ nhẹ phân tách */
+    padding: 10px 0;
+}
+
+#mobile-category-list a span:last-child {
+    color: #9ca3af !important; /* Màu số lượng (3), (10) nhẹ hơn chút */
+}
+
+/* Hiệu ứng khi nhấn vào một thể loại */
+#mobile-category-list a:active {
+    color: #facc15 !important;
+    background-color: rgba(250, 204, 21, 0.1);
+}
+/* Ép màu nền menu khi có light-mode */
+.light-mode #mobile-menu {
+    background-color: #ffffff !important;
+}
+
+/* Ép màu chữ chính khi có light-mode */
+.light-mode #mobile-menu a, 
+.light-mode #mobile-menu button,
+.light-mode #mobile-menu span {
+    color: #1a1a1a !important;
+}
+
+/* Ép màu danh sách con khi có light-mode */
+.light-mode #mobile-category-list {
+    background-color: #f9fafb !important;
+    border-color: rgba(0,0,0,0.1) !important;
+}
+
+/* Giữ màu vàng cho các mục đang chọn hoặc hover */
+.light-mode #mobile-menu .text-primary {
+    color: #eab308 !important;
+}
