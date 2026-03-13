@@ -39,11 +39,18 @@ function resetFontSize() {
     currentFontSize = 18;
     updateFontSize();
 }
-
-document.addEventListener("DOMContentLoaded", updateFontSize);
-// Xóa class no-transition sau khi load xong
-document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-        document.documentElement.classList.remove("no-transition");
-    }, 100);
+// Xử lý đóng/mở thanh công cụ
+toggleBtn.addEventListener('click', () => {
+    const isHidden = container.classList.contains('translate-x-[calc(100%-40px)]');
+    if (isHidden) {
+        container.classList.remove('translate-x-[calc(100%-40px)]');
+        toggleIcon.innerText = '❯';
+        toggleIcon.classList.add('rotate-0');
+    } else {
+        container.classList.add('translate-x-[calc(100%-40px)]');
+        toggleIcon.innerText = '❮';
+    }
 });
+
+// Chạy khởi tạo
+initFontSize();

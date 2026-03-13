@@ -55,11 +55,21 @@
         </form>
 
         <!-- Link chuyển hướng sang Đăng ký -->
-        <div class="mt-6 text-center">
-            <p class="text-sm text-gray-400">Chưa có tài khoản?
-                <a href="{% url 'register' %}" class="font-medium text-primary hover:underline">Đăng ký ngay</a>
-            </p>
-        </div>
+        <div class="mt-6 text-center space-y-4">
+    <p class="text-sm text-gray-400">
+        Chưa có tài khoản?
+        <a href="{% url 'register' %}" class="font-medium text-primary hover:underline">Đăng ký ngay</a>
+    </p>
+
+    <div class="pt-2">
+        <a href="/" class="inline-flex items-center justify-center gap-2 w-full px-6 py-2.5 border border-gray-600 text-gray-300 hover:text-white hover:border-primary hover:bg-primary/10 font-medium rounded-full transition-all duration-300 group">
+            <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Trang chủ
+        </a>
+    </div>
+</div>
     </div>
 
 </body>

@@ -11,7 +11,7 @@
 
     </style>
     <!-- Preload theme để tránh chớp -->
-   
+
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'story/js/base.js' %}"></script>
@@ -86,26 +86,36 @@
     </div>
     {% include 'story/footer/footer.html' %}
     <div id="font-control-container"
-        class="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center transition-transform duration-300 translate-x-[calc(100%-12px)] shadow-2xl">
+        class="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center transition-all duration-500 translate-x-[calc(100%-40px)] hover:translate-x-0">
 
         <button id="font-toggle-btn"
-            class="w-8 h-12 md:w-10 md:h-16 bg-primary text-white rounded-l-xl flex items-center justify-center shadow-lg focus:outline-none">
-            <span id="toggle-icon" class="transition-transform duration-300">❮</span>
+            class="w-10 h-10 bg-primary text-black rounded-l-full flex items-center justify-center shadow-[-4px_0_10px_rgba(0,0,0,0.3)] focus:outline-none border-y border-l border-white/20">
+            <div class="flex flex-col items-center">
+                <span class="text-xs font-bold leading-none">A</span>
+                <span id="toggle-icon" class="text-[10px] transition-transform duration-300">❮</span>
+            </div>
         </button>
 
         <div
-            class="flex flex-col gap-3 p-3 bg-dark-bg-card border-l border-y border-dark-border rounded-l-2xl shadow-inner min-w-[56px] md:min-w-[64px]">
-            <button onclick="changeFontSize(1)"
-                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-primary hover:bg-secondary text-white rounded-full font-bold text-xl active:scale-90 transition-all">
+            class="flex flex-col gap-2 p-2 bg-[#1a1a1a] border-l border-y border-white/10 rounded-l-2xl shadow-2xl min-w-[50px]">
+
+            <button onclick="changeFontSize(2)"
+                class="w-10 h-10 flex items-center justify-center bg-primary hover:bg-yellow-500 text-black rounded-xl font-bold text-xl active:scale-90 transition-all shadow-lg">
                 A+
             </button>
-            <div id="current-size-display" class="text-xs text-center font-bold text-gray-400">18</div>
-            <button onclick="changeFontSize(-1)"
-                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white rounded-full font-bold text-sm active:scale-90 transition-all">
+
+            <div class="flex flex-col items-center">
+                <span id="current-size-display" class="text-lg font-mono font-bold text-primary">18</span>
+                <span class="text-[8px] uppercase text-gray-500 font-bold">Size</span>
+            </div>
+
+            <button onclick="changeFontSize(-2)"
+                class="w-10 h-10 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl font-bold text-sm active:scale-90 transition-all border border-white/5">
                 A-
             </button>
+
             <button onclick="resetFontSize()"
-                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-red-600 hover:bg-red-500 text-white rounded-full text-xs active:scale-90 transition-all">
+                class="w-10 h-10 flex items-center justify-center bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white rounded-xl text-lg active:scale-90 transition-all border border-red-500/30">
                 ↺
             </button>
         </div>

@@ -13,31 +13,42 @@
       <a href="/stories/" class="nav-link hover:text-primary transition-colors">Truyện</a>
 
       <div class="relative group">
-        <button class="nav-link flex items-center group-hover:text-primary font-medium outline-none py-5">
-          Thể loại
-          <svg class="w-4 h-4 ml-1 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        </button>
-        <div
-          class="dropdown-menu absolute left-1/2 -translate-x-1/2 w-[550px] lg:w-[650px] pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-          <div
-            class="dropdown-content border border-white/10 rounded-xl shadow-2xl overflow-hidden mt-1 backdrop-blur-md bg-[#121212]/95">
-            <div class="grid grid-cols-3 gap-x-2 gap-y-1 p-5">
-              {% for cat in categories %}
-              <a href="{% url 'category_detail' cat.slug %}"
-                class="flex items-center justify-between px-3 py-2 text-[14px] text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-colors">
-                <span class="font-medium">{{ cat.category_name }}</span>
-                {% if cat.story_count %}
-                <span class="text-[10px] text-gray-500">({{ cat.story_count }})</span>
-                {% endif %}
-              </a>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
+  <button class="nav-link flex items-center group-hover:text-primary font-medium outline-none py-5">
+    Thể loại
+    <svg class="w-4 h-4 ml-1 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor"
+      viewBox="0 0 24 24">
+      <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+  
+  <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 w-[550px] lg:w-[650px] pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+    <div class="dropdown-content border border-white/10 rounded-xl shadow-2xl overflow-hidden mt-1 backdrop-blur-md bg-[#121212]/95">
+      
+      <div class="grid grid-cols-3 gap-x-2 gap-y-1 p-5 pb-2">
+        {% for cat in categories %}
+        <a href="{% url 'category_detail' cat.slug %}"
+          class="flex items-center justify-between px-3 py-2 text-[14px] text-gray-300 hover:bg-white/5 hover:text-primary rounded-lg transition-colors">
+          <span class="font-medium">{{ cat.category_name }}</span>
+          {% if cat.story_count %}
+          <span class="text-[10px] text-gray-500">({{ cat.story_count }})</span>
+          {% endif %}
+        </a>
+        {% endfor %}
       </div>
+
+      <div class="border-t border-white/5 p-3 bg-white/[0.02]">
+        <a href="{% url 'categories' %}" 
+           class="flex items-center justify-center gap-2 w-full py-2 text-sm font-bold text-primary hover:bg-primary/10 rounded-lg transition-all">
+          <span>Xem tất cả thể loại</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
 
       <a href="/contact/" class="nav-link hover:text-primary transition-colors">Liên hệ</a>
     </nav>
