@@ -240,15 +240,15 @@
               </div>
             </div>
             {% else %}
-            <div class="flex items-center space-x-2 mr-6">
+            <div class="flex items-center bg-white/5 border border-white/10 p-0.5 md:p-1 rounded-full shadow-sm ml-auto mr-2 md:mr-6">
               <a
                 href="{% url 'login' %}"
-                class="text-sm font-medium text-primary hover:text-primary transition-colors"
+                class="px-2 md:px-4 py-1.5 text-[11px] md:text-sm font-bold text-black bg-primary rounded-full hover:bg-yellow-400 transition-all active:scale-90 whitespace-nowrap"
                 >Đăng nhập</a
               >
               <a
                 href="{% url 'register' %}"
-                class="text-sm font-medium text-primary hover:text-primary transition-colors"
+                class="px-2 md:px-4 py-1.5 text-[11px] md:text-sm font-medium text-gray-300 hover:text-primary transition-colors whitespace-nowrap"
               >
                 Đăng ký
               </a>
@@ -336,7 +336,7 @@
 </div>
 <section id="main-banner" class="banner-container pt-20 md:pt-0 transition-all duration-300">
         <div
-        class="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12"
+        class="container mx-auto px-4 md:px-9 md:pr-[60px] flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12"
       >
         <!-- Text content - ẩn trên mobile, hiện trên desktop -->
         <div class="hidden md:flex flex-1 flex-col text-left">
