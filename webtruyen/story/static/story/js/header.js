@@ -14,10 +14,16 @@ function setThemeIcon(isLight) {
 // 2. Hàm Toggle Theme
 function toggleTheme() {
     const html = document.documentElement;
-    const isLight = html.classList.toggle("light-mode");
 
+    // Tạm thời tắt transition để tránh bị "chậm" khi đổi chế độ sáng/tối
+    html.classList.add("no-transition");
+
+    const isLight = html.classList.toggle("light-mode");
     localStorage.setItem("theme", isLight ? "light" : "dark");
     setThemeIcon(isLight);
+
+    // Bật lại transition sau khi đã đổi xong (sẽ áp dụng cho các thay đổi sau)
+    requestAnimationFrame(() => html.classList.remove("no-transition"));
 }
 
 // 3. Khởi tạo khi DOM sẵn sàng

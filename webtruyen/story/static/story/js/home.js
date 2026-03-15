@@ -93,10 +93,15 @@ function setThemeIcon(isLight) {
 
 function toggleTheme() {
     const html = document.documentElement;
-    const isLight = html.classList.toggle("light-mode");
 
+    // Tạm thời tắt transition để ký hiệu màu chữ đổi đồng bộ, không bị "chậm"
+    html.classList.add("no-transition");
+
+    const isLight = html.classList.toggle("light-mode");
     localStorage.setItem("theme", isLight ? "light" : "dark");
     setThemeIcon(isLight);
+
+    requestAnimationFrame(() => html.classList.remove("no-transition"));
 }
 
 // Khởi tạo theme khi trang load
