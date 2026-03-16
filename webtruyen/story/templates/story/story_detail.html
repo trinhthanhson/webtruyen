@@ -12,8 +12,6 @@
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-   
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'story/js/base.js' %}"></script>
 
 </head>
@@ -62,7 +60,7 @@
                 <div class="flex flex-col md:flex-row gap-8">
                     <div class="w-full md:w-64 flex-shrink-0">
                         <div class="relative group">
-                            <img src="{{ story.cover_image_url }}"
+                            <img src="{{ story.cover_image_url }}" loading="lazy"
                                 class="w-full rounded-xl shadow-2xl border border-gray-700 object-cover aspect-[3/4]"
                                 alt="{{ story.title }}">
                             <span
@@ -215,7 +213,7 @@
                             class="sidebar-card group flex gap-3 items-start">
                             <div
                                 class="w-16 h-20 flex-shrink-0 relative overflow-hidden rounded-lg shadow-md border border-white/5">
-                                <img src="{{ same_story.cover_image_url }}"
+                                <img src="{{ same_story.cover_image_url }}" loading="lazy"
                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     alt="{{ same_story.title }}">
 

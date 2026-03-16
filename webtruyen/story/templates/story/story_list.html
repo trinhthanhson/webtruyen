@@ -12,8 +12,6 @@
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
-
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'story/js/base.js' %}"></script>
 
 </head>
@@ -37,7 +35,7 @@
                 class="story-card group relative flex flex-col h-full overflow-hidden rounded-xl bg-dark-bg-card border border-transparent hover:border-primary/50 transition-all duration-300">
 
                 <a href="{% url 'story_detail' story.slug %}" class="relative aspect-[3/4] block overflow-hidden">
-                    <img src="{{ story.cover_image_url }}" alt="{{ story.title }}"
+                    <img src="{{ story.cover_image_url }}" alt="{{ story.title }}" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
 
                     <div

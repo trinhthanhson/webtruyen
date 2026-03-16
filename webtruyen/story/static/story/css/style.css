@@ -161,7 +161,6 @@ html.light-mode .category-detail-page {
   z-index: -2;
   transform: scale(1.1);
   transition: background-image 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: background-image;
 }
 
 .global-overlay {
@@ -603,6 +602,42 @@ html.light-mode .modern-footer {
   color: #1f2937;
 }
 
+/* Reduce motion / heavy effects for smoother scrolling */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  #global-bg-blur {
+    filter: none !important;
+  }
+
+  #main-header,
+  .dropdown-content,
+  .glass-panel,
+  .story-card,
+  .story-card-link {
+    backdrop-filter: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  #global-bg-blur {
+    filter: none !important;
+  }
+
+  #main-header,
+  .dropdown-content,
+  .glass-panel,
+  .story-card,
+  .story-card-link {
+    backdrop-filter: none !important;
+  }
+}
+
 html.light-mode .modern-footer::before {
   background: linear-gradient(90deg, transparent, #eab308, transparent);
 }
@@ -801,6 +836,50 @@ html.light-mode p,
 html.light-mode span,
 html.light-mode div:not(.text-primary) {
   color: #000000;
+}
+
+/* Category list page theme */
+.category-list-page {
+  background-color: #0f0f0f;
+  color: #f3f4f6;
+}
+
+.category-list-page .card-bg {
+  background-color: #1a1a1a;
+}
+
+.category-list-page .text-white {
+  color: #f8fafc;
+}
+
+.category-list-page .text-gray-100 {
+  color: #f3f4f6;
+}
+
+.category-list-page .text-gray-500 {
+  color: #9ca3af;
+}
+
+html.light-mode .category-list-page {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+html.light-mode .category-list-page .card-bg {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+html.light-mode .category-list-page .text-white,
+html.light-mode .category-list-page .text-gray-100 {
+  color: #1f2937;
+}
+
+html.light-mode .category-list-page .text-gray-500 {
+  color: #6b7280;
+}
+
+html.light-mode .category-list-page .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Home Page Light Mode */

@@ -69,7 +69,16 @@
                     {% endif %}
                   </a>
                   {% endfor %}
-                </div>
+                </div> 
+                 <div class="border-t border-white/5 p-3 bg-white/[0.02]">
+              <a href="{% url 'categories' %}"
+                class="flex items-center justify-center gap-2 w-full py-2 text-sm font-bold text-primary hover:bg-primary/10 rounded-lg transition-all">
+                <span>Xem tất cả thể loại</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
               </div>
             </div>
           </div>
@@ -350,6 +359,7 @@
               <a href="{% url 'story_detail' story.slug %}" class="block w-full h-full">
                 <img
                   src="{{ story.cover_image_url }}"
+                  loading="lazy"
                   alt="{{ story.title }}"
                   class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
                 />
@@ -372,6 +382,7 @@
           <div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 shadow-md">
             <img
               src="{{ story.cover_image_url }}"
+              loading="lazy"
               class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
             />
           </div>
@@ -386,6 +397,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'story/js/home.js' %}"></script>
+    <script src="{% static 'story/js/header.js' %}"></script>
 
   </body>
 </html>
