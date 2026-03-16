@@ -23,67 +23,66 @@
     {% include 'story/header/header.html' %}
 
     <!-- Nội dung -->
-    <div class="container mx-auto max-w-5xl my-10 mt-20 p-6 md:p-10 glass-panel rounded-2xl shadow-2xl">
+    <div class="container mx-auto max-w-7xl my-6 md:my-18 mt-20 p-4 sm:p-6 md:p-12 lg:p-16 glass-panel rounded-2xl shadow-2xl">
 
-        <!-- Tiêu đề chương -->
-        <h1 class="text-3xl md:text-4xl font-extrabold text-primary text-center pb-4 mb-6 border-b border-gray-600">
-            {{ page_title }}
-        </h1>
+    <h1 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-primary text-center pb-6 mb-8 border-b border-white/10">
+        {{ page_title }}
+    </h1>
 
-        <!-- Thông tin truyện -->
-        {% if story %}
-        <p class="text-center text-gray-400 mb-8">
-            Truyện:
-            <a href="{% url 'story_detail' story_slug=story.slug %}"
-                class="text-primary hover:text-secondary font-semibold">
-                {{ story.title }}
-            </a>
-            <span class="text-sm ml-1">| Tác giả: {{ story.author }}</span>
-        </p>
+    {% if story %}
+    <p class="text-center text-gray-400 mb-10 text-base md:text-lg">
+        Truyện:
+        <a href="{% url 'story_detail' story_slug=story.slug %}"
+            class="text-primary hover:text-secondary font-semibold transition-colors">
+            {{ story.title }}
+        </a>
+        <span class="hidden md:inline-block mx-2 text-gray-600">|</span> 
+        <span class="block md:inline-block text-sm md:text-base mt-1 md:mt-0">Tác giả: {{ story.author }}</span>
+    </p>
+    {% endif %}
+
+    <div class="chapter-content text-gray-200 leading-relaxed md:leading-loose text-justify mx-auto max-w-full">
+        {% if chapter.content %}
+            <div id="reading-content" class="prose prose-invert prose-lg max-w-none">
+                {{ chapter.content|linebreaksbr }}
+            </div>
+        {% elif chapter.image_urls %}
+            <div class="flex flex-col items-center gap-4">
+                {% for image_url in chapter.image_urls %}
+                <img src="{{ image_url }}" alt="Hình ảnh minh họa chương" class="w-full h-auto rounded-lg shadow-lg">
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-gray-500 py-20 text-xl">Chương này hiện chưa có nội dung.</p>
+        {% endif %}
+    </div>
+
+    <div class="flex justify-center items-center gap-4 mt-16 pt-8 border-t border-white/10">
+        {% if previous_chapter %}
+        <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=previous_chapter.chapter_number %}"
+            class="flex-1 md:flex-none md:min-w-[200px] bg-primary hover:bg-yellow-500 text-black text-center py-3 px-6 rounded-xl font-bold shadow-lg transition-all active:scale-95">
+            ← Chương trước
+        </a>
+        {% else %}
+        <button disabled
+            class="flex-1 md:flex-none md:min-w-[200px] bg-gray-700/50 text-gray-500 text-center py-3 px-6 rounded-xl font-bold cursor-not-allowed">
+            ← Chương trước
+        </button>
         {% endif %}
 
-        <!-- Nội dung chương -->
-        <div class="chapter-content">
-            {% if chapter.content %}
-            {{ chapter.content|linebreaksbr }}
-            {% elif chapter.image_urls %}
-            {% for image_url in chapter.image_urls %}
-            <img src="{{ image_url }}" alt="Hình ảnh minh họa chương">
-            {% endfor %}
-            {% else %}
-            <p class="text-center text-gray-500 py-10">Chương này hiện chưa có nội dung.</p>
-            {% endif %}
-        </div>
-
-        <!-- Thanh điều hướng chương -->
-        <div class="flex justify-center gap-4 mt-12 pt-6 border-t border-gray-700">
-
-            {% if previous_chapter %}
-            <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=previous_chapter.chapter_number %}"
-                class="flex-1 max-w-[200px] btn-primary text-center py-3 px-6 rounded-lg font-bold shadow-md">
-                ← Chương trước
-            </a>
-            {% else %}
-            <button disabled
-                class="flex-1 max-w-[200px] bg-gray-300 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
-                ← Chương trước
-            </button>
-            {% endif %}
-
-            {% if next_chapter %}
-            <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=next_chapter.chapter_number %}"
-                class="flex-1 max-w-[200px] btn-primary text-center py-3 px-6 rounded-lg font-bold shadow-md">
-                Chương sau →
-            </a>
-            {% else %}
-            <button disabled
-                class="flex-1 max-w-[200px] bg-gray-300 text-gray-500 text-center py-3 px-6 rounded-lg font-bold shadow-md cursor-not-allowed">
-                Chương sau →
-            </button>
-            {% endif %}
-        </div>
-
+        {% if next_chapter %}
+        <a href="{% url 'chapter_detail' story_slug=story.slug chapter_number=next_chapter.chapter_number %}"
+            class="flex-1 md:flex-none md:min-w-[200px] bg-primary hover:bg-yellow-500 text-black text-center py-3 px-6 rounded-xl font-bold shadow-lg transition-all active:scale-95">
+            Chương sau →
+        </a>
+        {% else %}
+        <button disabled
+            class="flex-1 md:flex-none md:min-w-[200px] bg-gray-700/50 text-gray-500 text-center py-3 px-6 rounded-xl font-bold cursor-not-allowed">
+            Chương sau →
+        </button>
+        {% endif %}
     </div>
+</div>
     {% include 'story/footer/footer.html' %}
     <div id="font-control-container"
         class="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center transition-all duration-500 translate-x-[calc(100%-40px)] hover:translate-x-0">
