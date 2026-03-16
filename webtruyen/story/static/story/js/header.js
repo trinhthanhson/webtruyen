@@ -68,3 +68,25 @@ function toggleCategory() {
     list.classList.toggle("hidden");
     icon.classList.toggle("rotate-180");
 }
+
+ function toggleMobileSearch() {
+    const bar = document.getElementById('mobile-search-bar');
+    const input = document.getElementById('mobile-search-input');
+    const isOpen = bar.style.maxHeight !== '0px' && bar.style.maxHeight !== '';
+
+    if (isOpen) {
+      bar.style.maxHeight = '0px';
+    } else {
+      bar.style.maxHeight = bar.scrollHeight + 'px';
+      setTimeout(() => input.focus(), 300);
+    }
+  }
+
+  // Đóng search bar khi bấm ra ngoài
+  document.addEventListener('click', function(e) {
+    const bar = document.getElementById('mobile-search-bar');
+    const btn = document.getElementById('mobile-search-btn');
+    if (bar && btn && !bar.contains(e.target) && !btn.contains(e.target)) {
+      bar.style.maxHeight = '0px';
+    }
+  });

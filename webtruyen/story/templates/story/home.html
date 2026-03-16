@@ -78,8 +78,9 @@
         </nav>
 
         <!-- Right side -->
-        <div class="flex items-center space-x-3">
-          <!-- Search (desktop only) -->
+        <div class="flex items-center space-x-1 sm:space-x-3">
+
+          <!-- Search desktop -->
           <div class="hidden md:block relative">
             <form action="{% url 'search_results' %}" method="GET">
               <input
@@ -92,6 +93,17 @@
             </form>
           </div>
 
+          <!-- Search icon mobile -->
+          <button
+            id="mobile-search-btn"
+            onclick="toggleMobileSearch()"
+            class="md:hidden p-2 text-gray-400 hover:text-primary transition-colors focus:outline-none flex-shrink-0"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+          </button>
+
           <!-- Theme toggle -->
           <button
             onclick="toggleTheme()"
@@ -100,10 +112,10 @@
             <svg id="mode-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
           </button>
 
-          <!-- Auth buttons -->
-          <div class="flex items-center border-l border-gray-700/50 pl-3 ml-1 space-x-3">
+          <!-- Auth -->
+          <div class="flex items-center border-l border-gray-700/50 pl-2 sm:pl-3 ml-1">
             {% if user.is_authenticated %}
-            <!-- Desktop user dropdown -->
+            <!-- Desktop dropdown -->
             <div class="relative group hidden md:block">
               <button class="flex items-center space-x-2 focus:outline-none py-2">
                 <div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold text-sm uppercase">
@@ -148,12 +160,10 @@
               </div>
             </div>
 
-            <!-- Mobile: chỉ hiện avatar nhỏ -->
-            <div class="md:hidden">
-              <a href="{% url 'profile' %}" class="w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold text-sm uppercase">
-                {{ user.username|slice:":1" }}
-              </a>
-            </div>
+            <!-- Mobile: avatar nhỏ -->
+            <a href="{% url 'profile' %}" class="md:hidden w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold text-sm uppercase flex-shrink-0">
+              {{ user.username|slice:":1" }}
+            </a>
 
             {% else %}
             <!-- Desktop login/register -->
@@ -170,7 +180,7 @@
             {% endif %}
           </div>
 
-          <!-- Hamburger button (mobile only) -->
+          <!-- Hamburger mobile -->
           <button
             onclick="toggleMobileMenu()"
             class="md:hidden p-2 text-gray-500 hover:text-white focus:outline-none flex-shrink-0"
@@ -180,6 +190,36 @@
             </svg>
           </button>
         </div>
+      </div>
+
+      <!-- Mobile search bar drop-down -->
+      <div
+        id="mobile-search-bar"
+        class="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+        style="max-height: 0px;"
+      >
+        <form
+          action="{% url 'search_results' %}"
+          method="GET"
+          class="flex items-center gap-2 px-4 py-3 bg-[#1a1a1a]/95 border-t border-white/10"
+        >
+          <input
+            id="mobile-search-input"
+            type="text"
+            name="q"
+            value="{{ query|default:'' }}"
+            placeholder="Tìm kiếm truyện..."
+            class="flex-1 bg-white/10 border border-gray-700/50 text-gray-200 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-gray-500"
+          />
+          <button
+            type="submit"
+            class="flex-shrink-0 w-10 h-10 bg-primary rounded-lg flex items-center justify-center hover:bg-yellow-400 transition-all"
+          >
+            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+          </button>
+        </form>
       </div>
     </header>
 
@@ -234,7 +274,7 @@
 
           <a href="/contact/" class="text-gray-300 light-mode:text-gray-700">Liên hệ</a>
 
-          <!-- Auth section ở cuối mobile menu -->
+          <!-- Auth section cuối menu -->
           <div class="border-t border-white/10 pt-6 mt-auto">
             {% if user.is_authenticated %}
             <div class="flex flex-col space-y-4">
@@ -286,7 +326,6 @@
     <!-- Banner -->
     <section id="main-banner" class="banner-container pt-20 md:pt-0 transition-all duration-300">
       <div class="container mx-auto px-4 md:px-9 md:pr-[60px] flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-        <!-- Text content - ẩn trên mobile -->
         <div class="hidden md:flex flex-1 flex-col text-left">
           <a href="#" id="active-title-link" class="inline-block group">
             <h2 id="active-title" class="text-5xl font-bold mb-6 leading-tight group-hover:text-primary"></h2>
@@ -299,7 +338,6 @@
           >Đọc Ngay</a>
         </div>
 
-        <!-- Swiper -->
         <div class="swiper mySwiper w-[90%] max-w-sm mx-auto md:w-auto md:mx-0 flex justify-center left-[10px]">
           <div class="swiper-wrapper">
             {% for story in stories %}
@@ -324,7 +362,6 @@
       </div>
     </section>
 
-    <!-- Main content -->
     <main class="container mx-auto px-6 py-20">
       <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
         <span class="w-1.5 h-8 bg-primary rounded-full"></span>Truyện Mới Cập Nhật
@@ -349,5 +386,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'story/js/home.js' %}"></script>
+
   </body>
 </html>
