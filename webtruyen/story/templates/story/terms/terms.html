@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi" class="scrollbar-gutter-stable">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều khoản sử dụng | Thiên Mộng Hành</title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+    <script src="{% static 'story/js/base.js' %}"></script>
+    
+    
+</head>
+
+<body class="bg-dark-bg-body font-sans antialiased text-gray-100 min-h-screen flex flex-col"> 
+
+    {% include 'story/header/header.html' %}
+
+    <main class="flex-grow container mx-auto px-6 py-20">
+        <div class="mb-12 border-b border-white/10 pb-8 [.light-mode_&]:border-gray-200 text-center">
+    <h1 class="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-primary to-yellow-200 bg-clip-text text-transparent inline-block">
+        Điều khoản dịch vụ
+    </h1>
+<p class="text-gray-400">Cập nhật lần cuối: <span id="current-date">Ngày ... tháng ..., 2026</span></p>
+</div>
+
+        <div class="space-y-10 leading-relaxed">
+            
+            <section class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:border-primary/20 transition-colors 
+                            [.light-mode_&]:bg-gray-50 [.light-mode_&]:border-gray-200 [.light-mode_&]:text-gray-700">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-8 h-8 bg-primary/20 text-primary rounded-lg flex items-center justify-center font-bold">01</span>
+                    <h2 class="text-xl font-bold [.light-mode_&]:text-gray-900 text-white">Chấp thuận điều khoản</h2>
+                </div>
+                <p>
+                    Bằng việc truy cập và sử dụng website <strong>Thiên Mộng Hành</strong>, bạn đồng ý tuân thủ các quy định và điều kiện được nêu tại đây. Nếu bạn không đồng ý với bất kỳ phần nào, vui lòng ngừng sử dụng dịch vụ của chúng tôi.
+                </p>
+            </section>
+
+            <section class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:border-primary/20 transition-colors
+                            [.light-mode_&]:bg-gray-50 [.light-mode_&]:border-gray-200 [.light-mode_&]:text-gray-700">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-8 h-8 bg-primary/20 text-primary rounded-lg flex items-center justify-center font-bold">02</span>
+                    <h2 class="text-xl font-bold [.light-mode_&]:text-gray-900 text-white">Quyền sở hữu trí tuệ</h2>
+                </div>
+                <ul class="list-disc list-inside space-y-3 opacity-90">
+                    <li>Mọi nội dung bao gồm văn bản, đồ họa, logo và mã nguồn đều thuộc sở hữu của Thiên Mộng Hành hoặc bên cấp phép.</li>
+                    <li>Người dùng không được sao chép, phân phối hoặc sử dụng nội dung cho mục đích thương mại khi chưa có sự đồng ý bằng văn bản.</li>
+                </ul>
+            </section>
+
+            <section class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:border-primary/20 transition-colors
+                            [.light-mode_&]:bg-gray-50 [.light-mode_&]:border-gray-200 [.light-mode_&]:text-gray-700">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-8 h-8 bg-primary/20 text-primary rounded-lg flex items-center justify-center font-bold">03</span>
+                    <h2 class="text-xl font-bold [.light-mode_&]:text-gray-900 text-white">Trách nhiệm người dùng</h2>
+                </div>
+                <p class="mb-4">Khi sử dụng dịch vụ, bạn cam kết:</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-black/20 [.light-mode_&]:bg-white rounded-xl border border-white/5 [.light-mode_&]:border-gray-200">
+                        <h4 class="text-primary font-bold mb-1 text-sm uppercase">Nội dung sạch</h4>
+                        <p class="text-xs opacity-70">Không bình luận khiếm nhã, gây thù ghét hoặc vi phạm pháp luật.</p>
+                    </div>
+                    <div class="p-4 bg-black/20 [.light-mode_&]:bg-white rounded-xl border border-white/5 [.light-mode_&]:border-gray-200">
+                        <h4 class="text-primary font-bold mb-1 text-sm uppercase">Bảo mật</h4>
+                        <p class="text-xs opacity-70">Tự bảo quản thông tin tài khoản và mật khẩu cá nhân.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="mt-16 p-8 bg-primary rounded-[2rem] text-black text-center shadow-xl shadow-primary/20">
+            <h3 class="text-2xl font-black mb-2">Bạn có thắc mắc?</h3>
+            <p class="font-medium mb-6 opacity-80 text-sm">Nếu cần làm rõ thêm bất kỳ điều khoản nào, hãy liên hệ với chúng tôi ngay.</p>
+            <a href="{% url 'hotline' %}" class="inline-block bg-black text-white px-10 py-3.5 rounded-2xl font-bold hover:scale-105 transition-all shadow-lg active:scale-95">
+                Liên hệ hỗ trợ
+            </a>
+        </div>
+    </main>
+
+    {% include 'story/footer/footer.html' %}
+
+    <script src="{% static 'story/js/base.js' %}"></script>
+    <script>
+        // Khi trang đã load xong hoàn toàn, gỡ bỏ class no-transition để các hiệu ứng hover hoạt động bình thường
+        window.addEventListener('load', () => {
+            document.body.classList.remove('no-transition');
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng trong JS chạy từ 0-11
+        const year = now.getFullYear();
+
+        const dateString = `Ngày ${day} tháng ${month}, ${year}`;
+        document.getElementById('current-date').textContent = dateString;
+    });
+    </script>
+</body>
+</html>

@@ -17,7 +17,18 @@ section,
 div {
   background-color: transparent;
 }
-
+html {
+    scrollbar-gutter: stable;
+}
+#main-header {
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+html {
+    scrollbar-gutter: stable !important;
+    overflow-y: scroll; /* Ép luôn có thanh cuộn dù nội dung ngắn hay dài */
+}
 /* Preload */
 html.no-transition,
 html.no-transition * {

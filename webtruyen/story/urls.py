@@ -1,6 +1,8 @@
 # story/urls.py
 
 from django.urls import path
+
+from story.views.hotline_views import terms_view
 from . import views
 from django.contrib.auth import views as auth_views
 
@@ -59,4 +61,6 @@ urlpatterns = [
     path("accounts/profile/edit/", views.profile_edit_view, name="profile_edit"),
     path("logout/", views.custom_logout_view, name="logout"),
     path('favorite/<slug:story_slug>/', views.toggle_favorite, name='toggle_favorite'),
+    path('contact/', views.hotline_views, name='hotline'),
+    path('terms/', terms_view, name='terms'),
 ]

@@ -1,5 +1,4 @@
 
-// 1. Hàm đặt Icon (☀️/🌙)
 function setThemeIcon(isLight) {
     const icon = document.getElementById("mode-icon");
     if (!icon) return;
@@ -11,7 +10,6 @@ function setThemeIcon(isLight) {
     }
 }
 
-// 2. Hàm Toggle Theme
 function toggleTheme() {
     const html = document.documentElement;
 
@@ -22,16 +20,13 @@ function toggleTheme() {
     localStorage.setItem("theme", isLight ? "light" : "dark");
     setThemeIcon(isLight);
 
-    // Bật lại transition sau khi đã đổi xong (sẽ áp dụng cho các thay đổi sau)
     requestAnimationFrame(() => html.classList.remove("no-transition"));
 }
 
-// 3. Khởi tạo khi DOM sẵn sàng
 function init() {
     const isLight = document.documentElement.classList.contains("light-mode");
     setThemeIcon(isLight);
 
-    // Xóa class no-transition ngay (sớm nhất có thể)
     document.documentElement.classList.remove("no-transition");
 
     initHeaderScroll();
@@ -43,7 +38,6 @@ if (document.readyState === "loading") {
     init();
 }
 
-// 4. Xử lý Scroll Header
 let header;
 let ticking = false;
 
@@ -92,7 +86,6 @@ function toggleCategory() {
     }
   }
 
-  // Đóng search bar khi bấm ra ngoài
   document.addEventListener('click', function(e) {
     const bar = document.getElementById('mobile-search-bar');
     const btn = document.getElementById('mobile-search-btn');

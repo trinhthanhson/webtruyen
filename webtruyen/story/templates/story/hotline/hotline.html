@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi" class="scrollbar-gutter-stable">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liên hệ & Hỗ trợ | Thiên Mộng Hành</title>
+ <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
+    <style>
+
+    </style>
+    <!-- Preload theme để tránh chớp -->
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'story/js/base.js' %}"></script>
+
+    
+    
+</head>
+
+<body class="font-sans antialiased story-detail-page">
+
+    {% include 'story/header/header.html' %}
+
+    <main class="container mx-auto px-4 pt-28 md:pt-36 pb-20">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-yellow-200 bg-clip-text text-transparent">
+                Liên hệ với chúng tôi
+            </h1>
+            <p class="text-gray-400 text-lg">
+                Bạn có thắc mắc hoặc góp ý? Đừng ngần ngại liên hệ với đội ngũ Thiên Mộng Hành.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8 mb-20">
+            <div class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center group hover:border-primary/30 transition-all duration-500">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Hotline</h3>
+                <a href="tel:0123456789" class="text-2xl font-bold text-primary hover:underline">0123.456.789</a>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center group hover:border-primary/30 transition-all duration-500">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Email</h3>
+                <a href="mailto:support@tmh.com" class="text-lg font-semibold text-primary hover:underline">support@tmh.com</a>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center group hover:border-primary/30 transition-all duration-500">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Cộng đồng</h3>
+                <span class="text-lg font-semibold text-primary">Facebook / Telegram</span>
+            </div>
+        </div>
+
+        <div class="max-w-5xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+            <div class="md:w-1/3 bg-primary p-10 text-black flex flex-col justify-between relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-black mb-6 leading-tight uppercase">Gửi tin nhắn <br> cho chúng tôi</h2>
+                    <p class="font-medium opacity-90 leading-relaxed text-sm">
+                        Chúng tôi luôn lắng nghe mọi đóng góp để xây dựng Thiên Mộng Hành trở thành cộng đồng truyện tốt nhất.
+                    </p>
+                </div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-black/10 rounded-full blur-3xl"></div>
+            </div>
+
+            <div class="md:w-2/3 p-8 lg:p-12">
+                <form action="{% url 'hotline' %}" method="POST" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="relative group">
+                            <input type="text" name="name" id="name" required placeholder=" " 
+                                class="peer w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 pt-7 pb-3 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-gray-100">
+                            <label for="name" 
+                                class="absolute left-5 top-5 text-gray-500 transition-all pointer-events-none peer-focus:text-xs peer-focus:top-2 peer-focus:text-primary peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:top-2">
+                                Họ và tên
+                            </label>
+                        </div>
+
+                        <div class="relative group">
+                            <input type="email" name="email" id="email" required placeholder=" " 
+                                class="peer w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 pt-7 pb-3 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-gray-100">
+                            <label for="email" 
+                                class="absolute left-5 top-5 text-gray-500 transition-all pointer-events-none peer-focus:text-xs peer-focus:top-2 peer-focus:text-primary peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:top-2">
+                                Địa chỉ Email
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <select name="subject" id="subject" 
+                            class="peer w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 pt-7 pb-3 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-gray-100 appearance-none cursor-pointer">
+                            <option value="Góp ý" class="bg-[#1a1a1a]">Góp ý tính năng</option>
+                            <option value="Báo lỗi" class="bg-[#1a1a1a]">Báo lỗi ứng dụng/web</option>
+                            <option value="Bản quyền" class="bg-[#1a1a1a]">Vấn đề bản quyền</option>
+                            <option value="Hợp tác" class="bg-[#1a1a1a]">Hợp tác nội dung</option>
+                        </select>
+                        <label for="subject" class="absolute left-5 top-2 text-xs text-primary font-bold">Chủ đề</label>
+                        <div class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <textarea name="message" id="message" rows="4" required placeholder=" " 
+                            class="peer w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 pt-8 pb-3 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-gray-100 min-h-[120px]"></textarea>
+                        <label for="message" 
+                            class="absolute left-5 top-6 text-gray-500 transition-all pointer-events-none peer-focus:text-xs peer-focus:top-2 peer-focus:text-primary peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:top-2">
+                            Lời nhắn chi tiết của bạn...
+                        </label>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-primary hover:bg-yellow-400 text-black font-black py-4 rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-2 group/btn">
+                        GỬI LIÊN HỆ NGAY
+                        <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    {% include 'story/footer/footer.html' %}
+
+    <script src="{% static 'story/js/base.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.documentElement.classList.remove("no-transition");
+        });
+    </script>
+</body>
+</html>

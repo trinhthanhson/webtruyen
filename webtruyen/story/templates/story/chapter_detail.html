@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }}</title>
+        <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{% static 'story/css/style.css' %}">
     <style>
 
@@ -19,7 +22,6 @@
 </head>
 
 <body class="font-sans antialiased chapter-detail-page">
-    <!-- Header -->
     {% include 'story/header/header.html' %}
 
     <!-- Nội dung -->
@@ -29,7 +31,6 @@
         {{ page_title }}
     </h1>
 
-    {% if story %}
     <p class="text-center text-gray-400 mb-10 text-base md:text-lg">
         Truyện:
         <a href="{% url 'story_detail' story_slug=story.slug %}"
